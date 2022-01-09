@@ -1,6 +1,7 @@
 # Naver-Cafe-Twitch-Clip-Loader
 
 - 네이버 카페 글에서 Twitch 클립 링크를 편하게 볼 수 있도록 해주는 UserScript
+- 네이버 카페는 Youtube 링크를 카페 글 내에서 바로 볼 수 있도록 비디오로 자동 변환하는 기능을 지원하지만, Twitch Cilp 의 경우에는 해당 기능을 지원하지 않습니다. 때문에 Twitch Clip 의 경우 매번 새 창을 띄워 Twitch Clip 페이지에서 클립을 재생해야 하는 귀찮음이 있습니다. 본 UserScript 는 네이버 카페 글에서 Twitch 클립 링크를 감지하는 경우, 재생 가능한 비디오로 변환하는 브라우저 확장 유저스크립트 입니다.
 
 ## Preview
 
