@@ -25,7 +25,7 @@
 - Safari - [Tampermonkey](https://safari.tampermonkey.net/tampermonkey.safariextz)
 - Edge - [Tampermonkey](https://www.microsoft.com/store/p/tampermonkey/9nblggh5162s)
 
-> 본 스크립트는 Tampermonkey 외의 스크립트에서는 정상 동작하지 않을 수 있습니다.
+> 본 스크립트는 Tampermonkey 외의 스크립트 매니저에서는 정상 동작하지 않을 수 있습니다.
 
 ### STEP 2. UserScript
 
