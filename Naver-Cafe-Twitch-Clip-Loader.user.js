@@ -32,7 +32,7 @@
 
 (async () => {
     'use strict';
-    console.log("[NCTCL]   NaverCafeTwitchClipLoader", document.location.href);
+    console.log("[NCTCL]   Naver-Cafe-Twitch-Clip-Loader", document.location.href);
     var DEBUG = await GM.getValue("DEBUG", false);
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -104,13 +104,13 @@
         },
         autoPlayFirstClip: {
             category: "general",
-            category_name: "자동 변환 시",
+            category_name: "페이지 로딩 시",
             depth: 3,
             radio_enable_value: "autoLoad",
             type: "checkbox",
             value: false,
-            title: "첫번째 클립을 자동 재생",
-            desc: "첫번째 클립을 자동 재생합니다."
+            title: "첫 번째 클립을 자동 재생",
+            desc: "페이지 로딩과 동시에 첫 번째 클립을 자동 재생합니다."
         },
         autoPlayFirstClipMuted: {
             category: "general",
@@ -178,7 +178,7 @@
             head.appendChild(link);
         }
 
-        document.title = "NaverFaceTwitchClipLoader 상세 설정 페이지";
+        document.title = "Naver-Cafe-Twitch-Clip-Loader 상세 설정 페이지";
         GM_setting.createlayout($("body"));
         return;
     }
