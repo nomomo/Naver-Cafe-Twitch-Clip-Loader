@@ -6,6 +6,7 @@
 
 - 네이버 카페 글에서 트위치 클립 링크를 감지하는 경우, 재생 가능한 비디오로 변환합니다.
 - 단순 링크의 경우 변환하지 않으며, 아래 그림과 같이 Twitch Clip 의 섬네일이 있는 링크만 변환합니다.
+- 설정에서 링크를 비디오로 변환할 시점을 선택할 수 있습니다. (페이지 로딩 시 자동 변환 or 링크 클릭 시 변환)
 
 ![Preview](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_01.png)
 
@@ -28,6 +29,8 @@
 > 본 스크립트는 Tampermonkey 외의 스크립트에서는 정상 동작하지 않을 수 있습니다.
 
 ### STEP 2. UserScript
+
+- 유저스크립크 관리 확장기능 설치 후, 아래의 링크를 클릭하여 스크립트를 설치합니다.
 
 - [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/Naver-Cafe-Twitch-Clip-Loader.user) from [https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/Naver-Cafe-Twitch-Clip-Loader.user.js](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/Naver-Cafe-Twitch-Clip-Loader.user.js)
 
