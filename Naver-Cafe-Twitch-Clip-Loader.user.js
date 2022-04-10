@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.0.4
+// @version     0.0.5
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -129,7 +129,7 @@
         },
         autoPlayFirstClipMuted: {
             category: "type",
-            depth: 4,
+            depth: 3,
             radio_enable_value: "autoLoad",
             type: "checkbox",
             value: true,
