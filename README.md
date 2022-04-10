@@ -45,11 +45,24 @@
 
 ## Change log
 
+### 0.0.3 (Apr. 10, 2022)
+
+- 기능 추가
+  - 전체화면 스크롤 동작 개선: 네이버 카페에서 비디오를 전체화면 한 후 해제했을 때, 스크롤이 다른 위치로 변경되지 않도록 하는 기능을 추가했습니다. Twitch Clip 과 네이버 비디오 모두에 적용됩니다.
+  - 원본 링크 삭제: 클립 링크를 비디오로 변환 시, 본문에 동일한 링크가 존재하는 경우 삭제하여 보기 좋게 만듭니다.
+- 클립 타이틀과 링크를 더 깔끔하게 표시합니다.
+
 ### 0.0.2 (Mar. 02, 2022)
 
 - 페이지 로딩 시점에 변환할 개수 제한 설정 추가 (클립 많은 글에서 심하게 느려지는 현상 방지)
-- https://www.twitch.tv/[스트리머 ID]/clip/[클립 IP] 형태의 링크 감지하도록 함
+- https://www.twitch.tv/[스트리머 ID]/clip/[클립 ID] 형태의 링크 감지하도록 함
 
 ### 0.0.1 (Jan. 09, 2022)
 
 - 최초 커밋
+
+## Happy??
+
+<a href="https://www.buymeacoffee.com/nomomo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
+<a href="https://toon.at/donate/636947867320352181" target="_blank"><img src="https://raw.githubusercontent.com/nomomo/Addostream/master/assets/toonation_b11.gif" height="41" alt="Donate with Toonation" /></a>
