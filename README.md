@@ -11,12 +11,6 @@
 
 ![Preview](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_01.png)
 
-- Toolbar 의 Tampermonkey 아이콘 - Naver-Cafe-Twitch-Clip-Loader - 상세 설정 열기를 클릭하여 설정을 변경할 수 있습니다.
-
-![Open Settings Menu](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_02.png)
-
-![Settings](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_03.png)
-
 ## Install
 
 Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
@@ -43,6 +37,14 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 > Naver Cafe 접속에 문제가 생기거나 클립 재생이 안 되는 문제 등이 발생하는 경우, Tampermonkey 의 관리 메뉴에서 이 스크립트를 끄거나 삭제해주세요.
 
 - 이것으로 설치는 끝입니다. 즐겁게 사용하세요~
+
+## Settings
+
+- Naver Cafe 에 접속한 상태에서, Toolbar 의 Tampermonkey 아이콘 - Naver-Cafe-Twitch-Clip-Loader - 상세 설정 열기를 클릭하여 설정을 변경할 수 있습니다.
+
+![Open Settings Menu](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_02.png)
+
+![Settings](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_03.png)
 
 ## Bug report
 
