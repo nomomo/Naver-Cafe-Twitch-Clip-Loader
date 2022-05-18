@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.0.5
+// @version     0.0.6
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -37,6 +37,7 @@
 
     console.log("[NCTCL]   Naver-Cafe-Twitch-Clip-Loader", document.location.href);
     var DEBUG = await GM.getValue("DEBUG", false);
+    var isTwitch = /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href);
 
     ////////////////////////////////////////////////////////////////////////////////////
     // libs
@@ -97,7 +98,7 @@
             valid:"number",
             min_value:1,
             max_value:100,
-            title:"비디오 가로 사이즈(%)", desc:"클립 가로 사이즈를 결정합니다.<br />(Default: 100, Range: 1~100)" },
+            title:"비디오 가로 사이즈(%)", desc:"본문 사이즈 대비 클립 가로 사이즈를 결정합니다.<br />(Default: 100, Range: 1~100)" },
         method : {
             category:"type",
             category_name:"동작 방식",
@@ -117,7 +118,7 @@
             valid:"number",
             min_value:1,
             max_value:100,
-            title:"페이지 로딩 시점에 변환할 개수 제한", desc:"페이지 로딩 시점에 비디오로 변환할 링크의 최대 개수를 설정합니다. 최대 개수를 초과한 클립부터는 링크를 클릭하는 경우에만 비디오로 변환됩니다. 이 개수를 크게 설정하면 클립이 많은 글에서 브라우저가 한참동안 멈출 수 있습니다.<br />(Default: 5, Range: 1~1000)" },
+            title:"페이지 로딩 시점에 변환할 개수 제한", desc:"페이지 로딩 시점에 비디오로 변환할 링크의 최대 개수를 설정하여 브라우저가 멈추는 것을 방지합니다. 최대 개수를 초과한 클립부터는 링크를 클릭하여 비디오로 변환할 수 있습니다.<br />(Default: 5, Range: 1~1000)" },
         autoPlayFirstClip: {
             category: "type",
             depth: 3,
@@ -157,28 +158,20 @@
         },
         autoPauseOtherClips: {
             category:"etc",
-            category_name: "고급",
+            category_name: "고급 사용자 설정",
             depth: 2,
             type: "checkbox",
             value: true,
-            title:"클립 재생 시 다른 클립 일시정지",
-            desc:"Twitch Clip 재생 시, 자동으로 다른 모든 클립을 일시정지 합니다. 다음 클립을 재생하기 위하여 이전 클립을 정지할 필요가 없습니다. (엄청 편하다!)"
+            title:"비디오 재생 시 다른 재생 중인 비디오 일시정지",
+            desc:"Twitch Clip 또는 Naver Video 를 재생 시, 다른 재생 중인 모든 Naver Video 와 Twitch Clip 을 일시정지 합니다. 다음 클립을 재생하기 위하여 이전 클립을 정지할 필요가 없습니다. (엄청 편하다!)"
         },
-        autoPlayNextClip: {
+        autoPauseOtherClipsForNaverVideo: {
             category:"etc",
-            depth: 2,
+            depth: 3,
             type: "checkbox",
             value: true,
-            title:"다음 클립을 자동으로 이어서 재생",
-            desc:"본문에 여러 Twitch Clip 이 존재하는 경우, 클립이 종료되면 다음 클립을 자동으로 재생합니다. (편하다!)"
-        },
-        removeOriginalLinks: {
-            category:"etc",
-            depth: 2,
-            type: "checkbox",
-            value: true,
-            title:"원본 링크 삭제",
-            desc:"클립 링크를 비디오로 변환 시, 본문에 동일한 링크가 존재하는 경우 삭제하여 보기 좋게 만듭니다."
+            title:"네이버 비디오에도 적용",
+            desc:"네이버 비디오 관련 재생 문제가 발생 시 본 옵션을 끄세요."
         },
         fixFullScreenScrollChange: {
             category:"etc",
@@ -186,9 +179,41 @@
             type: "checkbox",
             value: true,
             title:"전체화면 스크롤 동작 개선",
-            desc:"네이버 카페에 삽입된 비디오를 전체화면 한 후 해제했을 때, 스크롤이 다른 위치로 변경되는 문제를 개선시킵니다. 만약 전체화면 후 스크롤과 관련된 다른 문제가 발생한다면 이 기능을 끄십시오."
+            desc:"비디오를 전체화면 한 후 해제했을 때 스크롤이 다른 위치로 변경되는 문제를 개선합니다. 만약 전체화면 후 스크롤과 관련된 다른 문제가 발생한다면 이 기능을 끄십시오."
+        },
+        naverVideoAutoMaxQuality: {
+            category:"etc",
+            depth: 2,
+            type: "checkbox",
+            value: true,
+            title:"네이버 비디오를 항상 최대 화질로 시작",
+            desc:"네이버 비디오를 로드할 때 선택 가능한 최대 화질로 자동 설정합니다."
+        },
+        removeOriginalLinks: {
+            category:"etc",
+            depth: 2,
+            type: "checkbox",
+            value: true,
+            title:"클립 원본 링크 삭제",
+            desc:"클립 링크를 비디오로 변환 시, 본문에 동일한 링크가 존재하는 경우 삭제하여 보기 좋게 만듭니다."
+        },
+        autoPlayNextClip: {
+            category:"etc",
+            depth: 2,
+            type: "checkbox",
+            value: false,
+            title:"다음 클립을 자동으로 이어서 재생",
+            desc:"본문에 여러 Twitch Clip 이 존재하는 경우, 클립이 종료되면 다음 클립을 자동으로 재생합니다. (편하다!)"
         }
     };
+    GM_addStyle(`
+    body #GM_setting {min-width:800px;}
+    body::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
+    body::-webkit-scrollbar-thumb { background: #ccc; }
+    body #GM_setting .GM_setting_depth1 .GM_setting_list_head{width:370px;}
+    body #GM_setting .GM_setting_depth2 .GM_setting_list_head{width:340px;}
+    body #GM_setting .GM_setting_depth3 .GM_setting_list_head{width:310px;}
+    `);
     window.GM_setting = GM_setting;
     //await GM_setting.init("GM_SETTINGS", _settings);
     await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false});
@@ -196,7 +221,7 @@
         GM.registerMenuCommand("상세 설정 열기", function(){
             var ww = $(window).width(),
                 wh = $(window).height();
-            var wn = (ww > 850 ? 850 : ww/5*4);
+            var wn = (ww > 930 ? 930 : ww/5*4);
             var left  = (ww/2)-(wn/2),
                 top = (wh/2)-(wh/5*4/2);
             window.open("https://cafe.naver.com/NaverCafeTwitchClipLoaderSettings/","winname",
@@ -232,7 +257,7 @@
         return;
     }
     // Embed Twitch Clip
-    else if(/(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href) && GM_SETTINGS.use && (GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip)){
+    else if(isTwitch && GM_SETTINGS.use && (GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip)){
         var video = undefined;
         var match = document.location.href.match(/^https?:\/\/clips\.twitch\.tv\/embed\?clip=([a-zA-Z0-9-_]+)/);
         var clipId = "";
@@ -282,10 +307,10 @@
         return;
     }
 
-    window.addEventListener("message", function(e){
+    var autoPauseVideo = function(e){
         if(!GM_SETTINGS.autoPauseOtherClips && !GM_SETTINGS.autoPlayNextClip) return;
         if(e.origin === "https://clips.twitch.tv" && e.data.type === "NCTCL"){
-            NOMO_DEBUG("message from clips.twitch.tv", e.data);
+            NOMO_DEBUG("autoPauseVideo", e.data);
             if(e.data.clipId === undefined || e.data.clipId === "") return;
 
             var $iframes = $(document).find("div.NCTCL-iframe-container iframe");
@@ -314,7 +339,38 @@
                         }
                 }
             });
+
+            // for naver video
+            if(!GM_SETTINGS.autoPauseOtherClips || !GM_SETTINGS.autoPauseOtherClipsForNaverVideo || isTwitch) return true;
+            if(e.data.event == "play"){
+                var $videos = $(document).find("video");
+                $videos.each(function(i, v){
+                    var $nvideo = $(v);
+                    var $id = $nvideo.attr("id");
+                    if(e.data.clipId == $id) return;
+                    if(!$nvideo.hasClass("_FISRTPLAYED") || $nvideo[0].paused) return;
+
+                    var $sevideo = $nvideo.closest(".se-video");
+                    if ($sevideo.length == 0) {
+                        NOMO_DEBUG("no se-video");
+                        return;
+                    }
+
+                    var $playbtn = $sevideo.find(".u_rmc_play_area button");
+                    if($playbtn.length == 0) {
+                        NOMO_DEBUG("no playbtn");
+                        return;
+                    }
+
+                    $playbtn.trigger("click");
+                    NOMO_DEBUG("NAVER VIDEO PAUSE");
+                });
+            }
         }
+    }
+
+    window.addEventListener("message", function(e){
+        autoPauseVideo(e);
     });
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -524,5 +580,78 @@
     catch(e){
         console.error("Error from fixFullScreenScrollChange", e);
     }
+
+    $(document).arrive("video", { onlyOnce: true, existing: true }, function (elem) {
+        try{
+            if(isTwitch) return;
+            if($(elem).hasClass("_FISRTPLAYED")) return;
+
+            $(elem).on("play", function (e) {
+                NOMO_DEBUG("Naver video played", e);
+                var $elem = $(e.target);
+
+                // autoPauseOtherClipsForNaverVideo
+                if(GM_SETTINGS.autoPauseOtherClips && GM_SETTINGS.autoPauseOtherClipsForNaverVideo){
+                    autoPauseVideo({
+                        "origin":"https://clips.twitch.tv",
+                        "data":{"type":"NCTCL", "event":"play", "clipId":$elem.attr("id")},
+                    });
+                }
+
+                if($elem.hasClass("_FISRTPLAYED")) return;
+                $elem.addClass("_FISRTPLAYED");
+            });
+
+            $(elem).on("pause", function (e) {
+                NOMO_DEBUG("Naver video paused", e);
+            });
+        }
+        catch(e){
+            console.error("Error from video arrive", e);
+        }
+    });
+
+    if(GM_SETTINGS.naverVideoAutoMaxQuality){
+        $(document).arrive(".u_rmc_definition_ly", { existing: true }, function (elem) {
+            setTimeout(function(){
+                try{
+                    NOMO_DEBUG("TRY TO SET BEST QUALITY");
+                    var $elem = $(elem);
+                    var $u_rmcplayer = $elem.closest(".u_rmcplayer");
+                    if($u_rmcplayer.length === 0) {
+                        NOMO_DEBUG("no $u_rmcplayer");
+                        return;
+                    }
+
+                    if($u_rmcplayer.hasClass("_QSET")) {
+                        NOMO_DEBUG("ALREADY QSET");
+                        return;
+                    }
+
+                    var $qli = $(elem).find("li");
+                    if($qli.length > 2){
+                        var $last = $qli.last();
+                        if($last.hasClass("u_rmc_on")) {
+                            NOMO_DEBUG("u_rmc_on - ALREADY QSET");
+                            return;
+                        }
+
+                        NOMO_DEBUG("BEST QUALITY SET", $last.text());
+                        $last.find("button").trigger("click");
+
+                        $u_rmcplayer.addClass("_QSET");
+                    }
+                    else{
+                        NOMO_DEBUG("no li elements for QSET");
+                    }
+
+                }
+                catch(e){
+                    console.error("Error from naverVideoAutoMaxQuality arrive", e);
+                }
+            }, 1);
+        });
+    }
+
 
 })();
