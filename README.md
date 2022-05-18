@@ -1,7 +1,7 @@
 # Naver-Cafe-Twitch-Clip-Loader
 
 - 본 UserScript 는 네이버 카페 글에서 Twitch 클립 링크를 재생 가능한 비디오로 변환해줍니다. (엄청 편하다!)
-- 전체화면 재생 후 전체화면 해제 시 스크롤이 이상한 위치로 이동하는 문제를 해결해줍니다.
+- 네이버 카페에서 전체화면 후 해제 시 스크롤이 이상한 위치로 이동하는 문제를 해결해줍니다.
 - 설정에서 링크를 비디오로 변환할 시점을 선택할 수 있습니다. (페이지 로딩 시 자동 변환 or 링크 클릭 시 변환)
 - 설명 동영상: [https://www.youtube.com/watch?v=USr6AtvKslc](https://www.youtube.com/watch?v=USr6AtvKslc)
 
