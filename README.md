@@ -1,6 +1,6 @@
 # Naver-Cafe-Twitch-Clip-Loader
 
-- 본 UserScript는 네이버 카페 글에서 Twitch 클립 링크를 재생 가능한 비디오로 변환해줍니다. (엄청 편하다!)
+- 본 UserScript 는 네이버 카페 글에서 Twitch 클립 링크를 재생 가능한 비디오로 변환해줍니다. (엄청 편하다!)
 - 전체화면 재생 후 전체화면 해제 시 스크롤이 이상한 위치로 이동하는 문제를 해결해줍니다.
 - 설정에서 링크를 비디오로 변환할 시점을 선택할 수 있습니다. (페이지 로딩 시 자동 변환 or 링크 클릭 시 변환)
 - 설명 동영상: [https://www.youtube.com/watch?v=USr6AtvKslc](https://www.youtube.com/watch?v=USr6AtvKslc)
@@ -19,21 +19,23 @@
 
 ## Install
 
+Naver-Cafe-Twitch-Clip-Loader 스크립트의 설치 방법을 설명합니다.
+
 ### STEP 1. ScriptManager
 
-자신의 브라우저에 맞는 유저스크립트 관리 확장기능 설치 (동작 테스트는 Chrome, Firefox 에서만 했습니다.)
+본 확장기능은 유저스크립트의 형태로 개발되었으며, 스크립트 설치를 위해 먼저 자신의 브라우저에 맞는 유저스크립트 관리자의 설치가 필요합니다. 아래 링크에서 유저스크립트 관리 확장기능인 Tampermonkey 를 설치하십시오. (동작 테스트는 Chrome, Firefox 에서만 했습니다.)
 
 - Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
 - Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 - Opera - [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/)
 - Safari - [Tampermonkey](https://safari.tampermonkey.net/tampermonkey.safariextz)
-- Edge - [Tampermonkey](https://www.microsoft.com/store/p/tampermonkey/9nblggh5162s)
+- Edge - [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
 
 > 본 스크립트는 Tampermonkey 외의 스크립트 매니저에서는 정상 동작하지 않을 수 있습니다.
 
 ### STEP 2. UserScript
 
-- 유저스크립크 관리 확장기능 설치 후, 아래의 링크를 클릭하여 스크립트를 설치합니다.
+- 유저스크립트 관리 확장기능 설치 후, 아래의 링크를 클릭하여 스크립트를 설치합니다.
 
 - [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js) from [https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js)
 
