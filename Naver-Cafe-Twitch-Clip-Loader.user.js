@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.0.6
+// @version     0.0.7
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -208,8 +208,6 @@
     };
     GM_addStyle(`
     body #GM_setting {min-width:800px;}
-    body::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
-    body::-webkit-scrollbar-thumb { background: #ccc; }
     body #GM_setting .GM_setting_depth1 .GM_setting_list_head{width:370px;}
     body #GM_setting .GM_setting_depth2 .GM_setting_list_head{width:340px;}
     body #GM_setting .GM_setting_depth3 .GM_setting_list_head{width:310px;}
@@ -240,6 +238,10 @@
             }
         });
 
+        GM_addStyle(`
+            body::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
+            body::-webkit-scrollbar-thumb { background: #ccc; }
+        `);
         var GM_Setting_Bootstrap = 'GM_Setting_Bootstrap';
         if (!document.getElementById(GM_Setting_Bootstrap)) {
             var head = document.getElementsByTagName('head')[0];
