@@ -17,7 +17,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ### STEP 1. ScriptManager
 
-본 확장기능은 유저스크립트의 형태로 개발되었으며, 스크립트 설치를 위해 먼저 자신의 브라우저에 맞는 유저스크립트 관리자의 설치가 필요합니다. 아래 링크에서 유저스크립트 관리 확장기능인 Tampermonkey 를 설치하십시오. (동작 테스트는 Chrome, Firefox 에서만 했습니다.)
+아래 링크에서 유저스크립트 관리 확장기능을 설치하세요.
 
 - Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
 - Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
@@ -26,6 +26,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 - Edge - [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
 
 > 본 스크립트는 Tampermonkey 외의 스크립트 매니저에서는 정상 동작하지 않을 수 있습니다.
+> 동작 테스트는 Chrome, Firefox 에서만 했습니다.
 
 ### STEP 2. UserScript
 
@@ -52,6 +53,12 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 - nomotg@gmail.com
 
 ## Change log
+
+### 0.0.8 (Mar. 20, 2022)
+
+- 기능 추가
+  - 게시판에서 기본 글 표시 개수를 설정할 수 있는 기능 추가
+- 자주 수정되지 고급 기능을 숨기고 원할 때 볼 수 있도록 하여, 설정 화면을 깔끔하게 만들었어요.
 
 ### 0.0.7 (Mar. 19, 2022)
 
