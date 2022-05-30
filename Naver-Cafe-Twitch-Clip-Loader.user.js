@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.0.8
+// @version     0.0.9
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -241,7 +241,7 @@
     //await GM_setting.init("GM_SETTINGS", _settings);
     await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false});
     if(typeof GM.registerMenuCommand === "function"){
-        GM.registerMenuCommand("상세 설정 열기", function(){
+        GM.registerMenuCommand("상세 설정 열기 (새 창)", function(){
             var ww = $(window).width(),
                 wh = $(window).height();
             var wn = (ww > 930 ? 930 : ww/5*4);
@@ -250,8 +250,68 @@
             window.open("https://cafe.naver.com/NaverCafeTwitchClipLoaderSettings/","winname",
                 "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4+",top="+top+",left="+left);
         });
+        GM.registerMenuCommand("상세 설정 열기 (현재 창)", openSettingsMenu);
     }
 
+    // 설정 메뉴 추가 및 관리
+    function openSettingsMenu(){
+        try{
+            if(document === undefined){
+                NOMO_DEBUG("Document is undefined from openSettingsMenu");
+                return;
+            }
+            if(!/(^https:\/\/cafe\.naver\.com\/)/.test(document.location.href)){
+                NOMO_DEBUG("no naver cafe: return from openSettingsMenu");
+                return;
+            }
+            NOMO_DEBUG("msg from openSettingsMenu");
+            var GM_Setting_Bootstrap = 'GM_Setting_Bootstrap';
+            $("#nomo_settings_container").remove();
+
+            var $container = $( /*html*/ `
+            <div id="nomo_settings_container" style="display:none;cursor:pointer;position:fixed;top:0;left:0;width:100%;height:100%;z-index:200000;background:rgba(0,0,0,0.93);">
+                <div id="nomo_settings" style="cursor:default;font-size:12px;max-width:850px;max-height:calc(100% - 40px);margin:20px auto;background:#fff;padding:10px 20px;border-radius:5px;overflow-y:scroll;"></div>
+            </div>`).appendTo("body");
+            $container.on("click", function () {
+                $("#GM_Setting_css_temp").remove();
+                $("#GM_Setting_Bootstrap").remove();
+                $(this).fadeOut(500, function () {
+                    $(this).remove();
+                });
+            });
+            $container.find("#nomo_settings").on("click", function (e) {
+                e.stopPropagation();
+            });
+
+            /*!
+            * Bootstrap v3.1.1 (http://getbootstrap.com)
+            * Copyright 2011-2014 Twitter, Inc.
+            * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+            */
+            if (!document.getElementById(GM_Setting_Bootstrap)) {
+                var head = document.getElementsByTagName('head')[0];
+                var link = document.createElement('link');
+                link.id = GM_Setting_Bootstrap;
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css';
+                link.media = 'all';
+                head.appendChild(link);
+            }
+            if ($("#GM_Setting_css_temp").length == 0){
+                $("head").append(`<style id='GM_Setting_css_temp' rel='stylesheet' type='text/css'>ul, ol{margin:0; padding:0 !important;}
+                #nomo_settings::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
+                #nomo_settings::-webkit-scrollbar-thumb { background: #ccc; }
+                body{overflow-y:hidden;}</style>`);
+            }
+
+            $("#nomo_settings_container").fadeIn(500);
+            GM_setting.createlayout($("#nomo_settings"));
+        }
+        catch(e){
+            NOMO_DEBUG("Error from openSettingsMenu function", e);
+        }
+    }
     // 설정 페이지
     if(/(^https:\/\/cafe\.naver\.com\/NaverCafeTwitchClipLoaderSettings)/.test(document.location.href)){
         $("body").empty().css("padding","0px 30px 0px 30px");
