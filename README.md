@@ -49,6 +49,10 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 > 상세 설정을 새 창으로 열 때 AdBlock 사용, 팝업 차단 등에 의하여 문제가 발생하는 경우 현재 창으로 여세요.
 
+## FAQ
+
+- Q: 스크립트를 새 버전으로 업데이트 하려면 어떻게 하나요?<br />A: 주기적으로 자동 업데이트 되지만, Tampermonkey 대시보드에서 "최근 업데이트 일시"를 클릭하여 수동 업데이트가 가능합니다.<br />설치 링크를 다시 클릭하여 업데이트 할 수도 있습니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js)
+
 ## Bug report
 
 - 버그 리포트 & 건의사항은 아래의 링크로 보내주세요.
@@ -59,7 +63,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 ### 0.1.0 (Jun. 04, 2022)
 
 - 기능 추가
-  - "클립 재생 시 특정 사운드 볼륨(Volume)으로 설정" 기능 추가
+  - "클립 로드 시 특정 사운드 볼륨(Volume)으로 설정" 기능 추가
 
 ### 0.0.9 (Mar. 31, 2022)
 
