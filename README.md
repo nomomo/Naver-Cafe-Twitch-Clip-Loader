@@ -55,7 +55,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ## Bug report
 
-- 버그 리포트 & 건의사항은 아래의 링크로 보내주세요.
+- 버그 리포트 & 건의사항은 [Issues](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues) 에 올려주시거나, 카페 글에 댓글로 남겨주시거나, 아래의 메일로 보내주세요.
 - nomotg@gmail.com
 
 ## Change log
@@ -74,7 +74,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 기능 추가
   - 게시판에서 기본 글 표시 개수를 설정할 수 있는 기능 추가
-- 자주 수정되지 고급 기능을 숨기고 원할 때 볼 수 있도록 하여, 설정 화면을 깔끔하게 만들었어요.
+- 자주 수정되지 않는 고급 기능을 숨기고 원할 때 볼 수 있도록 하여, 설정 화면을 깔끔하게 만들었어요.
 
 ### 0.0.7 (Mar. 19, 2022)
 
