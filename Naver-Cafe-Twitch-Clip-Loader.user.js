@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.1.1
+// @version     0.1.2
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -39,7 +39,7 @@
     console.log("[NCTCL]   Naver-Cafe-Twitch-Clip-Loader", document.location.href);
     var DEBUG = await GM.getValue("DEBUG", false);
     var isTwitch = /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href);
-    var isTwitchMuted = (isTwitch && document.location.href.indexOf("muted=true"));
+    var isTwitchMuted = (isTwitch && document.location.href.indexOf("muted=true") !== -1);
 
     ////////////////////////////////////////////////////////////////////////////////////
     // libs
