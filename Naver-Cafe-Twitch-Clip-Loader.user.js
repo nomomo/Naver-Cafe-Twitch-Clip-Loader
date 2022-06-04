@@ -156,7 +156,7 @@
             type: "checkbox",
             value: false,
             title: {en:"Set the volume when stream starts", ko:"클립 로드 시 특정 사운드 볼륨(Volume)으로 설정"},
-            desc: "브라우저에서 클립을 음소거 하는 것을 피하려면 본 옵션을 사용하세요."
+            desc: "TIP: Chrome 계열 브라우저는 자동 재생되는 클립을 종종 음소거합니다. 음소거 문제를 피하려면 본 옵션을 사용하세요."
         },
         target_start_volume : {
             category:"type", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
