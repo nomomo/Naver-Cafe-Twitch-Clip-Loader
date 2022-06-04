@@ -622,19 +622,53 @@
         opacity:1.0;
     }
     .NCTCL-iframe-container .se-link{
-        display: inline-block; padding: 16px; border: 1px solid rgba(0,0,0,.15); box-sizing: border-box; margin-top: -1px;text-decoration: none;
+        display: flex; align-items:center; padding: 0 16px; border: 1px solid rgba(0,0,0,.15); box-sizing: border-box; margin-top: -1px;text-decoration: none;
         overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size:14px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
         height: 48px;
+        font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
     }
     .NCTCL-iframe-container .se-link:hover{
         text-decoration: none;
     }
+    .NCTCL-iframe-container .se-link svg{
+        margin-right:5px;
+        flex-shrink: 0;
+        vertical-align: middle;
+    }
     .NCTCL-iframe-container .NCTCL-titleText {
+        height:16px;
+        vertical-align: middle;
+        font-size: 16px;
+        font-weight: 700;
+        flex-shrink: 0;
+        max-width: calc(100% - 19px);
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     .NCTCL-iframe-container .NCTCL-clipurlText {
-        text-decoration: underline;
+        color:#333;
+        height:16px;
+        color:black;
+        vertical-align: middle;
+        font-size: 14px;
+        margin-left: 10px;
+        
+        text-overflow: ellipsis;
+        overflow: hidden;
+        position:relative;
+        top:2px;
     }
-
+    .NCTCL-iframe-container a.se-link .NCTCL-titleText {
+        color:#000 !important;
+    }
+    .NCTCL-iframe-container a.se-link .NCTCL-clipurlText{
+        color:#999 !important;
+    }
+    .NCTCL-iframe-container a.se-link:hover .NCTCL-titleText, .NCTCL-iframe-container a.se-link:hover .NCTCL-clipurlText {
+        color:#4a90e2 !important;
+    }
+    .noUnderLine{text-decoration:none;}
+    .UnderLine{text-decoration: underline;}
     .se-media-meta-info-description::before, .se-media-meta-info-title::before{
         content: 'NAVER';
         font-weight: 900;
@@ -685,14 +719,14 @@
             if($title.length !== 0){
                 title = escapeHtml($title.text());
                 titleText = `<span class="NCTCL-titleText">${title}</span>`;
-                clipurlText = `(<span class="NCTCL-clipurlText">${clipurl}</span>)`;
+                clipurlText = `<span class="NCTCL-clipurlText">(<span class="UnderLine">${clipurl}</span>)</span>`;
             }
             $parentContainer.after(`
             <div class="NCTCL-iframe-container">
                 <iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no" height="${videoHeightStr}" width="${videoWidthStr}"></iframe>
                 <br />
                 <a title="클릭 시 다음의 Twitch Clip 페이지로 이동합니다. ${clipurl}" href="${clipurl}" class="se-link" target="_blank" style="width:${videoWidthStr};">
-                    <svg style="vertical-align: bottom;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14" height="14" viewBox="0 0 256 256" xml:space="preserve">
+                    <svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14" height="14" viewBox="0 0 256 256" xml:space="preserve">
                         <g transform="translate(128 128) scale(0.72 0.72)" style="">
                             <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
                                 <path d="M 2.015 15.448 v 63.134 h 21.493 V 90 h 12.09 l 11.418 -11.418 h 17.463 l 23.507 -23.507 V 0 H 8.06 L 2.015 15.448 z M 15.448 8.06 h 64.478 v 42.985 L 66.493 64.478 H 45 L 33.582 75.896 V 64.478 H 15.448 V 8.06 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(97,59,162); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
