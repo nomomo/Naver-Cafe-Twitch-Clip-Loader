@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.2.0
+// @version     0.2.1
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -38,6 +38,7 @@
 
     console.log("[NCTCL]   Naver-Cafe-Twitch-Clip-Loader", document.location.href);
     var DEBUG = await GM.getValue("DEBUG", false);
+    unsafeWindow.NCTCL_DEBUG_TOGGLE = function(){DEBUG=!DEBUG;GM.setValue("DEBUG", DEBUG);return `DEBUG = ${DEBUG}`};
     var isTwitch = /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href);
     var isTwitchMuted = (isTwitch && document.location.href.indexOf("muted=true") !== -1);
 
@@ -275,7 +276,16 @@
                 "50":{title:"50"}
             }
         },
-        under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능을 직접 설정할 수 있습니다." },
+        improvedRefresh:{
+            under_dev:true,
+            category:"etc",
+            depth: 1,
+            type: "checkbox",
+            value: false,
+            title:"[실험실] 네이버 카페 새로고침 개선",
+            desc:"네이버 카페에서 새로고침 시, 메인 화면 대신 이전에 탐색한 페이지를 불러옵니다. 만약 네이버 카페에서 새로고침 시 문제가 발생한다면 이 기능을 끄십시오."
+        },
+        under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능과 실험실 기능을 직접 설정할 수 있습니다." },
     };
     GM_addStyle(`
     body #GM_setting {min-width:800px;}
@@ -404,35 +414,7 @@
         return;
     }
     // Embed Twitch Clip
-    else if(isTwitch && GM_SETTINGS.use && (GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip)){
-        var video = undefined;
-        var match = document.location.href.match(/^https?:\/\/clips\.twitch\.tv\/embed\?clip=([a-zA-Z0-9-_]+)/);
-        var clipId = "";
-        if(match !== null && match.length > 1){
-            clipId = match[1];
-            NOMO_DEBUG("clipId = ", clipId);
-        }
-
-        window.addEventListener("message", function(e){
-            if(e.origin !== "https://cafe.naver.com" || e.data.type !== "NCTCL") return;
-            NOMO_DEBUG("message from naver", e.data);
-            if(e.data.clipId === undefined || e.data.clipId === "" || video === undefined) return;
-            switch(e.data.event){
-                default:
-                    break;
-                case "pause":
-                    if(e.data.clipId !== clipId && typeof video.pause === "function"){
-                        video.pause();
-                        break;
-                    }
-                case "play":
-                    if(video.paused){
-                        document.querySelector("button[data-a-target='player-play-pause-button']").click();
-                    }
-                    break;
-            }
-        });
-
+    else if(isTwitch && GM_SETTINGS.use){
         // set_volume_when_stream_starts
         var is_volume_changed = false;
         if(GM_SETTINGS.set_volume_when_stream_starts){
@@ -442,17 +424,59 @@
                 localStorage.setItem('video-muted', {default:false});
             }
         }
-
+        
         // play_and_pause_by_click
         if(GM_SETTINGS.play_and_pause_by_click){
             try {
                 $(document).on('click', "[data-a-target='player-overlay-click-handler']", (e) => {
-                    NOMO_DEBUG('clicked', e);
+                    NOMO_DEBUG('clicked - playing', e);
                     document.querySelector("button[data-a-target='player-play-pause-button']").click();
                 });
+
+                $(document).on('click', ".player-overlay-background", (e)=>{
+                    NOMO_DEBUG('clicked - end or play', e);
+                    if($(e.target).find(".clip-postplay-recommendations").length !== 0){
+                        NOMO_DEBUG("There is recommendations div");
+                        document.querySelector("button[data-a-target='player-play-pause-button']").click();
+                    }
+                    else{
+                        NOMO_DEBUG("There is no recommendations div");
+                    }
+                });
+
             } catch (e) {
                 NOMO_DEBUG("ERROR FROM play_and_pause_by_click", e);
             }
+        }
+        
+        var video = undefined;
+        var match = document.location.href.match(/^https?:\/\/clips\.twitch\.tv\/embed\?clip=([a-zA-Z0-9-_]+)/);
+        var clipId = "";
+        if(match !== null && match.length > 1){
+            clipId = match[1];
+            NOMO_DEBUG("clipId = ", clipId);
+        }
+
+        if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip){
+            window.addEventListener("message", function(e){
+                if(e.origin !== "https://cafe.naver.com" || e.data.type !== "NCTCL") return;
+                NOMO_DEBUG("message from naver", e.data);
+                if(e.data.clipId === undefined || e.data.clipId === "" || video === undefined) return;
+                switch(e.data.event){
+                    default:
+                        break;
+                    case "pause":
+                        if(e.data.clipId !== clipId && typeof video.pause === "function"){
+                            video.pause();
+                            break;
+                        }
+                    case "play":
+                        if(video.paused){
+                            document.querySelector("button[data-a-target='player-play-pause-button']").click();
+                        }
+                        break;
+                }
+            });
         }
 
         $(document).arrive("video", { onlyOnce: true, existing: true }, function (elem) {
@@ -461,16 +485,16 @@
             video = elem;
             NOMO_DEBUG("video", video);
             video.addEventListener('play', (e) => {
-                NOMO_DEBUG('play()', e);
-                window.parent.postMessage({"type":"NCTCL", "event":"play", "clipId":clipId}, "https://cafe.naver.com");
+                NOMO_DEBUG('twitch clip play()', e);
+                if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"play", "clipId":clipId}, "https://cafe.naver.com");
             });
             video.addEventListener('pause', (e) => {
-                NOMO_DEBUG('pause()', e);
-                window.parent.postMessage({"type":"NCTCL", "event":"pause", "clipId":clipId}, "https://cafe.naver.com");
+                NOMO_DEBUG('twitch clip pause()', e);
+                if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"pause", "clipId":clipId}, "https://cafe.naver.com");
             })
             video.addEventListener('ended', (e) => {
-                NOMO_DEBUG('ended', e);
-                window.parent.postMessage({"type":"NCTCL", "event":"ended", "clipId":clipId}, "https://cafe.naver.com");
+                NOMO_DEBUG('twitch clip ended', e);
+                if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"ended", "clipId":clipId}, "https://cafe.naver.com");
             });
             
             // set_volume_when_stream_starts
@@ -921,12 +945,89 @@
         `);
     }
 
+    // improvedRefresh
+    function improvedRefresh(){
+        try{
+            // iframe
+            if(window.self !== window.top){
+                if(unsafeWindow.top.refreshChecked){
+                    NOMO_DEBUG("이미 refresh 여부가 체크되었다.");
+                    return;
+                }
+
+                var savedLastCafeMainUrl = {url:undefined, date:-1};
+                try{
+                    let savedLSLSCMU = localStorage.getItem('lastCafeMainUrl');
+                    if(savedLSLSCMU === null){
+                        NOMO_DEBUG("savedLSLSCMU = null");
+                        return;
+                    }
+                    savedLastCafeMainUrl = JSON.parse(savedLSLSCMU);
+                }
+                catch(e){
+                    console.error("Error from improvedRefresh JSON.parse", e);
+                    return;
+                }
+    
+                NOMO_DEBUG("savedLastCafeMainUrl", savedLastCafeMainUrl);
+                if(document.location.href === savedLastCafeMainUrl.url){
+                    NOMO_DEBUG("저장된 url 과 현재 url 이 같다", savedLastCafeMainUrl.url);
+                    return;
+                }
+        
+                const parentWindowRefreshed = String(window.top.performance.getEntriesByType("navigation")[0].type) === "reload";
+                let refreshDelay = Number(new Date()) - savedLastCafeMainUrl.date;
+        
+                NOMO_DEBUG("PARENT REFRESHED? = ", parentWindowRefreshed, "CURRENT URL = ", document.location.href, ", REFRESHDELAY = ", refreshDelay);
+                unsafeWindow.parent.refreshChecked = true;
+    
+                if(parentWindowRefreshed && refreshDelay < 5000.0){
+                    NOMO_DEBUG("LOAD SAVED IFRAME URL. CURRRENT URL = ", document.location.href, ", SAVED URL = ", savedLastCafeMainUrl.url);
+                    document.location.href = savedLastCafeMainUrl.url;
+                }
+            }
+            
+            // top
+            if(window.self === window.top){
+                window.onbeforeunload = function() {
+                    let $cafeMain = $("#cafe_main");
+                    if($cafeMain.length !== 0){
+                        var lastCafeMainUrl = $cafeMain[0].contentWindow.location.href;
+                        localStorage.setItem('lastCafeMainUrl', JSON.stringify({
+                            "url":lastCafeMainUrl,
+                            "date":Number(new Date())
+                        }));
+                    }
+                };
+            }
+        }
+        catch(e){
+            console.error("Error from improvedRefresh", e);
+        }
+    }
+    if(GM_SETTINGS.improvedRefresh){
+        improvedRefresh();
+    }
+
     ////////////////////////////////////////////////////
     // document ready
     $(document).ready(function(){
         // naverBoardDefaultArticleCount
         try{
             if(GM_SETTINGS.naverBoardDefaultArticleCount !== "0"){
+                unsafeWindow.oriSearchFrmAfter = unsafeWindow.searchFrmAfter;
+                unsafeWindow.searchFrmAfter = function(frm){
+                    var oriSearchFrmAfterStr = oriSearchFrmAfter.toString();
+                    var clubid = oriSearchFrmAfterStr.match(/clubid=(\d+)/);
+                    if(clubid !== null && clubid.length >= 2){
+                        NOMO_DEBUG("clubid", clubid);
+                        $("#cafe_main").attr("src",`/ArticleSearchList.nhn?search.clubid=${clubid[1]}&search.searchBy=0&search.query=${URLEncoder.encode(frm.query.value,"MS949")}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
+                    }
+                    else{
+                        oriSearchFrmAfter(frm);
+                    }
+                }
+
                 let $as = $("#cafe-menu").find(".cafe-menu-list a[target='cafe_main']");
                 $as.each(function(i,v){
                     setTimeout(function(){
