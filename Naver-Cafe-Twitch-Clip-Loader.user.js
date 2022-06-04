@@ -656,7 +656,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         position:relative;
-        top:2px;
+        top:1px;
     }
     .NCTCL-iframe-container a.se-link .NCTCL-titleText {
         color:#000 !important;
