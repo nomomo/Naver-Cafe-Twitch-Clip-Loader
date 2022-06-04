@@ -218,6 +218,28 @@
             title:"화면 클릭으로 클립 재생 및 일시정지",
             desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)"
         },
+        useTheaterMode : {
+            category:"theaterMode",
+            category_name: "영화관 모드",
+            under_dev:true,
+            depth: 1,
+            type: "checkbox",
+            value: true,
+            title:"영화관 모드 버튼을 표시",
+            desc:"카페 화면 최상단의 '영화관 모드' 버튼을 클릭하여 영화관 모드를 활성화할 수 있습니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다.",
+        },
+        useTheaterModeContentWidth : {
+            category:"theaterMode",
+            depth: 2,
+            under_dev:true,
+            type: "text",
+            value: 1300,
+            valid:"number",
+            min_value:400,
+            max_value:10000,
+            title:"본문(컨텐츠) 가로 사이즈(px)",
+            desc:"영화관 모드 시 카페 컨텐츠의 가로 사이즈를 결정합니다.<br />FHD 해상도 기준 권장 사이즈 : 800(네이버 카페 기본) ~ 1500<br />(Default: 1300, Range: 400~10000)",
+        },
         naverVideoAutoMaxQuality: {
             category:"etc",
             category_name: "편의 기능",
@@ -265,6 +287,14 @@
         border-top: 1px solid #ccc !important;
         margin-top: 10px !important;
         padding-top: 10px !important;
+    }
+
+    #theaterModeBtn {
+        display: inline-block;
+        float: left;
+        margin-top: 10px;
+        font-size: 12px;
+        cursor: pointer;
     }
     `);
     window.GM_setting = GM_setting;
@@ -536,12 +566,21 @@
     ////////////////////////////////////////////////////////////////////////////////////
     // Main
     ////////////////////////////////////////////////////////////////////////////////////
+    // 영화관 모드
+    let isTheaterMode = await GM.getValue("theaterMode", false);
+    let $theaterModeBtn = $(`<span title="[NCTCL] 현재 영화관 모드가 ${isTheaterMode ? "켜져" : "꺼져"} 있습니다. 클릭 시 영화관 모드를 ${isTheaterMode ? "비활성화" : "활성화"} 합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다." id="theaterModeBtn">영화관 모드 ${isTheaterMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
+    .on("click", async () => {
+        isTheaterMode = await GM.setValue("theaterMode", !isTheaterMode);
+        location.reload();
+    });
+    let contentWidth = 800;
+
     // 콘텐츠 width 계산
-    var contentWidth = 800;
     var videoWidth, videoHeight, videoWidthStr, videoHeightStr;
     var reCalculateIframeWidth = function(width){
+        contentWidth = width;
         videoWidth = Number(GM_SETTINGS.videoWidth)/100.0 * contentWidth;
-        videoHeight = Number(videoWidth)/16*9;// + 30
+        videoHeight = Number(videoWidth)/16.0*9.0;// + 30
         videoWidthStr = String(videoWidth) + "px";
         videoHeightStr = String(videoHeight) + "px";
         NOMO_DEBUG("reCalculateIframeWidth", width);
@@ -561,6 +600,7 @@
     .NCTCL-iframe-container .se-link{
         display: inline-block; padding: 16px; border: 1px solid rgba(0,0,0,.15); box-sizing: border-box; margin-top: -1px;text-decoration: none;
         overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size:14px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
+        height: 48px;
     }
     .NCTCL-iframe-container .se-link:hover{
         text-decoration: none;
@@ -570,6 +610,20 @@
     .NCTCL-iframe-container .NCTCL-clipurlText {
         text-decoration: underline;
     }
+
+    .se-media-meta-info-title::before{
+        content: 'NAVER';
+        font-weight: 900;
+        color: #2DB400;
+        font-size: 12px;
+        font-family: math;
+        height: 16px;
+        width: 16px;
+        margin-right: 5px;
+        background: #eee;
+        padding: 0 3px;
+        user-select: none;
+    }
     `);
 
     // Twitch clip 링크를 iframe 으로 변환
@@ -577,7 +631,12 @@
         try{
             var $parentContainer = $elem.closest("div.se-component-content");
             var $article_container = $elem.closest("div.article_container");
-            if($article_container.length !== 0) reCalculateIframeWidth($article_container.width());
+            if($article_container.length !== 0) {
+                reCalculateIframeWidth($article_container.width());
+            }
+            else{
+                NOMO_DEBUG("$article_container.length is zero");
+            }
             $parentContainer.hide();
             var tempary = document.location.href.split("/");
             var parentHref = tempary[2];
@@ -647,6 +706,7 @@
             var $elem = $(elem);
             if($elem.hasClass("fired")) return;
             $elem.addClass("fired");
+            $elem.parent("div.se-section-oglink").addClass("fired");
 
             var $as = $elem.find("a");
             var regex = /^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9-_]+)/;
@@ -815,9 +875,58 @@
         });
     }
 
-    if(GM_SETTINGS.naverBoardDefaultArticleCount !== "0"){
+    // theaterMode
+    if(GM_SETTINGS.useTheaterMode && isTheaterMode){
+        var cw = (Number(GM_SETTINGS.useTheaterModeContentWidth) + 60.0) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
+        var cwPure = Number(GM_SETTINGS.useTheaterModeContentWidth) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
+
+        GM_addStyle(`
+            #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
+            #cafe-body, #content-area, #front-cafe, #front-img {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
+            #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+            .CafeViewer .se-viewer .se-caption, .CafeViewer .se-viewer .se-component-content, .CafeViewer .se-viewer .se-component-content.se-component-content-fit, .se-section-video {
+                max-width:${cw}px !important;
+                max-height:calc(${cw}px / 16.0 * 9.0) !important
+                width:${cw}px !important;
+            }
+            .CafeViewer .se-viewer .se-section-oglink.fired {
+                max-width:${cwPure}px !important;
+                max-height:calc(${cwPure}px / 16.0 * 9.0 + 49px) !important;
+            }
+            .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail,
+            .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail-resource{
+                max-width:${cwPure}px !important;
+                max-height:calc(${cwPure}px / 16.0 * 9.0 - 49px) !important;
+            }
+
+            #front-cafe {text-align:center}
+            .ArticleFormBanner.bottom{margin:0 auto}
+        `);
+    }
+
+    if(!isTheaterMode){
+        GM_addStyle(`
+        .CafeViewer .se-viewer .se-section-oglink.fired .se-oglink-thumbnail-resource{
+            object-fit:cover;
+        }
+        .CafeViewer .se-viewer .se-section-oglink.fired {
+            max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
+            max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 + 49px) !important;
+        }
+        .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail,
+        .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail-resource{
+            max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
+            max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 - 49px) !important;
+        }
+        `);
+    }
+
+    ////////////////////////////////////////////////////
+    // document ready
+    $(document).ready(function(){
+        // naverBoardDefaultArticleCount
         try{
-            $(document).ready(function(){
+            if(GM_SETTINGS.naverBoardDefaultArticleCount !== "0"){
                 let $as = $("#cafe-menu").find(".cafe-menu-list a[target='cafe_main']");
                 $as.each(function(i,v){
                     setTimeout(function(){
@@ -826,11 +935,45 @@
                         $a.attr("href", `${oriHref}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
                     }, 1);
                 });
-            });
+            }
         }
         catch(e){
             console.error("Error from naverBoardDefaultArticleCount", e);
         }
-    }
+
+        // theaterMode
+        try{
+            if(GM_SETTINGS.useTheaterMode){
+                var $gnbmenu = $("#gnb-menu");
+                if($gnbmenu.length !== 0){
+                    $gnbmenu.prepend($theaterModeBtn);
+                }
+
+                if(isTheaterMode){
+                    var $frontImage = $("#front-cafe a img");
+                    if($frontImage.length !== 0){
+                        var src = $frontImage.attr("src");
+                        GM_addStyle(`
+                        #front-cafe::before{
+                            content:'-';
+                            width:100%;
+                            height:100%;
+                            z-index:-1;
+                            position:absolute;
+                            background-size: cover;
+                            top:0;
+                            left:0;
+                            background-image:url(${src});
+                            filter:blur(10px)
+                        }
+                        `);
+                    }
+                }
+            }
+        }
+        catch(e){
+            console.error("Error from theaterMode", e);
+        }
+    });
 
 })();
