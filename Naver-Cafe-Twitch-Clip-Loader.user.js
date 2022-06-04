@@ -138,7 +138,7 @@
             type: "checkbox",
             value: true,
             title: "클립 로드 시 자동 재생",
-            desc: "클릭과 동시에 클립을 자동 재생합니다."
+            desc: "클릭과 동시에 클립을 자동 재생합니다. 이 옵션을 사용하면 클립이 음소거 상태로 재생되는 경우가 있습니다."
         },
         clickRequiredMuted: {
             category: "type",
@@ -156,7 +156,7 @@
             type: "checkbox",
             value: false,
             title: {en:"Set the volume when stream starts", ko:"클립 로드 시 특정 사운드 볼륨(Volume)으로 설정"},
-            desc: "TIP: Chrome 계열 브라우저는 자동 재생되는 클립을 종종 음소거합니다. 음소거 문제를 피하려면 본 옵션을 사용해보세요."
+            desc: "TIP: Chrome 계열 브라우저는 자동 재생되는 클립을 종종 음소거합니다. 음소거 문제를 피하려면 본 옵션을 사용해보세요(안 될 수도 있음)."
         },
         target_start_volume : {
             category:"type", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
@@ -591,7 +591,7 @@
             }
             $parentContainer.after(`
             <div class="NCTCL-iframe-container">
-                <iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" scrolling="no" height="${videoHeightStr}" width="${videoWidthStr}"></iframe>
+                <iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no" height="${videoHeightStr}" width="${videoWidthStr}"></iframe>
                 <br />
                 <a title="클릭 시 다음의 Twitch Clip 페이지로 이동합니다. ${clipurl}" href="${clipurl}" class="se-link" target="_blank" style="width:${videoWidthStr};">
                     <svg style="vertical-align: bottom;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14" height="14" viewBox="0 0 256 256" xml:space="preserve">
