@@ -635,7 +635,7 @@
         text-decoration: underline;
     }
 
-    .se-media-meta-info-title::before{
+    .se-media-meta-info-description::before, .se-media-meta-info-title::before{
         content: 'NAVER';
         font-weight: 900;
         color: #2DB400;
