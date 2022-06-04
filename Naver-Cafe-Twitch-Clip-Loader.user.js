@@ -766,6 +766,8 @@
                             changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, GM_SETTINGS.clickRequiredMuted);
                         });
                     }
+                    $elem.addClass("twitchClipFound");
+                    $elem.parent("div.se-section-oglink").addClass("twitchClipFound");
                 }
             }
             // 클릭 변환 시
@@ -786,6 +788,8 @@
                             e.preventDefault();
                             changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, GM_SETTINGS.clickRequiredMuted);
                         });
+                        $elem.addClass("twitchClipFound");
+                        $elem.parent("div.se-section-oglink").addClass("twitchClipFound");
                     }
                 });
             }
@@ -913,12 +917,12 @@
                 max-height:calc(${cw}px / 16.0 * 9.0) !important
                 width:${cw}px !important;
             }
-            .CafeViewer .se-viewer .se-section-oglink.fired {
+            .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
                 max-width:${cwPure}px !important;
                 max-height:calc(${cwPure}px / 16.0 * 9.0 + 49px) !important;
             }
-            .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail,
-            .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail-resource{
+            .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
+            .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
                 max-width:${cwPure}px !important;
                 max-height:calc(${cwPure}px / 16.0 * 9.0 - 49px) !important;
             }
@@ -930,15 +934,15 @@
 
     if(!isTheaterMode){
         GM_addStyle(`
-        .CafeViewer .se-viewer .se-section-oglink.fired .se-oglink-thumbnail-resource{
+        .CafeViewer .se-viewer .se-section-oglink.twitchClipFound .se-oglink-thumbnail-resource{
             object-fit:cover;
         }
-        .CafeViewer .se-viewer .se-section-oglink.fired {
+        .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
             max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
             max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 + 49px) !important;
         }
-        .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail,
-        .se-viewer .se-section-oglink.se-l-large_image.fired .se-oglink-thumbnail-resource{
+        .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
+        .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
             max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
             max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 - 49px) !important;
         }
