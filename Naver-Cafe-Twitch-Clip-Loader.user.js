@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.1.0
+// @version     0.1.1
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -156,7 +156,7 @@
             type: "checkbox",
             value: false,
             title: {en:"Set the volume when stream starts", ko:"클립 로드 시 특정 사운드 볼륨(Volume)으로 설정"},
-            desc: ""
+            desc: "브라우저에서 클립을 음소거 하는 것을 피하려면 본 옵션을 사용하세요."
         },
         target_start_volume : {
             category:"type", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
@@ -209,6 +209,15 @@
             title:"다음 클립을 자동으로 이어서 재생",
             desc:"본문에 여러 Twitch Clip 이 존재하는 경우, 클립이 종료되면 다음 클립을 자동으로 재생합니다. (편하다!)"
         },
+        play_and_pause_by_click : {
+            category:"advanced",
+            under_dev:true,
+            depth: 2,
+            type: "checkbox",
+            value: true,
+            title:"화면 클릭으로 클립 재생 및 일시정지",
+            desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)"
+        },
         naverVideoAutoMaxQuality: {
             category:"etc",
             category_name: "편의 기능",
@@ -219,7 +228,7 @@
             desc:"네이버 비디오를 로드할 때 선택 가능한 최대 화질로 자동 설정합니다."
         },
         fixFullScreenScrollChange: {
-            category:"advanced",
+            category:"etc",
             depth: 1,
             type: "checkbox",
             value: true,
@@ -404,6 +413,18 @@
             }
         }
 
+        // play_and_pause_by_click
+        if(GM_SETTINGS.play_and_pause_by_click){
+            try {
+                $(document).on('click', "[data-a-target='player-overlay-click-handler']", (e) => {
+                    NOMO_DEBUG('clicked', e);
+                    document.querySelector("button[data-a-target='player-play-pause-button']").click();
+                });
+            } catch (e) {
+                NOMO_DEBUG("ERROR FROM play_and_pause_by_click", e);
+            }
+        }
+
         $(document).arrive("video", { onlyOnce: true, existing: true }, function (elem) {
             //if(elem === undefined || !elem.src) return;
 
@@ -421,7 +442,7 @@
                 NOMO_DEBUG('ended', e);
                 window.parent.postMessage({"type":"NCTCL", "event":"ended", "clipId":clipId}, "https://cafe.naver.com");
             });
-
+            
             // set_volume_when_stream_starts
             try {
                 if(!isTwitchMuted && GM_SETTINGS.set_volume_when_stream_starts && !is_volume_changed){
