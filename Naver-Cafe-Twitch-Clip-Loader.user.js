@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.0.9
+// @version     0.1.0
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -33,11 +33,13 @@
 
 (async () => {
     'use strict';
-    if(window.self === window.top && /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href)) return;
+    if(window.self === window.top && /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href)) return;   
+    if(window.self !== window.top && /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href) && !(/(parent=(cafe|www)?\.?naver\.com)/.test(document.location.href))) return;
 
     console.log("[NCTCL]   Naver-Cafe-Twitch-Clip-Loader", document.location.href);
     var DEBUG = await GM.getValue("DEBUG", false);
     var isTwitch = /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href);
+    var isTwitchMuted = (isTwitch && document.location.href.indexOf("muted=true"));
 
     ////////////////////////////////////////////////////////////////////////////////////
     // libs
@@ -135,7 +137,7 @@
             radio_enable_value: "clickRequired",
             type: "checkbox",
             value: true,
-            title: "클립 로드 시 클립 자동 재생",
+            title: "클립 로드 시 자동 재생",
             desc: "클릭과 동시에 클립을 자동 재생합니다."
         },
         clickRequiredMuted: {
@@ -144,12 +146,25 @@
             radio_enable_value: "clickRequired",
             type: "checkbox",
             value: false,
-            title: "클립 로드 시 클립 음소거",
-            desc: "클립 재생 시 음소거 상태로 시작합니다."
+            title: "클립 로드 시 음소거 (Legacy)",
+            desc: "클립 재생 시 음소거 상태로 시작합니다. 본 옵션은 추후 삭제될 예정입니다. '클립 로드 시 특정 사운드 볼륨(Volume)으로 설정' 옵션을 사용하려면 본 옵션을 체크 해제 하세요."
+        },
+        set_volume_when_stream_starts: {
+            category: "advanced", 
+            category_name: "고급 설정",
+            depth: 1,
+            type: "checkbox",
+            value: false,
+            title: {en:"Set the volume when stream starts", ko:"클립 로드 시 특정 사운드 볼륨(Volume)으로 설정"},
+            desc: ""
+        },
+        target_start_volume : {
+            category:"type", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
+            title:{en:"Volume", ko:"Volume"},
+            desc:{en:"(Max Volume: 1.0, Mute: 0.0, Range: 0.0 ~ 1.0)", ko:"(Max Volume: 1.0, 음소거: 0.0, 범위: 0.0 ~ 1.0)"}
         },
         videoWidth : {
             category:"advanced",
-            category_name: "고급 사용자 설정",
             depth:2,
             under_dev:true,
             type: "text",
@@ -229,7 +244,7 @@
                 "50":{title:"50"}
             }
         },
-        under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"고급 기능 설정", desc:"고급 기능을 직접 설정할 수 있습니다." },
+        under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능을 직접 설정할 수 있습니다." },
     };
     GM_addStyle(`
     body #GM_setting {min-width:800px;}
@@ -379,6 +394,16 @@
             }
         });
 
+        // set_volume_when_stream_starts
+        var is_volume_changed = false;
+        if(GM_SETTINGS.set_volume_when_stream_starts){
+            localStorage.setItem('volume', GM_SETTINGS.target_start_volume);
+    
+            if(GM_SETTINGS.target_start_volume !== 0){
+                localStorage.setItem('video-muted', {default:false});
+            }
+        }
+
         $(document).arrive("video", { onlyOnce: true, existing: true }, function (elem) {
             //if(elem === undefined || !elem.src) return;
 
@@ -396,7 +421,27 @@
                 NOMO_DEBUG('ended', e);
                 window.parent.postMessage({"type":"NCTCL", "event":"ended", "clipId":clipId}, "https://cafe.naver.com");
             });
+
+            // set_volume_when_stream_starts
+            try {
+                if(!isTwitchMuted && GM_SETTINGS.set_volume_when_stream_starts && !is_volume_changed){
+                    NOMO_DEBUG("set_volume");
+                    if(video.volume !== undefined){
+                        NOMO_DEBUG("MUTE?", video.muted, "CURRENT VOLUME", video.volume, "TARGET VOLUME", GM_SETTINGS.target_start_volume);
+                        setTimeout(function(){
+                            if(GM_SETTINGS.target_start_volume !== 0.0){
+                                video.muted = false;
+                            }
+                            video.volume = GM_SETTINGS.target_start_volume;
+                            is_volume_changed = true;
+                        },100);
+                    }
+                }
+            } catch (e) {
+                NOMO_DEBUG("ERROR FROM set_volume_when_stream_starts", e);
+            }
         });
+
         return;
     }
 
