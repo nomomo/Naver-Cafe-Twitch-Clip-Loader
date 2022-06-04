@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.1.2
+// @version     0.1.3
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -152,14 +152,14 @@
         set_volume_when_stream_starts: {
             category: "advanced", 
             category_name: "고급 설정",
-            depth: 1,
+            depth: 2,
             type: "checkbox",
             value: false,
             title: {en:"Set the volume when stream starts", ko:"클립 로드 시 특정 사운드 볼륨(Volume)으로 설정"},
             desc: "TIP: Chrome 계열 브라우저는 자동 재생되는 클립을 종종 음소거합니다. 음소거 문제를 피하려면 본 옵션을 사용해보세요(안 될 수도 있음)."
         },
         target_start_volume : {
-            category:"type", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
+            category:"type", depth:3, type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
             title:{en:"Volume", ko:"Volume"},
             desc:{en:"(Max Volume: 1.0, Mute: 0.0, Range: 0.0 ~ 1.0)", ko:"(Max Volume: 1.0, 음소거: 0.0, 범위: 0.0 ~ 1.0)"}
         },
@@ -260,6 +260,12 @@
     body #GM_setting .GM_setting_depth1 .GM_setting_list_head{width:370px;}
     body #GM_setting .GM_setting_depth2 .GM_setting_list_head{width:340px;}
     body #GM_setting .GM_setting_depth3 .GM_setting_list_head{width:310px;}
+
+    #GM_setting li[GM_setting_key="set_volume_when_stream_starts"] {
+        border-top: 1px solid #ccc !important;
+        margin-top: 10px !important;
+        padding-top: 10px !important;
+    }
     `);
     window.GM_setting = GM_setting;
     //await GM_setting.init("GM_SETTINGS", _settings);
@@ -350,12 +356,6 @@
         GM_addStyle(`
             body::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
             body::-webkit-scrollbar-thumb { background: #ccc; }
-
-            #GM_setting li[gm_setting_key="videoWidth"] {
-                border-top: 1px solid #ccc;
-                margin-top: 10px;
-                padding-top: 10px;
-            }
         `);
         var GM_Setting_Bootstrap = 'GM_Setting_Bootstrap';
         if (!document.getElementById(GM_Setting_Bootstrap)) {
