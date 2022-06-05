@@ -60,7 +60,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ## Change log
 
-- 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/CHANGELOG.md)를 확인하세요.
+- 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
 ### 0.4.0 - Jun. 06, 2022
 
