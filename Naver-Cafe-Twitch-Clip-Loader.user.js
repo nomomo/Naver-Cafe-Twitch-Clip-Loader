@@ -108,7 +108,7 @@
             depth:3,
             radio_enable_value: "autoLoad",
             type: "text",
-            value: 5,
+            value: 1,
             valid:"number",
             min_value:1,
             max_value:100,
