@@ -1439,6 +1439,7 @@
                 ,.skin-1080 .NCTCL-iframe-container .se-link
                 ,.skin-1080 .CafeViewer .se-viewer .se-section-oglink.se-section.se-l-large_image .se-oglink-info
                 ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta
+                ,.skin-1080 .se-viewer .se-module-oglink
                 ,.skin-1080 .ArticleTagList .item
                 ,.skin-1080 .CommentBox .comment_list .CommentItem--mine
                 ,.skin-1080 .CommentBox .comment_list .CommentItem.CommentItem--mine::before
