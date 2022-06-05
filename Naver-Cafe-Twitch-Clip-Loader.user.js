@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.4.1
+// @version     0.4.2
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -611,12 +611,32 @@
     // 콘텐츠 width 계산
     var contentWidth = 800;
     var videoWidth, videoHeight, videoWidthStr, videoHeightStr;
+    var videoCSSElem = undefined;
+    var contentWidthInit = false;
     var reCalculateIframeWidth = function(width){
+        if(contentWidthInit && contentWidth === width){
+            return;
+        }
+        contentWidthInit = true;
+
+        if(videoCSSElem !== undefined){
+            $(videoCSSElem).remove();
+        }
         contentWidth = width;
         videoWidth = Number(GM_SETTINGS.videoWidth)/100.0 * contentWidth;
         videoHeight = Number(videoWidth)/16.0*9.0;// + 30
         videoWidthStr = String(videoWidth) + "px";
         videoHeightStr = String(videoHeight) + "px";
+
+        videoCSSElem = GM_addStyle(`
+        .NCTCL-iframe{
+           width:${videoWidthStr};
+           height:${videoHeightStr} ;
+        }
+        .NCTCL-iframe-container .se-link{
+            width:${videoWidthStr}
+        }
+        `);
         NOMO_DEBUG("reCalculateIframeWidth", width);
     }
     reCalculateIframeWidth(contentWidth);
@@ -734,9 +754,9 @@
             }
             $parentContainer.after(`
             <div class="NCTCL-iframe-container">
-                <iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no" height="${videoHeightStr}" width="${videoWidthStr}"></iframe>
+                <iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>
                 <br />
-                <a title="클릭 시 다음의 Twitch Clip 페이지로 이동합니다. ${clipurl}" href="${clipurl}" class="se-link" target="_blank" style="width:${videoWidthStr};">
+                <a title="클릭 시 다음의 Twitch Clip 페이지로 이동합니다. ${clipurl}" href="${clipurl}" class="se-link" target="_blank">
                     <svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14" height="14" viewBox="0 0 256 256" xml:space="preserve">
                         <g transform="translate(128 128) scale(0.72 0.72)" style="">
                             <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
@@ -995,6 +1015,7 @@
 
             if(GM_SETTINGS.useTheaterMode && isTheaterMode){
                 $("html").addClass("theaterMode");
+                reCalculateIframeWidth(Number(GM_SETTINGS.useTheaterModeContentWidth));
                 var cw = (Number(GM_SETTINGS.useTheaterModeContentWidth) + 60.0) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
                 var cwPure = Number(GM_SETTINGS.useTheaterModeContentWidth) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
         
@@ -1043,6 +1064,11 @@
                     max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 - 49px) !important;
                 }
                 `);
+            }
+
+            var $article_container = $("div.article_container");
+            if($article_container.length !== 0) {
+                reCalculateIframeWidth($article_container.width());
             }
 
             $theaterModeBtn
