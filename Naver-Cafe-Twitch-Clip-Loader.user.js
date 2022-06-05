@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.2.1
+// @version     0.4.0
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -227,7 +227,7 @@
             type: "checkbox",
             value: true,
             title:"영화관 모드 버튼을 표시",
-            desc:"카페 화면 최상단의 '영화관 모드' 버튼을 클릭하여 영화관 모드를 활성화할 수 있습니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다.",
+            desc:"카페 최상단 메뉴에 '영화관 모드' 버튼을 표시합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다."
         },
         useTheaterModeContentWidth : {
             category:"theaterMode",
@@ -276,6 +276,15 @@
                 "50":{title:"50"}
             }
         },
+        alwaysShowFavoriteBoard:{
+            under_dev:true,
+            category:"etc",
+            depth: 1,
+            type: "checkbox",
+            value: false,
+            title:"[실험실] 즐겨찾는 게시판을 항상 펼침",
+            desc:""
+        },
         improvedRefresh:{
             under_dev:true,
             category:"etc",
@@ -284,6 +293,15 @@
             value: false,
             title:"[실험실] 네이버 카페 새로고침 개선",
             desc:"네이버 카페에서 새로고침 시, 메인 화면 대신 이전에 탐색한 페이지를 불러옵니다. 만약 네이버 카페에서 새로고침 시 문제가 발생한다면 이 기능을 끄십시오."
+        },
+        showDarkModeBtn : {
+            category:"etc",
+            under_dev:true,
+            depth: 1,
+            type: "checkbox",
+            value: false,
+            title:"[실험실] 어두운 모드 버튼을 표시",
+            desc:"카페 최상단 메뉴에 '어두운 모드' 버튼을 표시합니다."
         },
         under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능과 실험실 기능을 직접 설정할 수 있습니다." },
     };
@@ -299,7 +317,7 @@
         padding-top: 10px !important;
     }
 
-    #theaterModeBtn {
+    #theaterModeBtn, #darkModeBtn {
         display: inline-block;
         float: left;
         margin-top: 10px;
@@ -590,16 +608,8 @@
     ////////////////////////////////////////////////////////////////////////////////////
     // Main
     ////////////////////////////////////////////////////////////////////////////////////
-    // 영화관 모드
-    let isTheaterMode = await GM.getValue("theaterMode", false);
-    let $theaterModeBtn = $(`<span title="[NCTCL] 현재 영화관 모드가 ${isTheaterMode ? "켜져" : "꺼져"} 있습니다. 클릭 시 영화관 모드를 ${isTheaterMode ? "비활성화" : "활성화"} 합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다." id="theaterModeBtn">영화관 모드 ${isTheaterMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
-    .on("click", async () => {
-        isTheaterMode = await GM.setValue("theaterMode", !isTheaterMode);
-        location.reload();
-    });
-    let contentWidth = 800;
-
     // 콘텐츠 width 계산
+    var contentWidth = 800;
     var videoWidth, videoHeight, videoWidthStr, videoHeightStr;
     var reCalculateIframeWidth = function(width){
         contentWidth = width;
@@ -626,6 +636,7 @@
         overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size:14px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
         height: 48px;
         font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+        background-color:#fff;
     }
     .NCTCL-iframe-container .se-link:hover{
         text-decoration: none;
@@ -953,50 +964,96 @@
     }
 
     // theaterMode
-    if(GM_SETTINGS.useTheaterMode && isTheaterMode){
-        var cw = (Number(GM_SETTINGS.useTheaterModeContentWidth) + 60.0) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
-        var cwPure = Number(GM_SETTINGS.useTheaterModeContentWidth) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
-
-        GM_addStyle(`
-            #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
-            #cafe-body, #content-area, #front-cafe, #front-img {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
-            #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
-            .CafeViewer .se-viewer .se-caption, .CafeViewer .se-viewer .se-component-content, .CafeViewer .se-viewer .se-component-content.se-component-content-fit, .se-section-video {
-                max-width:${cw}px !important;
-                max-height:calc(${cw}px / 16.0 * 9.0) !important
-                width:${cw}px !important;
+    var isTheaterMode = await GM.getValue("theaterMode", false);
+    if (typeof GM.addValueChangeListener === "function"){
+        GM.addValueChangeListener("theaterMode", async function (val_name, old_value, new_value, remote) {
+            if (remote) {
+                NOMO_DEBUG("다른 창에서 설정 변경됨. val_name, old_value, new_value, location:", val_name, old_value, new_value, document.location.href);
+                applyTheaterMode();
             }
-            .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
-                max-width:${cwPure}px !important;
-                max-height:calc(${cwPure}px / 16.0 * 9.0 + 49px) !important;
-            }
-            .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
-            .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
-                max-width:${cwPure}px !important;
-                max-height:calc(${cwPure}px / 16.0 * 9.0 - 49px) !important;
-            }
-
-            #front-cafe {text-align:center}
-            .ArticleFormBanner.bottom{margin:0 auto}
-        `);
+        });
     }
+    var $theaterModeBtn = $(`<span title="[NCTCL] 클릭 시 영화관 모드를 ${isTheaterMode ? "비활성화" : "활성화"} 합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다." id="theaterModeBtn">영화관 모드 ${isTheaterMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
+    .on("click", async () => {
+        NOMO_DEBUG("isTheaterMode", isTheaterMode, " -> ", !isTheaterMode);
+        isTheaterMode = !isTheaterMode;
+        await GM.setValue("theaterMode", isTheaterMode);
+        if (typeof GM.addValueChangeListener === "function"){
+            applyTheaterMode();
+        }
+        else{
+            location.reload();
+        }
+    });
+    var theaterModeCSSElem = undefined;
+    var nonTheaterModeCSSElem = undefined;
+    async function applyTheaterMode(){
+        try{
+            isTheaterMode = await GM.getValue("theaterMode", false);
+            if(theaterModeCSSElem !== undefined) $(theaterModeCSSElem).remove();
+            if(nonTheaterModeCSSElem !== undefined) $(nonTheaterModeCSSElem).remove();
 
-    if(!isTheaterMode){
-        GM_addStyle(`
-        .CafeViewer .se-viewer .se-section-oglink.twitchClipFound .se-oglink-thumbnail-resource{
-            object-fit:cover;
+            if(GM_SETTINGS.useTheaterMode && isTheaterMode){
+                $("html").addClass("theaterMode");
+                var cw = (Number(GM_SETTINGS.useTheaterModeContentWidth) + 60.0) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
+                var cwPure = Number(GM_SETTINGS.useTheaterModeContentWidth) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
+        
+                theaterModeCSSElem = GM_addStyle(`
+                    #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
+                    #cafe-body, #content-area, #front-cafe, #front-img, .footer {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
+                    #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                    .CafeViewer .se-viewer .se-caption, .CafeViewer .se-viewer .se-component-content, .CafeViewer .se-viewer .se-component-content.se-component-content-fit, .se-section-video {
+                        max-width:${cw}px !important;
+                        max-height:calc(${cw}px / 16.0 * 9.0) !important
+                        width:${cw}px !important;
+                    }
+                    .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
+                        max-width:${cwPure}px !important;
+                        max-height:calc(${cwPure}px / 16.0 * 9.0 + 49px) !important;
+                    }
+                    .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
+                    .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
+                        max-width:${cwPure}px !important;
+                        max-height:calc(${cwPure}px / 16.0 * 9.0 - 49px) !important;
+                    }
+        
+                    #front-cafe {text-align:center}
+                    .ArticleFormBanner.bottom{margin:0 auto}
+                    #cafe-intro .gate-list.border-sub {
+                        width:unset !important;
+                        float:unset !important;
+                        margin:0 auto;
+                    }
+                `);
+            }
+
+            if(!isTheaterMode){
+                $("html").removeClass("theaterMode");
+                nonTheaterModeCSSElem = GM_addStyle(`
+                .CafeViewer .se-viewer .se-section-oglink.twitchClipFound .se-oglink-thumbnail-resource{
+                    object-fit:cover;
+                }
+                .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
+                    max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
+                    max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 + 49px) !important;
+                }
+                .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
+                .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
+                    max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
+                    max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 - 49px) !important;
+                }
+                `);
+            }
+
+            $theaterModeBtn
+            .attr("title", `[NCTCL] 클릭 시 영화관 모드를 ${isTheaterMode ? "비활성화" : "활성화"} 합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다.`)
+            .html(`영화관 모드 ${isTheaterMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c">`);
         }
-        .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
-            max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
-            max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 + 49px) !important;
+        catch(e){
+            console.error("Error from applyTheaterMode", e);
         }
-        .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
-        .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
-            max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
-            max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 - 49px) !important;
-        }
-        `);
     }
+    applyTheaterMode();
 
     // improvedRefresh
     function improvedRefresh(){
@@ -1027,6 +1084,14 @@
                     NOMO_DEBUG("저장된 url 과 현재 url 이 같다", savedLastCafeMainUrl.url);
                     return;
                 }
+
+                var except = ["https://cafe.naver.com/MyCafeListGNBView.nhn"];
+                for(var i=0;i<except.length;i++){
+                    if(document.location.href.indexOf(except[i]) !== -1){
+                        NOMO_DEBUG("예외 목록에 포함된 URL", except[i], document.location.href);
+                        return;
+                    }
+                }
         
                 const parentWindowRefreshed = String(window.top.performance.getEntriesByType("navigation")[0].type) === "reload";
                 let refreshDelay = Number(new Date()) - savedLastCafeMainUrl.date;
@@ -1034,7 +1099,7 @@
                 NOMO_DEBUG("PARENT REFRESHED? = ", parentWindowRefreshed, "CURRENT URL = ", document.location.href, ", REFRESHDELAY = ", refreshDelay);
                 unsafeWindow.parent.refreshChecked = true;
     
-                if(parentWindowRefreshed && refreshDelay < 5000.0){
+                if(parentWindowRefreshed && refreshDelay < 2000.0){
                     NOMO_DEBUG("LOAD SAVED IFRAME URL. CURRRENT URL = ", document.location.href, ", SAVED URL = ", savedLastCafeMainUrl.url);
                     document.location.href = savedLastCafeMainUrl.url;
                 }
@@ -1063,6 +1128,538 @@
     }
 
     ////////////////////////////////////////////////////
+    // darkmode
+    var isDarkMode = await GM.getValue("darkMode", false);
+    if (typeof GM.addValueChangeListener === "function"){
+        GM.addValueChangeListener("darkMode", async function (val_name, old_value, new_value, remote) {
+            if (remote) {
+                NOMO_DEBUG("다른 창에서 설정 변경됨. val_name, old_value, new_value, location:", val_name, old_value, new_value, document.location.href);
+                applyDarkMode();
+            }
+        });
+    }
+    var $darkModeBtn = $(`<span title="[NCTCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다." id="darkModeBtn">어두운 모드 ${isDarkMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
+    .on("click", async () => {
+        NOMO_DEBUG("어두운 모드", isDarkMode , "->", !isDarkMode);
+        isDarkMode = !isDarkMode;
+        if(isDarkMode){
+            $darkModeBtn.html(`어두운 모드 켜짐<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c">`);
+        }
+        else{
+            $darkModeBtn.html(`어두운 모드 꺼짐<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c">`);
+        }
+        await GM.setValue("darkMode", isDarkMode);
+        if (typeof GM.addValueChangeListener === "function"){
+            applyDarkMode();
+        }
+        else{
+            location.reload();
+        }
+    });
+    var themeCSSElem = undefined;
+    async function applyDarkMode(){
+        try{
+            isDarkMode = await GM.getValue("darkMode", false);
+            NOMO_DEBUG("어두운 모드", isDarkMode);
+            $darkModeBtn.attr("title", `[NCTCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다.`);
+            if(themeCSSElem !== undefined) $(themeCSSElem).remove();
+            if(isDarkMode){
+                themeCSSElem = GM_addStyle(/*css*/`
+                
+                :root{
+                    --NCTCL-font-color:#FFF;
+                    --NCTCL-background-color:#202020;
+                    --NCTCL-border-color:#383838;
+            
+                    
+                    --NCTCL-font-color-lighter:#AAA;
+                    --NCTCL-background-color-lighter:#303030;
+                    --NCTCL-border-color-lighter:#383838;
+                    
+                    --NCTCL-font-color-lightest:#AAA;
+                    --NCTCL-background-color-lightest:#404040;
+                    --NCTCL-border-color-lightest:#484848;
+                }
+            
+                *::-webkit-scrollbar { background: #505050 !important; }
+                *::-webkit-scrollbar-thumb { background: #353535 !important; }
+            
+                #powerAd-div, #cafe_sdk {display:none}
+            
+                h1,h2,h3,h4,h5,h6
+                ,.skin-1080 .ia-info-data .gm-tcol-c .id .ellipsis
+                ,.skin-1080 #ia-info-data-emblem .txt
+                ,.skin-1080 .com .box-w .group-list .tcol-c
+                ,.skin-1080 .com .pocket_nav
+                ,.skin-1080 .com .pocket_nav .filter-50
+                ,.skin-1080 .com .box-w .group-mlist .tcol-c
+                ,.skin-1080 #cafe-secede
+                ,.skin-1080 .ia-info-data
+                ,.skin-1080 .ia-info-data2
+                ,.skin-1080 .ia-info-data3
+                ,.skin-1080 .ia-info-data3 li
+                ,.skin-1080 .SpecialMenu .menu_list .link_special
+                ,.skin-1080 .article-album .album-box .tit .ellipsis
+                ,.skin-1080 .board-notice.type_event .article, .skin-1080 .board-notice.type_up .article
+                ,.skin-1080 .article-board .pers_nick_area .p-nick a
+                ,.skin-1080 .article-board .td_date
+                ,.skin-1080 .article-board .td_view
+                ,.skin-1080 .article-album-sub .tit .ellipsis
+                ,.skin-1080 .RelatedArticles .member_area
+                ,.skin-1080 .ArticlePaginate .btn.number
+                ,.skin-1080 .PopularArticles .PopularCafeList .popular_list .post_box .title
+                ,.skin-1080 .RelatedArticles .date_area
+                ,.skin-1080 .article-board .td_likes
+                ,.skin-1080 .article-board .article
+                ,.skin-1080 .select_component .date_enter .tit
+                ,.skin-1080 .article-movie-sub .con
+                ,.skin-1080 .article-movie-sub .tit_area .tit strong
+                ,.skin-1080 #main-area .m-tcol-c
+                ,.skin-1080 #special-menu .special-menu .link_special
+                ,.skin-1080 #neighbor-cafe .comment
+                ,.skin-1080 #neighbor-cafe .bca
+                ,.skin-1080 #widget_company_info
+                ,.skin-1080 #widget_company_info .tit_company
+                ,.skin-1080 #widget_company_info .list_company .tit
+                ,.skin-1080 #widget_company_info .list_company li
+                ,.skin-1080 .article-album .album-box li .price
+                ,.skin-1080 .SaleInfo .CommercialDetail .list_detail .btn_text
+                ,.skin-1080 .ModalLayer
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_thead
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_td
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_list
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .safety_deal_text
+                ,.skin-1080 .SaleInfo
+                ,.skin-1080 .SaleInfo .CommercialDetail .list_title
+                ,.skin-1080 .SaleInfo .ProductCategory
+                ,.skin-1080 .NCTCL-iframe-container .se-link
+                ,.skin-1080 .CafeViewer .se-viewer .se-section-oglink.se-section.se-l-large_image .se-oglink-info
+                ,.skin-1080 .CafeViewer .se-viewer .se-module-oglink .se-oglink-title
+                ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta
+                ,.skin-1080 .se-viewer .se-video .se-media-meta-info, .se-viewer .se-video .se-media-meta-info-title
+                ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta-info-wrap:not(.se-is-activated) .se-media-meta-info-description
+                ,.NCTCL-iframe-container a.se-link .NCTCL-titleText
+                ,.skin-1080 .ArticleTagList .item
+                ,.skin-1080 .ArticleTagList .item a
+                ,.skin-1080 .pop_container
+                ,.skin-1080 .CommentWriter .comment_inbox_text
+                ,.skin-1080 .gnb_my_lyr
+                ,.skin-1080 .gnb_my_li .gnb_my_content
+                ,.skin-1080 #gnb a,.skin-1080 #gnb a:visited,.skin-1080 #gnb a:active,.skin-1080 #gnb a:focus
+                ,.skin-1080 .gnb_my_li .gnb_my_content .gnb_pay_check a,.skin-1080  .gnb_my_li .gnb_my_content .gnb_pay_check span,.skin-1080  .gnb_my_li .gnb_my_content .gnb_pay_check strong
+                ,.skin-1080 .gnb_bdr
+                ,.skin-1080 .gnb_txt
+                ,.skin-1080 .cc_layer_mynews .cc_mynews_list .info_top .box
+                ,.skin-1080 .cc_layer_mynews .cc_mynews_list .info_title
+                ,.skin-1080 .cc_layer_mynews .cc_mynews_list .cc_mynews_info
+                ,.skin-1080 .cc_layer_mynews .cc_mynews_list .info_txt
+                ,.skin-1080 .cafe_list .sort li.on a
+                ,.skin-1080 .cafe_list .sort li a
+                ,.skin-1080 .cafe_list .lst_mycafe li .cafe_name h5 a
+                ,.skin-1080 .LowLevelAccessGuide .tit_level
+                ,.skin-1080 .LowLevelAccessGuide .txt_level
+                ,.skin-1080 .LowLevelAccessGuide .list_explanation .explanation
+                ,.skin-1080 .LowLevelAccessGuide .list_explanation li
+                ,.skin-1080 .LowLevelAccessGuide .list_level .desc
+                {
+                    color:var(--NCTCL-font-color) !important;
+                }
+            
+                .skin-1080 .ia-info-data .gm-tcol-c
+                ,.skin-1080 .ia-info-data3 em
+                ,.skin-1080 .ia-info-data2 .mem-cnt-info .link_invite
+                ,.skin-1080 #member-action-data
+                ,.skin-1080 .info-action-tab .gm-tcol-t
+                ,.skin-1080 #member-action-data .prfl_info
+                ,.skin-1080 #member-action-data .grade
+                ,.skin-1080 #member-action-data .grade .txt
+                ,.skin-1080 #linked-member #lm-list .tcol-c
+                ,.skin-1080 .m-tcol-c
+                ,.skin-1080 #naver-gnb #gnb-menu .naver-h,.skin-1080 #naver-gnb #gnb-menu .m-cafe,.skin-1080 #naver-gnb #gnb-menu .join-cafe,.skin-1080 #naver-gnb #gnb-menu .chatting-cafe,.skin-1080 #naver-gnb #gnb-menu #gnb,.skin-1080 #naver-gnb #gnb-menu .gnb_name
+                ,.skin-1080 .Gnb .gnb_menu .gnb_link
+                ,.Gnb .GnbNaver #gnb a.gnb_my .gnb_name
+                ,.WritingHeader .tool_area .temp_save_area .btn_temp_save
+                ,.WritingHeader .tool_area .temp_save_area .btn_temp_count
+                ,.skin-1080 .board-notice.type_event .cmt, .skin-1080 .board-notice.type_up .cmt
+                ,.skin-1080 .article-board .board-list .head
+                ,.skin-1080 .WriterInfo .profile_info .nick_level
+                ,.skin-1080 .CommentBox .comment_option .comment_tab .comment_tab_item .comment_tab_button[aria-selected=true]
+                ,.skin-1080 .RelatedArticlesTabContainer__tab button[aria-pressed=true]
+                ,.skin-1080 .RelatedArticlesTabContainer__tab button
+                ,.skin-1080 .footer
+                ,.skin-1080 .footer .cafe_name
+                ,#theaterModeBtn
+                ,#darkModeBtn
+                ,#button_town_cafe
+                ,.skin-1080 .prev-next a
+                ,.skin-1080 .select_component .select_list li a
+                ,.skin-1080 .select_component2 .select_list li a
+                ,.skin-1080 .article-movie-sub .txt
+                ,.skin-1080 .article-movie-sub .user_info .m-tcol-c
+                ,.skin-1080 .check_box label
+                ,.skin-1080 .input_component input::placeholder
+                ,.skin-1080 .alarm_switch .alarm_txt
+                ,.skin-1080 .SaleInfo .BottomNotice
+                ,.skin-1080 .SaleInfo .BottomNotice .text_title
+                ,.skin-1080 .SaleInfo .BottomNotice .text_info
+                ,.skin-1080 .CafeViewer .se-viewer .se-module-oglink .se-oglink-summary
+                ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta-info-tag
+                ,.skin-1080 .list-style .total
+                ,.skin-1080 .cc_layer_mynews .cc_mynews_list .info_bottom
+                ,.skin-1080 .cafe_list .lst_mycafe li .cafe_name .second
+                ,.skin-1080 .cafe_list .lst_mycafe li .cafe_name .second
+                ,.skin-1080 .list_sub_tab .link
+                ,.skin-1080 .LowLevelAccessGuide .txt_level .level
+                {
+                    color:var(--NCTCL-font-color-lighter) !important;
+                }
+            
+                /* space */
+                .Gnb .gnb_menu .gnb_item:after
+                ,#naver-gnb #gnb-menu .tcol-c
+                ,.footer .cafe_link:before
+                ,.RelatedArticlesTabContainer__tab button[aria-pressed=true]:after
+                ,.skin-1080 .prev-next .pgR:before
+                {
+                    background-color:var(--NCTCL-border-color) !important;
+                }
+            
+                .skin-1080 .CommentBox
+                ,.skin-1080 .ArticleContentBox
+                ,.skin-1080 .ArticleContentBox .article_header
+                ,.skin-1080 .CommentBox .comment_list .CommentItem
+                ,.skin-1080 .RelatedArticles .list_item
+                ,.skin-1080 .RelatedArticles .list_item:first-child
+                ,.skin-1080 .RelatedArticlesTabContainer__tab button[aria-pressed=true]
+                ,.skin-1080 .RelatedArticlesTabContainer__tab .tab_menu
+                ,.skin-1080 .PopularArticles .PopularCafeList .popular_list .list_item
+                ,.skin-1080 .select_component2 .select_list
+                ,.skin-1080 .select_component .select_list
+                ,.skin-1080 .article-movie-sub li
+                ,.skin-1080 .area_info_box
+                ,.skin-1080#main-area .list-tit
+                ,.skin-1080 .list-style .check_box ~ .sort_form
+                ,.skin-1080 .list-style .sort_form
+                ,.skin-1080 .com .box-w .group-mlist
+                ,.skin-1080 .info-action-tab .tit-bookmark
+                ,.skin-1080 .list_sub_tab
+                ,.skin-1080 .SaleInfo .CommercialDetail .section
+                ,.skin-1080 .PurchaseButton.PurchaseButton--bottom
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_table
+                ,.skin-1080 .gnb_my_lyr
+                ,.skin-1080 .cafe_list .lst_mycafe
+                ,.skin-1080 .cafe_list_control
+                ,.skin-1080 .article-board tbody td
+                {
+                    border-color:var(--NCTCL-border-color);
+                }
+
+                
+                .skin-1080 .list_sub_tab .on .link
+                {
+                    border-color:var(--NCTCL-border-color-lightest);
+                }
+            
+                /* normal */
+                html
+                , iframe
+                ,.skin-1080
+                ,.skin-1080 .layout_content
+                ,.skin-1080 #linked-member #lm-list
+                ,.skin-1080 .gate-list.border-sub
+                ,.skin-1080 .article-board thead th
+                ,.skin-1080 .article-board tbody td
+                {
+                    color:var(--NCTCL-font-color);
+                    background-color:var(--NCTCL-background-color);
+                    border-color:var(--NCTCL-border-color);
+                }
+            
+                /* lighter */
+                .skin-1080 #cafe-info-action
+                ,.skin-1080 .info-action-tab .tit-bookmark .btn-bookmark-off
+                ,.skin-1080 #cafe-menu
+                ,.skin-1080 #cafe-menu div.cafe-menu-space
+                ,.skin-1080 .box-g-m
+                ,.skin-1080 #cafe-menu .cafe-menu-tit
+                ,.skin-1080 #cafe-menu .cafe-menu-tit .gm-tcol-t
+                ,.skin-1080 #cafe-menu .cafe-menu-list
+                ,.skin-1080 #cafe-menu .cafe-menu-list li
+                ,.skin-1080 #cafe-menu .cafe-menu-list li a
+                ,.skin-1080 #cafe-menu .cafe-menu-list h1
+                ,.skin-1080 #cafe-menu .cafe-menu-list h2
+                ,.skin-1080 #cafe-menu .cafe-menu-list h3
+                ,.skin-1080 #cafe-menu .cafe-menu-list h4
+                ,.skin-1080 #cafe-menu .cafe-menu-list h5
+                ,.skin-1080 #cafe-menu .cafe-menu-list h6
+                ,.skin-1080 .com .box-w
+                ,.skin-1080 .box_notice
+                ,.skin-1080 #special-menu
+                ,.skin-1080 .SpecialMenu
+                ,.skin-1080 .SpecialMenu .menu_list
+                ,.skin-1080 .cafe-search .inp
+                ,.skin-1080 .area_info_box
+                ,.skin-1080 #ia-info-data-emblem
+                ,.skin-1080 .ia-info-data2
+                ,.skin-1080 .info-action-tab
+                ,.skin-1080 .CommentWriter
+                ,.skin-1080 .ArticlePaginate .btn.number[aria-pressed=true]
+                ,.skin-1080 .RelatedArticles .list_item.selected
+                ,.skin-1080 .prev-next
+                ,.skin-1080 .prev-next a
+                ,.skin-1080 .list-search
+                ,.skin-1080 .select_component
+                ,.skin-1080 .select_component .select_box
+                ,.skin-1080 .select_component .select_list li
+                ,.skin-1080 .select_component2
+                ,.skin-1080 .select_component2 .select_box
+                ,.skin-1080 .select_component2 .select_list li
+                ,.skin-1080 .input_component
+                ,.skin-1080 .input_component input
+                ,.skin-1080 .select_component .date_enter
+                ,.skin-1080 .select_component .date_enter input
+                ,.skin-1080 .btn_type1.post_write
+                ,.skin-1080 #widget-count
+                ,.alarm_switch .layer_alarm
+                ,.skin-1080 #widget-currency
+                ,.skin-1080 #widget-currency .bg-body tr:nth-child(even) th, .skin-1080 #widget-currency .bg-body tr:nth-child(even) td
+                ,.skin-1080 #widget-currency .bg-head
+                ,.skin-1080 .com .box-ww.white_box
+                ,.skin-1080 .com .box-ww
+                ,.skin-1080 .PurchaseButton .purchase_chat .btn_purchase
+                ,.skin-1080 .PurchaseButton .purchase_chat .btn_commerce_status.type_chat
+                ,.skin-1080 .PurchaseButton .purchase_chat .btn_commerce_status.type_pay
+                ,.skin-1080 .FormNoticeContent
+                ,.skin-1080 .SaleInfo .CommercialDetail .list_detail .btn_commerce
+                ,.skin-1080 .ModalLayer .layer_wrap
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_thead
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_td
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_list
+                ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .safety_deal_text
+                ,.skin-1080 .NCTCL-iframe-container .se-link
+                ,.skin-1080 .CafeViewer .se-viewer .se-section-oglink.se-section.se-l-large_image .se-oglink-info
+                ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta
+                ,.skin-1080 .ArticleTagList .item
+                ,.skin-1080 .CommentBox .comment_list .CommentItem--mine
+                ,.skin-1080 .CommentBox .comment_list .CommentItem.CommentItem--mine::before
+                ,.skin-1080 .gnb_my_li .gnb_my_content
+                ,.skin-1080 .gnb_my_lyr_iframe
+                ,.skin-1080 .select_component .select_list
+                ,.skin-1080 .cc_layer_mynews .cc_mynews_header
+                ,.skin-1080 .cc_layer_mynews .cc_mynews_list li
+                ,.skin-1080 .cc_layer_mynews
+                ,.skin-1080 #naver-gnb #join-cafe-iframe
+                ,.skin-1080 .cafe_list .lst_mycafe li
+                ,.skin-1080 .cafe_list .lst_mycafe li
+                ,.skin-1080 .cafe_list .sort_area
+                ,.skin-1080 .cafe_list_control
+                ,.skin-1080 .LowLevelAccessGuide .guide_box
+                {
+                    color:var(--NCTCL-font-color);
+                    background-color:var(--NCTCL-background-color-lighter);
+                    border-color:var(--NCTCL-border-color);
+                }
+            
+                .skin-1080 #nomo_settings
+                ,.skin-1080 #nomo_settings li
+                ,.skin-1080 #nomo_settings #GM_setting li[GM_setting_key="set_volume_when_stream_starts"]
+                ,.skin-1080 #GM_setting_footer
+                ,.skin-1080 #neighbor-cafe .comm-btn-top a
+                ,.skin-1080 .ModalLayer .layer_seller_contact .contact_box
+                ,.skin-1080 #gnb .gnb_my_li .gnb_my_community a,.skin-1080  .gnb_notice_li .gnb_notice_all,.skin-1080  a.gnb_service_all, .gnb_svc_more .svc_btns
+                ,.skin-1080 #naver-gnb #gnb-menu .gnb_txt
+                ,.skin-1080 .LowLevelAccessGuide .cafe_level_info
+                {
+                    color:var(--NCTCL-font-color);
+                    background-color:var(--NCTCL-background-color-lightest) !important;
+                    border-color:var(--NCTCL-border-color) !important;
+                }
+                .skin-1080 #nomo_settings #GM_setting input
+                ,.skin-1080 #nomo_settings #GM_setting .btn-default
+                ,.skin-1080 #nomo_settings #GM_setting .btn-primary
+                ,.skin-1080 #nomo_settings #GM_setting .form-control
+                {
+                    color:var(--NCTCL-font-color);
+                    background-color:var(--NCTCL-background-color-lighter);
+                    border-color:var(--NCTCL-border-color);
+                }
+                .skin-1080 #nomo_settings a
+                ,.skin-1080 #nomo_settings a:hover
+                ,.skin-1080 #nomo_settings a:focus{
+                    color:var(--NCTCL-font-color-lighter) !important;
+                }
+                #GM_setting .GM_setting_under_dev .GM_setting_title{
+                    color:#c9adff;
+                }
+                .skin-1080 #GM_setting .GM_setting_item_disable
+                ,.skin-1080 #GM_setting .GM_setting_item_disable .GM_setting_title
+                ,.skin-1080 #GM_setting .GM_setting_item_disable .GM_setting_desc
+                {
+                    color:#747474 !important;
+                }
+            
+                /* lightest */
+                .skin-1080 .cafe-write-btn a
+                ,.skin-1080 .ia-info-btn .link_chat
+                ,.skin-1080 .box_notice .link_more
+                ,.WritingHeader .tool_area .temp_save_area .btn_temp_save
+                ,.WritingHeader .tool_area .temp_save_area .btn_temp_count
+                ,.WriterInfo .profile_info .link_talk
+                ,.BaseButton.size_default:first-child
+                ,.BaseButton.size_default
+                ,.skin-1080 .board-notice.type_event .board-tag-txt, .skin-1080 .board-notice.type_up .board-tag-txt
+                ,.skin-1080 .prev-next a.on
+                ,.skin-1080 .select_component2 .select_list li a:hover
+                ,.skin-1080 .select_component .select_list li a:hover
+                ,.skin-1080 .select_component .date_enter .btn_set
+                ,.skin-1080 #widget_company_info .link_company
+                ,.skin-1080 .cafe-search .btn
+                ,.skin-1080 #cafe-menu #favoriteMenuGroup
+                ,.skin-1080 #cafe-menu #favoriteMenuGroup li
+                ,.skin-1080 #cafe-menu #favoriteMenuGroup li a
+                ,.skin-1080 #cafe-menu .cafe-menu-tit.frst
+                ,.skin-1080 #cafe-menu .cafe-menu-tit.frst h3
+                ,.skin-1080 #cafe-menu .cafe-menu-tit.frst a
+                {
+                    color:var(--NCTCL-font-color);
+                    background-color:var(--NCTCL-background-color-lightest);
+                    border-color:var(--NCTCL-border-color-lightest);
+                }
+            
+                /* 공지 */
+                .skin-1080 .board-notice.type_menu .board-tag-txt
+                ,.skin-1080 .board-notice.type_required .board-tag-txt
+                ,.skin-1080 .board-notice.type_main .board-tag-txt
+                {
+                    background: #303030;
+                    border-color: #404040;
+                    color: #fff;
+                }
+            
+                /* 글쓰기 */
+                .skin-1080 .setting_area, .skin-1080 .setting_area *{
+                    color:var(--NCTCL-font-color-lighter);
+                    background-color:var(--NCTCL-background-color-lighter);
+                    border-color:var(--NCTCL-border-color-lighter);
+                }
+            
+                /*emoji*/
+                .CommentBox .comment_list .CommentItemSticker .comment_sticker_link .image
+                ,.se-viewer .se-sticker-image{
+                    background-color:var(--NCTCL-background-color-lightest);
+                }
+                
+                .ArticleTool .button_comment .svg-icon
+                ,.prev-next .pgR:after
+                ,.footer .naver_cafe
+                ,.left_area .BaseButton.size_default:not(.BaseButton--skinGreen) svg.svg-icon
+                ,.right_area .BaseButton.size_default:not(.BaseButton--skinGreen) svg.svg-icon
+                ,.se-viewer .se-video .se-media-meta-toggle-button
+                {
+                    filter:invert(1)
+                }
+            
+                .toggle_switch .switch_slider
+                {
+                    filter:invert(1) brightness(2.5) contrast(0.78);
+                }
+            
+                #linked-member .member-reload
+                ,#linked-member .member-up
+                {
+                    filter:invert(1) brightness(1.2) contrast(0.7);
+                }
+            
+                #naver-gnb #gnb-menu .gnb_service_li .gnb_icon
+                ,.CommentBox .comment_option .comment_tab .comment_refresh_button
+                ,.SubscribeButton .ToggleSwitch.ToggleSwitch--skinGray .switch_slider
+                {
+                    filter:invert(1) contrast(0.7) brightness(0.5);
+                }
+            
+                .check_box input + label:before
+                {
+                    filter:invert(1) contrast(0.3) brightness(0.8);
+                }
+    
+                .skin-1080 .article-board [class*="list-i"]
+                ,.skin-1080 #cafe-menu .cafe-menu-list .ico_new
+                ,.skin-1080 #cafe-menu .cafe-menu-tit .ico_new
+                ,.ico_new
+                ,.skin-1080 .board-notice.type_required .cmt, .skin-1080 .board-notice.type_main .cmt
+                ,.skin-1080 .article-board .board-list .cmt
+                ,.skin-1080 #naver-gnb #gnb-menu .chatting-cafe .count
+                {
+                    filter:grayscale(0.4);
+                }
+    
+                .BaseButton--skinGreen
+                ,.skin-1080 #cafe-menu .cafe-menu-tit .ico-bookmark
+                {
+                    filter:grayscale(1.0);
+                }
+                
+                .toggle_switch .switch_input:checked + .switch_slider{
+                    background-color:#AAA;
+                }
+                .skin-1080 #cafe-menu .cafe-menu-list{
+                    margin-top:0px;
+                    padding-top:6px;
+                }
+    
+                .naver-splugin-c svg,
+                .button_sticker,
+                .button_file,
+                .btn_type1.post_write:before{
+                    filter:brightness(10);
+                }
+    
+                .NCTCL-iframe-container svg {
+                    display:none;
+                }
+    
+                .se-media-meta-info-description::before, .se-media-meta-info-title::before{
+                    background-color:var(--NCTCL-background-color) !important;
+                }
+                .skin-1080 .twitchClipFound .se-oglink-url{
+                    color:#a778ff !important;
+                }
+                .skin-1080 .twitchClipFound .se-oglink-title::before
+                ,.skin-1080 .NCTCL-titleText::before
+                {
+                    display: inline-block;
+                    content: 'Twitch';
+                    font-weight: 900;
+                    color: #a778ff;
+                    font-size: 12px;
+                    font-family: math;
+                    height: 20px;
+                    width: 45px;
+                    margin-right: 5px;
+                    background: unset;
+                    background-color: var(--NCTCL-background-color);
+                    position: relative;
+                    user-select: none;
+                    padding: 0 4px;
+                    box-sizing:border-box;
+                }
+                .skin-1080 .twitchClipFound .se-oglink-title::before{
+                    top:-1px;
+                }
+            
+                `.replace(/(\.skin\-1080)/g, "html[data-theme='dark'] body"));
+            
+                $("html").attr("data-theme","dark");
+    
+            }
+        }
+        catch(e){
+            console.error("Error from applyTheme", e);
+        }
+    }
+    applyDarkMode();
+
+    ////////////////////////////////////////////////////
     // document ready
     $(document).ready(function(){
         // naverBoardDefaultArticleCount
@@ -1081,12 +1678,30 @@
                     }
                 }
 
+                unsafeWindow.oriDrawFavoriteCafeMenuList = unsafeWindow.drawFavoriteCafeMenuList;
+                unsafeWindow.drawFavoriteCafeMenuList = function(favoriteCafeMenuList){
+                    unsafeWindow.oriDrawFavoriteCafeMenuList(favoriteCafeMenuList);
+                    let $as = $("#cafe-menu #favoriteMenuGroup").find("a");
+                    NOMO_DEBUG("$as", $as);
+                    $as.each(function(i,v){
+                        setTimeout(function(){
+                            let $a = $(v);
+                            let oriHref = $a.attr("href");
+                            if(oriHref.indexOf("userDisplay") === -1){
+                                $a.attr("href", `${oriHref}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
+                            }
+                        }, 1);
+                    });
+                }
+
                 let $as = $("#cafe-menu").find(".cafe-menu-list a[target='cafe_main']");
                 $as.each(function(i,v){
                     setTimeout(function(){
                         let $a = $(v);
                         let oriHref = $a.attr("href");
-                        $a.attr("href", `${oriHref}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
+                        if(oriHref.indexOf("userDisplay") === -1){
+                            $a.attr("href", `${oriHref}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
+                        }
                     }, 1);
                 });
             }
@@ -1095,38 +1710,62 @@
             console.error("Error from naverBoardDefaultArticleCount", e);
         }
 
-        // theaterMode
+        // theaterMode & theme
         try{
+            var $gnbmenu = $("#gnb-menu");
             if(GM_SETTINGS.useTheaterMode){
-                var $gnbmenu = $("#gnb-menu");
                 if($gnbmenu.length !== 0){
                     $gnbmenu.prepend($theaterModeBtn);
                 }
 
-                if(isTheaterMode){
-                    var $frontImage = $("#front-cafe a img");
-                    if($frontImage.length !== 0){
-                        var src = $frontImage.attr("src");
-                        GM_addStyle(`
-                        #front-cafe::before{
-                            content:'-';
-                            width:100%;
-                            height:100%;
-                            z-index:-1;
-                            position:absolute;
-                            background-size: cover;
-                            top:0;
-                            left:0;
-                            background-image:url(${src});
-                            filter:blur(10px)
-                        }
-                        `);
+                var $frontImage = $("#front-cafe a img");
+                if($frontImage.length !== 0){
+                    var src = $frontImage.attr("src");
+                    GM_addStyle(`
+                    html.theaterMode #front-cafe::before{
+                        content:'-';
+                        width:100%;
+                        height:100%;
+                        position:absolute;
+                        background-size: cover;
+                        top:0;
+                        left:0;
+                        background-image:url(${src});
+                        filter:blur(10px);
+                        z-index:1;
                     }
+
+                    html.theaterMode #front-cafe img{
+                        position:relative;
+                        top:0;
+                        left:0;
+                        z-index:2;
+                    }
+                    `);
+                }
+            }
+
+            if(GM_SETTINGS.showDarkModeBtn){
+                if($gnbmenu.length !== 0){
+                    $gnbmenu.prepend($darkModeBtn);
                 }
             }
         }
         catch(e){
             console.error("Error from theaterMode", e);
+        }
+
+        //alwaysShowFavoriteBoard
+        try{
+            if(GM_SETTINGS.alwaysShowFavoriteBoard){
+                let $favoriteMenuGroupBtn = $("#favoriteMenuGroupBtn");
+                if($favoriteMenuGroupBtn.length !== 0 && $favoriteMenuGroupBtn.hasClass("down-btn")){
+                    toggleFavoriteMenuGroup();
+                }
+            }
+        }
+        catch(e){
+            console.error("Error from alwaysShowFavoriteBoard", e);
         }
     });
 
