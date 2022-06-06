@@ -1196,7 +1196,7 @@
                     }
         
                     #front-cafe {text-align:center}
-                    .ArticleFormBanner.bottom{margin:0 auto}
+                    .ArticleFormBanner.bottom{margin-left:auto;margin-right:auto}
                     #cafe-intro .gate-list.border-sub {
                         width:unset !important;
                         float:unset !important;
