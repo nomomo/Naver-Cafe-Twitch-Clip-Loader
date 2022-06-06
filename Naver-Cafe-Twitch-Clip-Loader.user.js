@@ -324,6 +324,10 @@
         font-size: 12px;
         cursor: pointer;
     }
+
+    html body .se-viewer .se-module-oglink.twitchClipFound:before{
+        display:none;
+    }
     `);
     window.GM_setting = GM_setting;
     //await GM_setting.init("GM_SETTINGS", _settings);
@@ -453,6 +457,10 @@
                     ,[data-a-target="player-twitch-logo-button"]
                     {
                         display:none !important;
+                    }
+                    html body .video-player__container
+                    ,html body .video-player{
+                        background:unset;
                     }
                 `);
 
