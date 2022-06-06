@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.4.2
+// @version     0.4.3
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -112,7 +112,7 @@
             valid:"number",
             min_value:1,
             max_value:100,
-            title:"페이지 로딩 시점에 변환할 개수 제한", desc:"페이지 로딩 시점에 비디오로 변환할 링크의 최대 개수를 설정하여 브라우저가 멈추는 것을 방지합니다. 최대 개수를 초과한 클립부터는 링크를 클릭하여 비디오로 변환할 수 있습니다.<br />(Default: 1, Range: 1~1000)" },
+            title:"페이지 로딩 시점에 변환할 개수 제한", desc:"페이지 로딩 시점에 비디오로 변환할 링크의 최대 개수를 설정하여 브라우저가 멈추는 것을 방지합니다. 최대 개수를 초과한 클립부터는 링크를 클릭하여 비디오로 변환할 수 있습니다.<br />(Default: 1, Range: 1~100, 권장: 5 이하)" },
         autoPlayFirstClip: {
             category: "type",
             depth: 3,
@@ -139,7 +139,7 @@
             type: "checkbox",
             value: true,
             title: "클립 로드 시 자동 재생",
-            desc: "클릭과 동시에 클립을 자동 재생합니다. 이 옵션을 사용하면 클립이 음소거 상태로 재생되는 경우가 있습니다."
+            desc: "클릭과 동시에 클립을 자동 재생합니다. 이 옵션을 사용하면 클립이 간혹 음소거 상태로 재생될 수 있습니다."
         },
         clickRequiredMuted: {
             category: "type",
@@ -234,12 +234,12 @@
             depth: 2,
             under_dev:true,
             type: "text",
-            value: 1300,
+            value: 1200,
             valid:"number",
             min_value:400,
             max_value:10000,
             title:"본문(컨텐츠) 가로 사이즈(px)",
-            desc:"영화관 모드 시 카페 컨텐츠의 가로 사이즈를 결정합니다.<br />FHD 해상도 기준 권장 사이즈 : 800(네이버 카페 기본) ~ 1500<br />(Default: 1300, Range: 400~10000)",
+            desc:"영화관 모드 시 카페 컨텐츠의 가로 사이즈를 결정합니다.<br />(Default: 1200, Range: 400~10000, 권장: 800~1500)",
         },
         naverVideoAutoMaxQuality: {
             category:"etc",
@@ -256,13 +256,13 @@
             type: "checkbox",
             value: true,
             title:"전체화면 스크롤 동작 개선",
-            desc:"비디오를 전체화면 한 후 해제했을 때 스크롤이 다른 위치로 변경되는 문제를 개선합니다. 만약 전체화면 후 스크롤과 관련된 다른 문제가 발생한다면 이 기능을 끄십시오."
+            desc:"비디오를 전체화면 한 후 해제했을 때 스크롤이 다른 위치로 변경되는 문제를 개선합니다. 만약 전체화면 시 스크롤과 관련된 문제가 발생한다면 이 기능을 끄십시오."
         },
         naverBoardDefaultArticleCount: {
             category:"etc",
             depth: 1,
             type: "combobox",
-            value: "-1",
+            value: "0",
             title:"게시판 글 기본 개수 설정",
             desc:"게시판에서 기본으로 표시할 글 개수를 설정할 수 있습니다.",
             options:{
@@ -292,7 +292,7 @@
             type: "checkbox",
             value: false,
             title:"[실험실] 네이버 카페 새로고침 개선",
-            desc:"네이버 카페에서 새로고침 시, 메인 화면 대신 이전에 탐색한 페이지를 불러옵니다. 만약 네이버 카페에서 새로고침 시 문제가 발생한다면 이 기능을 끄십시오."
+            desc:"네이버 카페에서 새로고침 시, 메인 화면 대신 이전에 탐색한 페이지를 불러옵니다. 만약 새로고침 시 문제가 발생한다면 이 기능을 끄십시오."
         },
         showDarkModeBtn : {
             category:"etc",
@@ -545,7 +545,7 @@
             NOMO_DEBUG("autoPauseVideo", e.data);
             if(e.data.clipId === undefined || e.data.clipId === "") return;
 
-            var $iframes = $(document).find("div.NCTCL-iframe-container iframe");
+            var $iframes = $(document).find("div.NCTCL-container iframe");
             var endedNextFound = false;
             $iframes.each(function(i, v){
                 switch(e.data.event){
@@ -602,6 +602,9 @@
     }
 
     window.addEventListener("message", function(e){
+        // if(e.origin === "https://www.youtube.com"){
+        //     NOMO_DEBUG("POSTMESSAGE from YOUTUBE", e);
+        // }
         autoPauseVideo(e);
     });
 
@@ -633,7 +636,7 @@
            width:${videoWidthStr};
            height:${videoHeightStr} ;
         }
-        .NCTCL-iframe-container .se-link{
+        .NCTCL-container .se-link{
             width:${videoWidthStr}
         }
         `);
@@ -643,30 +646,56 @@
 
     // Add CSS
     GM_addStyle(`
-    .se-oglink-thumbnail.hoverPlayButton::before{
-        content:'';position:absolute; width: 100%; height: 100%; background-repeat: no-repeat;background-position: center center;
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABaCAYAAAA/xl1SAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTMyIDc5LjE1OTI4NCwgMjAxNi8wNC8xOS0xMzoxMzo0MCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUuNSAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RjBEQjEyRDJFQzRCMTFFNkFEQjVENzAwNDkwOUQ4MDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RjBEQjEyRDNFQzRCMTFFNkFEQjVENzAwNDkwOUQ4MDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGMERCMTJEMEVDNEIxMUU2QURCNUQ3MDA0OTA5RDgwNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGMERCMTJEMUVDNEIxMUU2QURCNUQ3MDA0OTA5RDgwNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgmImiEAAAs1SURBVHja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);
-        opacity:0.5;
+    .twitchClipFound .se-oglink-thumbnail.hoverPlayButton::before{
+        content: '▶️';
+        font-size: 15vw;
+        width: 16vw;
+        height: 16vw;
+        position: absolute;
+        z-index: 10;
+        color: #fff;
+        text-align: center;
+        font-family: monospace;
+        border-radius: 0.5vw;
+        top: calc(50% - 16vw / 2);
+        left: calc(50% - 16vw / 2);
+        opacity: 1.0;
+        padding: 0 0 0 0.8vw;
+        user-select: none;
+        transition-duration: 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: scaleX(0.9);
     }
-    .se-oglink-thumbnail.hoverPlayButton:hover::before{
+    .twitchClipFound .se-oglink-thumbnail.hoverPlayButton:hover::before{
+        background-color:rgba(255,255,255,0.2);
+        box-shadow: 0px 0px 1vw rgb(0 0 0 / 40%);
         opacity:1.0;
     }
-    .NCTCL-iframe-container .se-link{
+
+    .NCTCL-iframe-container {
+        line-height:0 !important;
+    }
+    .NCTCL-container .NCTCL-description {
+        margin-top:0.25px;
+    }
+    .NCTCL-container .se-link{
         display: flex; align-items:center; padding: 0 16px; border: 1px solid rgba(0,0,0,.15); box-sizing: border-box; margin-top:0px;text-decoration: none;
         overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size:14px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
         height: 48px;
         font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
         background-color:#fff;
     }
-    .NCTCL-iframe-container .se-link:hover{
+    .NCTCL-container .se-link:hover{
         text-decoration: none;
     }
-    .NCTCL-iframe-container .se-link svg{
-        margin-right:5px;
+    .NCTCL-container .se-link svg{
+        margin-right:10px;
         flex-shrink: 0;
         vertical-align: middle;
     }
-    .NCTCL-iframe-container .NCTCL-titleText {
+    .NCTCL-container .NCTCL-titleText {
         height:16px;
         vertical-align: middle;
         font-size: 16px;
@@ -676,7 +705,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
-    .NCTCL-iframe-container .NCTCL-clipurlText {
+    .NCTCL-container .NCTCL-clipurlText {
         color:#333;
         height:16px;
         color:black;
@@ -689,13 +718,13 @@
         position:relative;
         top:0.5px;
     }
-    .NCTCL-iframe-container a.se-link .NCTCL-titleText {
+    .NCTCL-container a.se-link .NCTCL-titleText {
         color:#000 !important;
     }
-    .NCTCL-iframe-container a.se-link .NCTCL-clipurlText{
+    .NCTCL-container a.se-link .NCTCL-clipurlText{
         color:#999 !important;
     }
-    .NCTCL-iframe-container a.se-link:hover .NCTCL-titleText, .NCTCL-iframe-container a.se-link:hover .NCTCL-clipurlText {
+    .NCTCL-container a.se-link:hover .NCTCL-titleText, .NCTCL-container a.se-link:hover .NCTCL-clipurlText {
         color:#4a90e2 !important;
     }
     .noUnderLine{text-decoration:none;}
@@ -708,42 +737,42 @@
         font-family: math;
         height: 16px;
         width: 16px;
-        margin-right: 5px;
+        margin-right: 10px;
         background: #eee;
         padding: 0 3px;
         user-select: none;
     }
 
-    .twitchClipFound .se-oglink-title::before{
+    
+    .twitchClipFound .se-oglink-title::before
+    /*,.twitchClipFound .NCTCL-titleText::before*/
+    {
         display: inline-block;
-        content: ' ';
-        width: 14px;
-        height: 14px;
-        padding: 0;
+        content: 'Twitch';
+        font-weight: 900;
+        color: #a778ff;
+        font-size: 12px;
+        font-family: math;
+        height: 20px;
+        width: 45px;
+        margin-right: 10px;
+        background: #eee;
         position: relative;
-        top: 1px;
-        left: 0px;
-        background-repeat: no-repeat;
-        margin: 0px 5px 0 0;
         user-select: none;
-        background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAA57GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMjItMDYtMDVUMDU6MzQ6MjcrMDk6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDIyLTA2LTA1VDA1OjM0OjI3KzA5OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAyMi0wNi0wNVQwNTozNDoyNyswOTowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6NDE0NDVkYjItMTdmZC00MjRiLTllNTItNjczYTdhYzQ1MzdiPC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6YjQ0ZWQ3ZWItZTQ0NS0xMWVjLWIwZTYtOWJhMjE0MDY3YTA5PC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6NDA4ZGFjZTItYzU5OS0zMTQ1LWFhYWQtZjRjODc3ZTkyYmZjPC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjQwOGRhY2UyLWM1OTktMzE0NS1hYWFkLWY0Yzg3N2U5MmJmYzwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAyMi0wNi0wNVQwNTozNDoyNyswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo0MTQ0NWRiMi0xN2ZkLTQyNGItOWU1Mi02NzNhN2FjNDUzN2I8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMjItMDYtMDVUMDU6MzQ6MjcrMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3BuZzwvZGM6Zm9ybWF0PgogICAgICAgICA8cGhvdG9zaG9wOkNvbG9yTW9kZT4zPC9waG90b3Nob3A6Q29sb3JNb2RlPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyMDAwMC8xMDAwMDwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6UmVzb2x1dGlvblVuaXQ+MjwvdGlmZjpSZXNvbHV0aW9uVW5pdD4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT42NTUzNTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+MTQ8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MTQ8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/PljEX3cAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAQ1JREFUeNqskCFPw1AURk+XysmGbgK1kE2R1m4TGJoMx28gSCqbkKBQpI7NIfoHUEPQpAZDa0tRJaRugb1RR6ofglBourGFcNU973sn976nSCmlawfkrwWbVtfUUdNYkMaCnqHTH3XWSpGfAaCGfgYSumaL4cF68elBANBYFj4/LkiiWclJNKvwShHg0rkr+6vz+1re4I/1/6J9sVf2x2eDWq4uk3Z2typsDLcBSGNB6GcMRp3NV01jgXsS0DN0jk773xOnXsLUSwBwJhahnxHeZhW5Z+o4YwuUFaveeAlpLOrSxCpZeXt5l1+QzwtcOwAJWruJM94vL2rtZvVzfh7k8wKt9cnu9eGvb/4YAF06VxHe71qoAAAAAElFTkSuQmCC);
+        padding: 0 4px;
+        box-sizing:border-box;
     }
     `);
 
-    // Twitch clip 링크를 iframe 으로 변환
-    var changeToTwitchCilpIframe = function($elem, clipId, autoPlay, muted){
+    // Twitch clip 링크 설명 삽입
+    var insertTwitchCilpDescription = function($elem, clipId){
         try{
-            var $parentContainer = $elem.closest("div.se-component-content");
+            var $parentContainer = $elem.closest("div.se-section-oglink");
             var $article_container = $elem.closest("div.article_container");
+            $parentContainer.find(".se-oglink-info").hide();
             if($article_container.length !== 0) {
                 reCalculateIframeWidth($article_container.width());
             }
-            else{
-                NOMO_DEBUG("$article_container.length is zero");
-            }
-            $parentContainer.hide();
-            var tempary = document.location.href.split("/");
-            var parentHref = tempary[2];
             var clipurl = `https://clips.twitch.tv/${clipId}`;
             var $title = $parentContainer.find(".se-oglink-title");
             var title = "", titleText = "", clipurlText = clipurl;
@@ -752,28 +781,50 @@
                 titleText = `<span class="NCTCL-titleText">${title}</span>`;
                 clipurlText = `<span class="NCTCL-clipurlText">(<span class="UnderLine">${clipurl}</span>)</span>`;
             }
-            $parentContainer.after(`
-            <div class="NCTCL-iframe-container">
-                <iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>
-                <br />
-                <a title="클릭 시 다음의 Twitch Clip 페이지로 이동합니다. ${clipurl}" href="${clipurl}" class="se-link" target="_blank">
-                    <svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14" height="14" viewBox="0 0 256 256" xml:space="preserve">
-                        <g transform="translate(128 128) scale(0.72 0.72)" style="">
-                            <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
-                                <path d="M 2.015 15.448 v 63.134 h 21.493 V 90 h 12.09 l 11.418 -11.418 h 17.463 l 23.507 -23.507 V 0 H 8.06 L 2.015 15.448 z M 15.448 8.06 h 64.478 v 42.985 L 66.493 64.478 H 45 L 33.582 75.896 V 64.478 H 15.448 V 8.06 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(97,59,162); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                <rect x="58.43" y="23.51" rx="0" ry="0" width="8.06" height="23.48" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(97,59,162); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) "/>
-                                <rect x="36.94" y="23.51" rx="0" ry="0" width="8.06" height="23.48" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(97,59,162); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) "/>
-                            </g>
-                        </g>
-                    </svg>
-                    ${titleText}
-                    ${clipurlText}
-                </a>
-            </div>
+            $parentContainer.append(`
+                <div class="NCTCL-container">
+                    <div class="NCTCL-iframe-container" data-clip-id="${clipId}"></div>
+                    <div class="NCTCL-description" data-clip-id="${clipId}">
+                        <a title="클릭 시 다음의 Twitch Clip 페이지로 이동합니다. ${clipurl}" href="${clipurl}" class="se-link" target="_blank">
+                            <svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14" height="14" viewBox="0 0 256 256" xml:space="preserve">
+                                <g transform="translate(128 128) scale(0.72 0.72)" style="">
+                                    <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
+                                        <path d="M 2.015 15.448 v 63.134 h 21.493 V 90 h 12.09 l 11.418 -11.418 h 17.463 l 23.507 -23.507 V 0 H 8.06 L 2.015 15.448 z M 15.448 8.06 h 64.478 v 42.985 L 66.493 64.478 H 45 L 33.582 75.896 V 64.478 H 15.448 V 8.06 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(97,59,162); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                                        <rect x="58.43" y="23.51" rx="0" ry="0" width="8.06" height="23.48" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(97,59,162); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) "/>
+                                        <rect x="36.94" y="23.51" rx="0" ry="0" width="8.06" height="23.48" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(97,59,162); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) "/>
+                                    </g>
+                                </g>
+                            </svg>
+                            ${titleText}
+                            ${clipurlText}
+                        </a>
+                    </div>
+                </div>
             `);
         }
         catch(e){
-            console.error("Error from changeToTwitchCilpIframe", e);
+            NOMO_DEBUG("Error from insertTwitchCilpDescription", e);
+        }
+    }
+    // Twitch clip 링크를 iframe 으로 변환
+    var iframeNo = 0;
+    var changeToTwitchCilpIframe = function($elem, clipId, autoPlay, muted){
+        try{
+            var $parentContainer = $elem.closest("div.se-component-content");
+            var $article_container = $elem.closest("div.article_container");
+            if($article_container.length !== 0) {
+                reCalculateIframeWidth($article_container.width());
+            }
+            $parentContainer.find(".se-oglink-thumbnail").hide();
+            var tempary = document.location.href.split("/");
+            var parentHref = tempary[2];
+            
+            $(`.NCTCL-iframe-container[data-clip-id='${clipId}']`)
+            .append(`<iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
+            iframeNo += 1;
+        }
+        catch(e){
+            NOMO_DEBUG("Error from changeToTwitchCilpIframe", e);
         }
     }
 
@@ -799,38 +850,52 @@
             });
         }
         catch(e){
-            console.error("Error from removeOriginalLinks", e);
+            NOMO_DEBUG("Error from removeOriginalLinks", e);
         }
     }
 
     // Twitch clip 링크 찾기
+    //var p0 = 0;
+    var regex = /^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9-_]+)/;
+    var regex2 = /^https?:\/\/www.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/([a-zA-Z0-9-_]+)/;
     $(document).arrive("div.se-module-oglink", { onlyOnce: true, existing: true }, function (elem) {
         try{
             if(!GM_SETTINGS.use) return;
+
+            //if(p0 === 0){p0 = Number(new Date());}
+            //NOMO_DEBUG("PERFORMANCE CHECK", Number(new Date()) - p0);
+
             var $elem = $(elem);
             if($elem.hasClass("fired")) return;
             $elem.addClass("fired");
             $elem.parent("div.se-section-oglink").addClass("fired");
 
-            var $as = $elem.find("a");
-            var regex = /^https?:\/\/clips\.twitch\.tv\/([a-zA-Z0-9-_]+)/;
-            var regex2 = /^https?:\/\/www.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/([a-zA-Z0-9-_]+)/;
+            setTimeout(function(){
+                var $a = $elem.find("a.se-oglink-thumbnail").first();
+                if($a.length === 0) return; // thumbnail 이 없는 것은 제외한다.
 
-            // 자동 변환 시
-            if(GM_SETTINGS.method === "autoLoad"){
-                var $a = $as.first();
                 var href = $a.attr("href");
                 var match = href.match(regex);
                 if(match == null){
                     match = href.match(regex2);
                 }
 
+                var clipId;
                 if(match !== null && match.length > 1){
-                    var clipId = match[1];
+                    clipId = match[1];
+                    removeOriginalLinks(href);
+                    insertTwitchCilpDescription($elem, clipId);
+                    //NOMO_DEBUG("TWITCH CILP FOUND, CLIP ID = ", clipId);
+                }
+                else{
+                    return;
+                }
+
+                // 자동 변환 시
+                if(GM_SETTINGS.method === "autoLoad"){
                     var isAutoPlay = false;
                     var isMuted = false;
-                    var NCTCL_Length = $(".NCTCL-iframe").length;
-                    removeOriginalLinks(href);
+                    var NCTCL_Length = iframeNo;//$(".NCTCL-iframe").length;
                     if(GM_SETTINGS.autoPlayFirstClip && NCTCL_Length == 0){
                         isAutoPlay = true;
                         if(GM_SETTINGS.autoPlayFirstClipMuted) isMuted = true;
@@ -846,38 +911,113 @@
                             changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, GM_SETTINGS.clickRequiredMuted);
                         });
                     }
-                    $elem.addClass("twitchClipFound");
-                    $elem.parent("div.se-section-oglink").addClass("twitchClipFound");
                 }
-            }
-            // 클릭 변환 시
-            else{   // if(GM_SETTINGS.method === "clickRequired")
-                $as.each(function(i, v){
-                    var $a = $(v);
-                    var href = $a.attr("href");
-                    var match = href.match(regex);
-                    if(match == null){
-                        match = href.match(regex2);
-                    }
-
-                    if(match !== null && match.length > 1){
-                        removeOriginalLinks(href);
-                        var clipId = match[1];
-                        if($a.hasClass("se-oglink-thumbnail")) $a.addClass("hoverPlayButton");
-                        $a.on("click", function(e){
-                            e.preventDefault();
-                            changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, GM_SETTINGS.clickRequiredMuted);
-                        });
-                        $elem.addClass("twitchClipFound");
-                        $elem.parent("div.se-section-oglink").addClass("twitchClipFound");
-                    }
-                });
-            }
+                // 클릭 변환 시
+                else{   // if(GM_SETTINGS.method === "clickRequired")
+                    if($a.hasClass("se-oglink-thumbnail")) $a.addClass("hoverPlayButton");
+                    $a.on("click", function(e){
+                        e.preventDefault();
+                        changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, GM_SETTINGS.clickRequiredMuted);
+                    });
+                }
+                $elem.addClass("twitchClipFound");
+                $elem.closest("div.se-section-oglink").addClass("twitchClipFound");
+                $elem.closest("div.se-component-content").addClass("twitchClipFound");
+                //NOMO_DEBUG("PERFORMANCE CHECK", Number(new Date()) - p0);
+            },1);
         }
         catch(e){
-            console.error("Error from arrive", e);
+            NOMO_DEBUG("Error from arrive", e);
         }
     });
+
+    // //Youtube video
+    // var YTIframeAPITag = document.createElement('script');
+    // YTIframeAPITag.src = "https://www.youtube.com/iframe_api";
+    // var firstScriptTag = document.getElementsByTagName('script')[0];
+    // firstScriptTag.parentNode.insertBefore(YTIframeAPITag, firstScriptTag);
+
+    // var convertedYTIdlist = [];
+    // var YTPlayers = {};
+    // $(document).arrive("div.se-module-oembed iframe", { onlyOnce: true, existing: true }, function (elem) {
+    //     try{
+    //         var $elem = $(elem);
+    //         if($elem.parent(".fired").length !== 0) return;
+    //         $elem.closest("div.se-module-oembed").addClass("fired");
+    //         var src = $elem.attr("src");
+
+    //         if(/^https:\/\/www\.youtube\.com\/embed/.test(src)){
+    //             var YTID = src.match(/\/embed\/([a-zA-Z0-9-_]+)/)
+    //             var YTStart = src.match(/start=(\d+)/);
+    //             var YTEnd = src.match(/end=(\d+)/);
+
+    //             NOMO_DEBUG("Parse Youtube", YTID, YTStart, YTEnd);
+
+    //             if(YTID === null || YTID.length < 2) return;
+    //             YTID = YTID[1];
+    //             if($.inArray(YTID, convertedYTIdlist) !== -1) return;
+    //             convertedYTIdlist.push(YTID);
+
+    //             NOMO_DEBUG($elem, $elem.attr("src"));
+    
+    //             var YTElemID = `NCTCL_yt_${YTID}`;
+    //             $elem.after(`<div id="${YTElemID}" data-yt-id="${YTID}" class="fired"></div>`);
+    //             $elem.remove();
+
+    //             var $article_container = $("div.article_container");
+    //             if($article_container.length !== 0) {
+    //                 reCalculateIframeWidth($article_container.width());
+    //             }
+
+    //             var YTOptions = {
+    //                 "height": videoHeight,
+    //                 "width": videoWidth,
+    //                 "videoId": YTID,
+    //                 "playerVars": {
+    //                   'autoplay': 0,
+    //                   'autohide': 0,
+    //                   'showinfo': 0
+    //                 },
+    //                 "suggestedQuality":"hd1080", // highres hd1080
+    //                 "events": {
+    //                     'onReady': onPlayerReady,
+    //                     'onStateChange': onPlayerStateChange
+    //                 }
+    //             };
+    //             if(YTStart !== null && YTStart.length > 1) YTOptions["playerVars"]["start"] = YTStart[1];
+    //             if(YTEnd !== null && YTEnd.length > 1) YTOptions["playerVars"]["end"] = YTEnd[1];
+    //             YTPlayers[YTElemID] = new YT.Player(YTElemID, YTOptions);
+
+    //             function onPlayerReady(event) {
+    //                 //event.target.playVideo();
+    //                 //event.target.loadVideoById({'videoId':YTID, 'startSeconds':30});
+    //                 //event.target.pauseVideo();
+    //             }
+    
+    //             var done = false;
+    //             function onPlayerStateChange(event) {
+    //                 var eventYTID = event.target.m.dataset["ytId"];
+    //                 var playerState = event.data == YT.PlayerState.ENDED ? '종료됨' :
+    //                 event.data == YT.PlayerState.PLAYING ? '재생 중' :
+    //                 event.data == YT.PlayerState.PAUSED ? '일시중지 됨' :
+    //                 event.data == YT.PlayerState.BUFFERING ? '버퍼링 중' :
+    //                 event.data == YT.PlayerState.CUED ? '재생준비 완료됨' :
+    //                 event.data == -1 ? '시작되지 않음' : '예외';
+    //                 NOMO_DEBUG("YOUTUBE PLAYER STATE CHANGED", eventYTID, event, playerState);
+    //                 if (event.data == YT.PlayerState.PLAYING && !done) {
+    //                 setTimeout(stopVideo, 6000);
+    //                 done = true;
+    //                 }
+    //             }
+    //             function stopVideo() {
+    //                 YTPlayers[YTElemID].stopVideo();
+    //             }
+    //         }
+    //     }
+    //     catch(e){
+    //         NOMO_DEBUG("Error from arrive (for youtube)", e);
+    //     }
+    // });
 
     // fixFullScreenScrollChange
     var parentHtml = parent.document.querySelector("html");
@@ -907,7 +1047,7 @@
         }
     }
     catch(e){
-        console.error("Error from fixFullScreenScrollChange", e);
+        NOMO_DEBUG("Error from fixFullScreenScrollChange", e);
     }
 
     $(document).arrive("video", { onlyOnce: true, existing: true }, function (elem) {
@@ -937,7 +1077,7 @@
             });
         }
         catch(e){
-            console.error("Error from video arrive", e);
+            NOMO_DEBUG("Error from video arrive", e);
         }
     });
 
@@ -977,7 +1117,7 @@
 
                 }
                 catch(e){
-                    console.error("Error from naverVideoAutoMaxQuality arrive", e);
+                    NOMO_DEBUG("Error from naverVideoAutoMaxQuality arrive", e);
                 }
             }, 1);
         });
@@ -1013,7 +1153,7 @@
             if(theaterModeCSSElem !== undefined) $(theaterModeCSSElem).remove();
             if(nonTheaterModeCSSElem !== undefined) $(nonTheaterModeCSSElem).remove();
 
-            if(GM_SETTINGS.useTheaterMode && isTheaterMode){
+            if(isTheaterMode){
                 $("html").addClass("theaterMode");
                 reCalculateIframeWidth(Number(GM_SETTINGS.useTheaterModeContentWidth));
                 var cw = (Number(GM_SETTINGS.useTheaterModeContentWidth) + 60.0) * Number(Number(GM_SETTINGS.videoWidth)) / 100.0;
@@ -1023,19 +1163,36 @@
                     #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
                     #cafe-body, #content-area, #front-cafe, #front-img, .footer {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
                     #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
-                    .CafeViewer .se-viewer .se-caption, .CafeViewer .se-viewer .se-component-content, .CafeViewer .se-viewer .se-component-content.se-component-content-fit, .se-section-video {
-                        max-width:${cw}px !important;
-                        max-height:calc(${cw}px / 16.0 * 9.0) !important
-                        width:${cw}px !important;
+                    .se-component-content.twitchClipFound
+                    {
+                        max-width:${cwPure}px !important;
+                        max-height:calc(${cwPure}px / 16.0 * 9.0 + 48px) !important;
+                        width:${cwPure}px !important;
                     }
+
+                    .se-section-video
+                    ,.se-component.se-video
+                    ,.se-component.se-video .se-component-content
+                    {
+                        max-width:${cwPure}px !important;
+                        /*max-height:calc(${cwPure}px / 16.0 * 9.0 + 130px) !important;*/
+                        width:${cwPure}px !important;
+                    }
+
+                    .CafeViewer .se-viewer .se-caption, .CafeViewer .se-viewer .se-component-content, .CafeViewer .se-viewer .se-component-content.se-component-content-fit{
+                        max-width:${cwPure}px !important;
+                        width:${cwPure}px !important;
+                    }
+
+
                     .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
                         max-width:${cwPure}px !important;
-                        max-height:calc(${cwPure}px / 16.0 * 9.0 + 49px) !important;
+                        max-height:calc(${cwPure}px / 16.0 * 9.0 + 48px) !important;
                     }
                     .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
                     .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
                         max-width:${cwPure}px !important;
-                        max-height:calc(${cwPure}px / 16.0 * 9.0 - 49px) !important;
+                        max-height:calc(${cwPure}px / 16.0 * 9.0) !important;
                     }
         
                     #front-cafe {text-align:center}
@@ -1047,8 +1204,12 @@
                     }
                 `);
             }
+            else{
+                var $article_container = $("div.article_container");
+                if($article_container.length !== 0) {
+                    reCalculateIframeWidth($article_container.width());
+                }
 
-            if(!isTheaterMode){
                 $("html").removeClass("theaterMode");
                 nonTheaterModeCSSElem = GM_addStyle(`
                 .CafeViewer .se-viewer .se-section-oglink.twitchClipFound .se-oglink-thumbnail-resource{
@@ -1056,12 +1217,12 @@
                 }
                 .CafeViewer .se-viewer .se-section-oglink.twitchClipFound {
                     max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
-                    max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 + 49px) !important;
+                    max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 + 48px) !important;
                 }
                 .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail,
                 .se-viewer .se-section-oglink.se-l-large_image.twitchClipFound .se-oglink-thumbnail-resource{
                     max-width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
-                    max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0 - 49px) !important;
+                    max-height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0) !important;
                 }
                 `);
             }
@@ -1076,7 +1237,7 @@
             .html(`영화관 모드 ${isTheaterMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c">`);
         }
         catch(e){
-            console.error("Error from applyTheaterMode", e);
+            NOMO_DEBUG("Error from applyTheaterMode", e);
         }
     }
     applyTheaterMode();
@@ -1101,7 +1262,7 @@
                     savedLastCafeMainUrl = JSON.parse(savedLSLSCMU);
                 }
                 catch(e){
-                    console.error("Error from improvedRefresh JSON.parse", e);
+                    NOMO_DEBUG("Error from improvedRefresh JSON.parse", e);
                     return;
                 }
     
@@ -1146,7 +1307,7 @@
             }
         }
         catch(e){
-            console.error("Error from improvedRefresh", e);
+            NOMO_DEBUG("Error from improvedRefresh", e);
         }
     }
     if(GM_SETTINGS.improvedRefresh){
@@ -1258,13 +1419,13 @@
                 ,.skin-1080 .SaleInfo
                 ,.skin-1080 .SaleInfo .CommercialDetail .list_title
                 ,.skin-1080 .SaleInfo .ProductCategory
-                ,.skin-1080 .NCTCL-iframe-container .se-link
+                ,.skin-1080 .NCTCL-container .se-link
                 ,.skin-1080 .CafeViewer .se-viewer .se-section-oglink.se-section.se-l-large_image .se-oglink-info
                 ,.skin-1080 .CafeViewer .se-viewer .se-module-oglink .se-oglink-title
                 ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta
                 ,.skin-1080 .se-viewer .se-video .se-media-meta-info, .se-viewer .se-video .se-media-meta-info-title
                 ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta-info-wrap:not(.se-is-activated) .se-media-meta-info-description
-                ,.NCTCL-iframe-container a.se-link .NCTCL-titleText
+                ,.NCTCL-container a.se-link .NCTCL-titleText
                 ,.skin-1080 .ArticleTagList .item
                 ,.skin-1080 .ArticleTagList .item a
                 ,.skin-1080 .pop_container
@@ -1397,6 +1558,9 @@
                 ,.skin-1080 .article-board thead th
                 ,.skin-1080 .article-board tbody td
                 ,.skin-1080 .search_result .search_input
+                ,.skin-1080 .prev-next
+                ,.skin-1080 .prev-next a
+                ,.skin-1080 .list-search
                 {
                     color:var(--NCTCL-font-color);
                     background-color:var(--NCTCL-background-color);
@@ -1438,9 +1602,6 @@
                 ,.skin-1080 .CommentWriter
                 ,.skin-1080 .ArticlePaginate .btn.number[aria-pressed=true]
                 ,.skin-1080 .RelatedArticles .list_item.selected
-                ,.skin-1080 .prev-next
-                ,.skin-1080 .prev-next a
-                ,.skin-1080 .list-search
                 ,.skin-1080 .select_component
                 ,.skin-1080 .select_component .select_box
                 ,.skin-1080 .select_component .select_list li
@@ -1469,7 +1630,7 @@
                 ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_td
                 ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_list
                 ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .safety_deal_text
-                ,.skin-1080 .NCTCL-iframe-container .se-link
+                ,.skin-1080 .NCTCL-container .se-link
                 ,.skin-1080 .CafeViewer .se-viewer .se-section-oglink.se-section.se-l-large_image .se-oglink-info
                 ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta
                 ,.skin-1080 .se-viewer .se-module-oglink
@@ -1650,7 +1811,7 @@
                     filter:brightness(10);
                 }
     
-                .NCTCL-iframe-container svg {
+                .NCTCL-container svg {
                     display:none;
                 }
     
@@ -1671,7 +1832,7 @@
                     font-family: math;
                     height: 20px;
                     width: 45px;
-                    margin-right: 5px;
+                    margin-right: 10px;
                     background: unset;
                     background-color: var(--NCTCL-background-color);
                     position: relative;
@@ -1690,17 +1851,43 @@
             }
         }
         catch(e){
-            console.error("Error from applyTheme", e);
+            NOMO_DEBUG("Error from applyTheme", e);
         }
     }
     applyDarkMode();
+
+    //FasterNoticeHide
+    try{
+        if(DEBUG){
+            let savedNOTICE_OPEN = localStorage.getItem('NOTICE_OPEN');
+            if(savedNOTICE_OPEN === null){
+                savedNOTICE_OPEN = "ON";
+            }
+            NOMO_DEBUG("NOTICE_OPEN", savedNOTICE_OPEN)
+            if(savedNOTICE_OPEN === "OFF"){
+                GM_addStyle(`._noticeArticle {display:none;}`);
+            }
+            $(document).on("change", "#notice_hidden", function(e){
+                NOMO_DEBUG("e.target.checked", e.target.checked);
+                if(e.target.checked){
+        
+                }
+                else{
+                    $("._noticeArticle").show();
+                }
+            });
+        }
+    }
+    catch(e){
+        NOMO_DEBUG("Error from FasterNoticeHide", e);
+    }
 
     ////////////////////////////////////////////////////
     // document ready
     $(document).ready(function(){
         // naverBoardDefaultArticleCount
         try{
-            if(GM_SETTINGS.naverBoardDefaultArticleCount !== "0"){
+            if(GM_SETTINGS.naverBoardDefaultArticleCount !== "0" && Number(GM_SETTINGS.naverBoardDefaultArticleCount) > 0){
                 unsafeWindow.oriSearchFrmAfter = unsafeWindow.searchFrmAfter;
                 unsafeWindow.searchFrmAfter = function(frm){
                     var oriSearchFrmAfterStr = oriSearchFrmAfter.toString();
@@ -1743,7 +1930,7 @@
             }
         }
         catch(e){
-            console.error("Error from naverBoardDefaultArticleCount", e);
+            NOMO_DEBUG("Error from naverBoardDefaultArticleCount", e);
         }
 
         // theaterMode & theme
@@ -1788,7 +1975,7 @@
             }
         }
         catch(e){
-            console.error("Error from theaterMode", e);
+            NOMO_DEBUG("Error from theaterMode", e);
         }
 
         //alwaysShowFavoriteBoard
@@ -1801,8 +1988,11 @@
             }
         }
         catch(e){
-            console.error("Error from alwaysShowFavoriteBoard", e);
+            NOMO_DEBUG("Error from alwaysShowFavoriteBoard", e);
         }
+
     });
+    // document ready end
+    ///////////////////////////////
 
 })();
