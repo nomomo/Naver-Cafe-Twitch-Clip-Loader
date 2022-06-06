@@ -448,8 +448,12 @@
             try {
                 GM_addStyle(`
                     .player-overlay-background--darkness-5{background:unset !important;}
-                    html body .top-bar{display:none !important;}
-                    [data-a-target="player-overlay-play-button"]{display:none !important;}
+                    html body .top-bar
+                    ,[data-a-target="player-overlay-play-button"]
+                    ,[data-a-target="player-twitch-logo-button"]
+                    {
+                        display:none !important;
+                    }
                 `);
 
                 $(document).on('click', "[data-a-target='player-overlay-click-handler']", (e) => {
