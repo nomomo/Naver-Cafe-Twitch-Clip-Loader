@@ -60,7 +60,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-## 0.4.0 ~ 0.4.3 - Jun. 06, 2022
+### 0.4.0 ~ 0.4.3 - Jun. 06, 2022
 
 - 이제 Twitch Clip 페이지에서처럼 일시정지 시 상단 오버레이와 재생 버튼 등을 숨깁니다. (기본 설정의 경우)
 - 실험실 기능 추가
