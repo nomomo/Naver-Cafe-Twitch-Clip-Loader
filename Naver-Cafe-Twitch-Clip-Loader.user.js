@@ -216,8 +216,8 @@
             depth: 2,
             type: "checkbox",
             value: true,
-            title:"화면 클릭으로 클립 재생 및 일시정지",
-            desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)"
+            title:"Twitch Clip 페이지 스타일로 표시",
+            desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)<br />일시정지 시 상단 오버레이와 재생 버튼을 숨깁니다."
         },
         useTheaterMode : {
             category:"theaterMode",
@@ -446,6 +446,12 @@
         // play_and_pause_by_click
         if(GM_SETTINGS.play_and_pause_by_click){
             try {
+                GM_addStyle(`
+                    .player-overlay-background--darkness-5{background:unset !important;}
+                    html body .top-bar{display:none !important;}
+                    [data-a-target="player-overlay-play-button"]{display:none !important;}
+                `);
+
                 $(document).on('click', "[data-a-target='player-overlay-click-handler']", (e) => {
                     NOMO_DEBUG('clicked - playing', e);
                     document.querySelector("button[data-a-target='player-play-pause-button']").click();
