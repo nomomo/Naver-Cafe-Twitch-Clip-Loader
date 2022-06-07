@@ -100,7 +100,7 @@
             type: "radio",
             value: "clickRequired",
             title:"클립 링크 변환 시점 선택",
-            desc:" - 페이지 로딩 시: 현재 화면에 보이는 섬네일을 비디오로 자동 변환<br /> - 섬네일 클릭 시: 섬네일을 클릭할 때 비디오로 변환", radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "섬네일 클릭 시", value:"clickRequired"}},
+            desc:" - 페이지 로딩 시: 섬네일을 비디오로 자동 변환<br /> - 섬네일 클릭 시: 섬네일을 클릭할 때 비디오로 변환", radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "섬네일 클릭 시", value:"clickRequired"}},
         },
         autoLoadLimit : {
             category: "type",
