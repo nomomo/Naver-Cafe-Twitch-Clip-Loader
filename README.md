@@ -60,7 +60,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-## 0.5.0 - Jun. 08, 2022
+### 0.5.0 - Jun. 08, 2022
 
 - 기능 개선
   - 이제 "페이지 로딩 시" 옵션을 사용했을 때, 화면에 보이는 영역의 섬네일만을 클립으로 변환하여 브라우저가 덜 버벅이도록 합니다.
