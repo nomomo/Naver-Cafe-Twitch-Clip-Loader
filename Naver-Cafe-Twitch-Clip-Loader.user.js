@@ -108,11 +108,11 @@
             depth:3,
             radio_enable_value: "autoLoad",
             type: "text",
-            value: 5,
+            value: 3,
             valid:"number",
             min_value:1,
             max_value:200,
-            title:"최대 자동 변환할 클립 개수 제한", desc:"이 값을 크게 설정하고 스크롤을 빠르게 내릴 경우 한 번에 많은 비디오를 로딩하느라 브라우저가 멈출 수 있으니 주의하세요. 최대 개수를 초과한 클립부터는 섬네일을 클릭하여 비디오로 변환할 수 있습니다. (Default: 5, Range: 1~200)",
+            title:"최대 자동 변환할 클립 개수 제한", desc:"이 값을 크게 설정하고 스크롤을 빠르게 내릴 경우 한 번에 많은 비디오를 로딩하느라 브라우저가 멈출 수 있으니 주의하세요. 최대 개수를 초과한 클립부터는 섬네일을 클릭하여 비디오로 변환할 수 있습니다. (Default: 3, Range: 1~200)",
         },
         autoPlayFirstClip: {
             category: "type",
