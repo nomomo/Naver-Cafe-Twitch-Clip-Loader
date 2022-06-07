@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.4.3
+// @version     0.5.0
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -100,7 +100,7 @@
             type: "radio",
             value: "clickRequired",
             title:"클립 링크 변환 시점 선택",
-            desc:"클립 링크를 비디오로 변환하는 시점을 선택", radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "링크 클릭 시", value:"clickRequired"}}
+            desc:" - 페이지 로딩 시: 현재 화면에 보이는 섬네일을 비디오로 자동 변환<br /> - 섬네일 클릭 시: 섬네일을 클릭할 때 비디오로 변환", radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "섬네일 클릭 시", value:"clickRequired"}},
         },
         autoLoadLimit : {
             category: "type",
@@ -108,11 +108,12 @@
             depth:3,
             radio_enable_value: "autoLoad",
             type: "text",
-            value: 1,
+            value: 5,
             valid:"number",
             min_value:1,
-            max_value:100,
-            title:"페이지 로딩 시점에 변환할 개수 제한", desc:"페이지 로딩 시점에 비디오로 변환할 링크의 최대 개수를 설정하여 브라우저가 멈추는 것을 방지합니다. 최대 개수를 초과한 클립부터는 링크를 클릭하여 비디오로 변환할 수 있습니다.<br />(Default: 1, Range: 1~100, 권장: 5 이하)" },
+            max_value:200,
+            title:"최대 자동 변환할 클립 개수 제한", desc:"이 값을 크게 설정하고 스크롤을 빠르게 내릴 경우 한 번에 많은 비디오를 로딩하느라 브라우저가 멈출 수 있으니 주의하세요. 최대 개수를 초과한 클립부터는 섬네일을 클릭하여 비디오로 변환할 수 있습니다. (Default: 5, Range: 1~200)",
+        },
         autoPlayFirstClip: {
             category: "type",
             depth: 3,
@@ -133,22 +134,13 @@
         },
         clickRequiredAutoPlay: {
             category: "type",
-            category_name: "링크 클릭 시",
+            category_name: "섬네일 클릭 시",
             depth: 3,
             radio_enable_value: "clickRequired",
             type: "checkbox",
             value: true,
             title: "클립 로드 시 자동 재생",
-            desc: "클릭과 동시에 클립을 자동 재생합니다. 이 옵션을 사용하면 클립이 간혹 음소거 상태로 재생될 수 있습니다."
-        },
-        clickRequiredMuted: {
-            category: "type",
-            depth: 3,
-            radio_enable_value: "clickRequired",
-            type: "checkbox",
-            value: false,
-            title: "클립 로드 시 음소거 (Legacy)",
-            desc: "클립 재생 시 음소거 상태로 시작합니다. 본 옵션은 추후 삭제될 예정입니다. '클립 로드 시 특정 사운드 볼륨(Volume)으로 설정' 옵션을 사용하려면 본 옵션을 체크 해제 하세요."
+            desc: "섬네일 클릭과 동시에 클립을 자동 재생합니다. 이 옵션을 사용하면 클립이 간혹 음소거 상태로 재생될 수 있습니다."
         },
         set_volume_when_stream_starts: {
             category: "advanced", 
@@ -437,6 +429,14 @@
     }
     // Embed Twitch Clip
     else if(isTwitch && GM_SETTINGS.use){
+        GM_addStyle(`
+            html body .player-overlay-background--darkness-5{background:rgba(0,0,0,.2);}
+            .player-overlay-background--darkness-5:hover [data-a-target='player-overlay-play-button'] {
+                background-color:rgba(255,255,255,0.2);
+                box-shadow: 0px 0px 1vw rgb(0 0 0 / 40%);
+            };
+        `);
+
         // set_volume_when_stream_starts
         var is_volume_changed = false;
         if(GM_SETTINGS.set_volume_when_stream_starts){
@@ -451,9 +451,7 @@
         if(GM_SETTINGS.play_and_pause_by_click){
             try {
                 GM_addStyle(`
-                    .player-overlay-background--darkness-5{background:unset !important;}
                     html body .top-bar
-                    ,[data-a-target="player-overlay-play-button"]
                     ,[data-a-target="player-twitch-logo-button"]
                     {
                         display:none !important;
@@ -521,8 +519,17 @@
             video = elem;
             NOMO_DEBUG("video", video);
             video.addEventListener('play', (e) => {
+                let $e = $(e.target);
                 NOMO_DEBUG('twitch clip play()', e);
                 if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"play", "clipId":clipId}, "https://cafe.naver.com");
+                
+                if(!$e.hasClass("_FIRSTPLAYED")){
+                    $e.addClass("_FIRSTPLAYED");
+                    GM_addStyle(`
+                    html body .player-overlay-background--darkness-5{background:unset !important;}
+                    [data-a-target="player-overlay-play-button"]{display:none;}
+                    `);
+                }
             });
             video.addEventListener('pause', (e) => {
                 NOMO_DEBUG('twitch clip pause()', e);
@@ -598,7 +605,7 @@
                     var $nvideo = $(v);
                     var $id = $nvideo.attr("id");
                     if(e.data.clipId == $id) return;
-                    if(!$nvideo.hasClass("_FISRTPLAYED") || $nvideo[0].paused) return;
+                    if(!$nvideo.hasClass("_FIRSTPLAYED") || $nvideo[0].paused) return;
 
                     var $sevideo = $nvideo.closest(".se-video");
                     if ($sevideo.length == 0) {
@@ -690,6 +697,9 @@
         background-color:rgba(255,255,255,0.2);
         box-shadow: 0px 0px 1vw rgb(0 0 0 / 40%);
         opacity:1.0;
+    }
+    html body .se-section-oglink.twitchClipFound .se-oglink-thumbnail:after{
+        border:0;
     }
 
     .NCTCL-iframe-container {
@@ -826,7 +836,7 @@
     }
     // Twitch clip 링크를 iframe 으로 변환
     var iframeNo = 0;
-    var changeToTwitchCilpIframe = function($elem, clipId, autoPlay, muted){
+    var changeToTwitchCilpIframe = function($elem, clipId, autoPlay, muted, lazy){
         try{
             var $parentContainer = $elem.closest("div.se-component-content");
             var $article_container = $elem.closest("div.article_container");
@@ -838,7 +848,7 @@
             var parentHref = tempary[2];
             
             $(`.NCTCL-iframe-container[data-clip-id='${clipId}']`)
-            .append(`<iframe class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
+            .append(`<iframe ${lazy ? "loading='lazy'" : ""} class="NCTCL-iframe" data-clip-id="${clipId}" src="https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
             iframeNo += 1;
         }
         catch(e){
@@ -913,20 +923,29 @@
                 if(GM_SETTINGS.method === "autoLoad"){
                     var isAutoPlay = false;
                     var isMuted = false;
+                    if(GM_SETTINGS.set_volume_when_stream_starts && GM_SETTINGS.target_start_volume == 0) isMuted = true;
                     var NCTCL_Length = iframeNo;//$(".NCTCL-iframe").length;
                     if(GM_SETTINGS.autoPlayFirstClip && NCTCL_Length == 0){
                         isAutoPlay = true;
                         if(GM_SETTINGS.autoPlayFirstClipMuted) isMuted = true;
-                        changeToTwitchCilpIframe($elem, clipId, isAutoPlay, isMuted);
+                        changeToTwitchCilpIframe($elem, clipId, isAutoPlay, isMuted, false);
                     }
                     else if(NCTCL_Length < GM_SETTINGS.autoLoadLimit){
-                        changeToTwitchCilpIframe($elem, clipId, isAutoPlay, isMuted);
+                        if(NCTCL_Length == 0){
+                            changeToTwitchCilpIframe($elem, clipId, isAutoPlay, isMuted, false);
+                        }
+                        else{
+                            changeToTwitchCilpIframe($elem, clipId, isAutoPlay, isMuted, true);
+                        }
                     }
                     else{
                         if($a.hasClass("se-oglink-thumbnail")) $a.addClass("hoverPlayButton");
                         $a.on("click", function(e){
                             e.preventDefault();
-                            changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, GM_SETTINGS.clickRequiredMuted);
+
+                            var isClickRequiredMuted = false;
+                            if(GM_SETTINGS.set_volume_when_stream_starts && GM_SETTINGS.target_start_volume == 0) isClickRequiredMuted = true;
+                            changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, isClickRequiredMuted, false);
                         });
                     }
                 }
@@ -935,7 +954,10 @@
                     if($a.hasClass("se-oglink-thumbnail")) $a.addClass("hoverPlayButton");
                     $a.on("click", function(e){
                         e.preventDefault();
-                        changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, GM_SETTINGS.clickRequiredMuted);
+
+                        var isClickRequiredMuted = false;
+                        if(GM_SETTINGS.set_volume_when_stream_starts && GM_SETTINGS.target_start_volume == 0) isClickRequiredMuted = true;
+                        changeToTwitchCilpIframe($(e.target), clipId, GM_SETTINGS.clickRequiredAutoPlay, isClickRequiredMuted, false);
                     });
                 }
                 $elem.addClass("twitchClipFound");
@@ -1072,7 +1094,7 @@
         try{
             if(!GM_SETTINGS.use) return;
             if(isTwitch) return;
-            if($(elem).hasClass("_FISRTPLAYED")) return;
+            if($(elem).hasClass("_FIRSTPLAYED")) return;
 
             $(elem).on("play", function (e) {
                 NOMO_DEBUG("Naver video played", e);
@@ -1086,8 +1108,8 @@
                     });
                 }
 
-                if($elem.hasClass("_FISRTPLAYED")) return;
-                $elem.addClass("_FISRTPLAYED");
+                if($elem.hasClass("_FIRSTPLAYED")) return;
+                $elem.addClass("_FIRSTPLAYED");
             });
 
             $(elem).on("pause", function (e) {
