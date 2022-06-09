@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.5.0
+// @version     0.5.1
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -209,7 +209,7 @@
             type: "checkbox",
             value: true,
             title:"Twitch Clip 페이지 스타일로 표시",
-            desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)<br />일시정지 시 상단 오버레이와 재생 버튼을 숨깁니다."
+            desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)<br />일시정지 시 상단 오버레이와 재생 버튼을 숨깁니다. 재생 중 화면을 더블 클릭하여 전체화면을 할 수 있습니다."
         },
         useTheaterMode : {
             category:"theaterMode",
@@ -462,9 +462,18 @@
                     }
                 `);
 
+                var backgroundDblclicked = false;
+                var dblclickSetTimeout = undefined;
+
                 $(document).on('click', "[data-a-target='player-overlay-click-handler']", (e) => {
                     NOMO_DEBUG('clicked - playing', e);
                     document.querySelector("button[data-a-target='player-play-pause-button']").click();
+                    
+                    backgroundDblclicked = true;
+                    clearTimeout(dblclickSetTimeout);
+                    dblclickSetTimeout = setTimeout(function(){
+                        backgroundDblclicked = false;
+                    },200);
                 });
 
                 $(document).on('click', ".player-overlay-background", (e)=>{
@@ -475,6 +484,12 @@
                     }
                     else{
                         NOMO_DEBUG("There is no recommendations div");
+                    }
+
+                    if(backgroundDblclicked){
+                        clearTimeout(dblclickSetTimeout);
+                        backgroundDblclicked = false;
+                        $("button[data-a-target='player-fullscreen-button']").click();
                     }
                 });
 
@@ -687,11 +702,13 @@
         opacity: 1.0;
         padding: 0 0 0 0.8vw;
         user-select: none;
-        transition-duration: 0.15s;
         display: flex;
         align-items: center;
         justify-content: center;
         transform: scaleX(0.9);
+        -webkit-transition: background-color 150ms linear;
+        -ms-transition: background-color 150ms linear;
+        transition: background-color 150ms linear;
     }
     .twitchClipFound .se-oglink-thumbnail.hoverPlayButton:hover::before{
         background-color:rgba(255,255,255,0.2);

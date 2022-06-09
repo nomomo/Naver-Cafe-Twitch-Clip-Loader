@@ -60,6 +60,11 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 0.5.1 - Jun. 09, 2022
+
+- 기능 개선
+  - 이제 재생 중에도 화면을 빠르게 더블클릭 하면 전체화면이 됩니다. (Twitch Clip 페이지 스타일로 표시 기능에 포함됨)
+
 ### 0.5.0 - Jun. 08, 2022
 
 - 기능 개선
