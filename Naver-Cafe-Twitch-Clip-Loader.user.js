@@ -473,7 +473,7 @@
                     clearTimeout(dblclickSetTimeout);
                     dblclickSetTimeout = setTimeout(function(){
                         backgroundDblclicked = false;
-                    },200);
+                    },500);
                 });
 
                 $(document).on('click', ".player-overlay-background", (e)=>{
