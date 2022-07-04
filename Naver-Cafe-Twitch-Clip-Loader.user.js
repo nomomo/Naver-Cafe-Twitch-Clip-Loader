@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
 // @namespace   Naver-Cafe-Twitch-Clip-Loader
-// @version     0.5.1
+// @version     0.5.2
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @author      Nomo
 // @include     https://cafe.naver.com/*
@@ -38,7 +38,7 @@
 
     console.log("[NCTCL]   Naver-Cafe-Twitch-Clip-Loader", document.location.href);
     var DEBUG = await GM.getValue("DEBUG", false);
-    unsafeWindow.NCTCL_DEBUG_TOGGLE = function(){DEBUG=!DEBUG;GM.setValue("DEBUG", DEBUG);return `DEBUG = ${DEBUG}`};
+    unsafeWindow.NCTCL_DEBUG_TOGGLE = function(){DEBUG=!DEBUG;GM.setValue("DEBUG", DEBUG);return `DEBUG = ${DEBUG}`;};
     var isTwitch = /(^https:\/\/clips\.twitch\.tv\/)/.test(document.location.href);
     var isTwitchMuted = (isTwitch && document.location.href.indexOf("muted=true") !== -1);
 
@@ -549,7 +549,7 @@
             video.addEventListener('pause', (e) => {
                 NOMO_DEBUG('twitch clip pause()', e);
                 if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"pause", "clipId":clipId}, "https://cafe.naver.com");
-            })
+            });
             video.addEventListener('ended', (e) => {
                 NOMO_DEBUG('twitch clip ended', e);
                 if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"ended", "clipId":clipId}, "https://cafe.naver.com");
@@ -588,20 +588,20 @@
             var $iframes = $(document).find("div.NCTCL-container iframe");
             var endedNextFound = false;
             $iframes.each(function(i, v){
+                var newData;
                 switch(e.data.event){
                     default:
-                        return false;
                         break;
                     case "play":
                         if(!GM_SETTINGS.autoPauseOtherClips) return false;
                         if(v.dataset.clipId === e.data.clipId) return true;
-                        var newData = {"type":"NCTCL", "event":"pause", "clipId":e.data.clipId};
+                        newData = {"type":"NCTCL", "event":"pause", "clipId":e.data.clipId};
                         v.contentWindow.postMessage(newData, "https://clips.twitch.tv");
                         break;
                     case "ended":
                         if(!GM_SETTINGS.autoPlayNextClip) return false;
                         if(endedNextFound){
-                            var newData = {"type":"NCTCL", "event":"play", "clipId":v.dataset.clipId};
+                            newData = {"type":"NCTCL", "event":"play", "clipId":v.dataset.clipId};
                             v.contentWindow.postMessage(newData, "https://clips.twitch.tv");
                             return false;
                         }
@@ -639,7 +639,7 @@
                 });
             }
         }
-    }
+    };
 
     window.addEventListener("message", function(e){
         // if(e.origin === "https://www.youtube.com"){
@@ -681,7 +681,7 @@
         }
         `);
         NOMO_DEBUG("reCalculateIframeWidth", width);
-    }
+    };
     reCalculateIframeWidth(contentWidth);
 
     // Add CSS
@@ -764,7 +764,7 @@
         top:0.5px;
     }
     .NCTCL-container a.se-link .NCTCL-titleText {
-        color:#000 !important;
+        color:#333 !important;
     }
     .NCTCL-container a.se-link .NCTCL-clipurlText{
         color:#999 !important;
@@ -850,7 +850,7 @@
         catch(e){
             NOMO_DEBUG("Error from insertTwitchCilpDescription", e);
         }
-    }
+    };
     // Twitch clip 링크를 iframe 으로 변환
     var iframeNo = 0;
     var changeToTwitchCilpIframe = function($elem, clipId, autoPlay, muted, lazy){
@@ -871,7 +871,7 @@
         catch(e){
             NOMO_DEBUG("Error from changeToTwitchCilpIframe", e);
         }
-    }
+    };
 
     var removeOriginalLinks = function(url){
         if(!GM_SETTINGS.use) return;
@@ -897,7 +897,7 @@
         catch(e){
             NOMO_DEBUG("Error from removeOriginalLinks", e);
         }
-    }
+    };
 
     // Twitch clip 링크 찾기
     //var p0 = 0;
@@ -1079,7 +1079,7 @@
     // fixFullScreenScrollChange
     var parentHtml = parent.document.querySelector("html");
     var lastScrollY = parentHtml.scrollTop;
-    var checkIsFullScreen = function(){ return document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen };
+    var checkIsFullScreen = function(){ return document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen ;};
     try{
         if(GM_SETTINGS.fixFullScreenScrollChange && window.self !== window.top){
             $(document).on ('mozfullscreenchange webkitfullscreenchange fullscreenchange',function(){
@@ -1206,6 +1206,7 @@
     var nonTheaterModeCSSElem = undefined;
     async function applyTheaterMode(){
         try{
+            var $article_container;
             isTheaterMode = await GM.getValue("theaterMode", false);
             if(theaterModeCSSElem !== undefined) $(theaterModeCSSElem).remove();
             if(nonTheaterModeCSSElem !== undefined) $(nonTheaterModeCSSElem).remove();
@@ -1262,7 +1263,7 @@
                 `);
             }
             else{
-                var $article_container = $("div.article_container");
+                $article_container = $("div.article_container");
                 if($article_container.length !== 0) {
                     reCalculateIframeWidth($article_container.width());
                 }
@@ -1284,7 +1285,7 @@
                 `);
             }
 
-            var $article_container = $("div.article_container");
+            $article_container = $("div.article_container");
             if($article_container.length !== 0) {
                 reCalculateIframeWidth($article_container.width());
             }
@@ -1901,7 +1902,7 @@
                     top:-1px;
                 }
             
-                `.replace(/(\.skin\-1080)/g, "html[data-theme='dark'] body"));
+                `.replace(/(\.skin-1080)/g, "html[data-theme='dark'] body"));
             
                 $("html").attr("data-theme","dark");
     
@@ -1920,14 +1921,14 @@
             if(savedNOTICE_OPEN === null){
                 savedNOTICE_OPEN = "ON";
             }
-            NOMO_DEBUG("NOTICE_OPEN", savedNOTICE_OPEN)
+            NOMO_DEBUG("NOTICE_OPEN", savedNOTICE_OPEN);
             if(savedNOTICE_OPEN === "OFF"){
                 GM_addStyle(`._noticeArticle {display:none;}`);
             }
             $(document).on("change", "#notice_hidden", function(e){
                 NOMO_DEBUG("e.target.checked", e.target.checked);
                 if(e.target.checked){
-        
+                    //
                 }
                 else{
                     $("._noticeArticle").show();
@@ -1956,7 +1957,7 @@
                     else{
                         oriSearchFrmAfter(frm);
                     }
-                }
+                };
 
                 unsafeWindow.oriDrawFavoriteCafeMenuList = unsafeWindow.drawFavoriteCafeMenuList;
                 unsafeWindow.drawFavoriteCafeMenuList = function(favoriteCafeMenuList){
@@ -1972,7 +1973,7 @@
                             }
                         }, 1);
                     });
-                }
+                };
 
                 let $as = $("#cafe-menu").find(".cafe-menu-list a[target='cafe_main']");
                 $as.each(function(i,v){
