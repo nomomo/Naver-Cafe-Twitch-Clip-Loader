@@ -1,0 +1,121 @@
+.twitchClipFound .se-oglink-thumbnail.hoverPlayButton::before{
+    content: '▶️';
+    font-size: 15vw;
+    width: 16vw;
+    height: 16vw;
+    position: absolute;
+    z-index: 10;
+    color: #fff;
+    text-align: center;
+    font-family: monospace;
+    border-radius: 0.5vw;
+    top: calc(50% - 16vw / 2);
+    left: calc(50% - 16vw / 2);
+    opacity: 1.0;
+    padding: 0 0 0 0.8vw;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scaleX(0.9);
+    -webkit-transition: background-color 150ms linear;
+    -ms-transition: background-color 150ms linear;
+    transition: background-color 150ms linear;
+}
+.twitchClipFound .se-oglink-thumbnail.hoverPlayButton:hover::before{
+    background-color:rgba(255,255,255,0.2);
+    box-shadow: 0px 0px 1vw rgb(0 0 0 / 40%);
+    opacity:1.0;
+}
+html body .se-section-oglink.twitchClipFound .se-oglink-thumbnail:after{
+    border:0;
+}
+
+.NCTCL-iframe-container {
+    line-height:0 !important;
+}
+.NCTCL-container .NCTCL-description {
+    margin-top:0.25px;
+}
+.NCTCL-container .se-link{
+    display: flex; align-items:center; padding: 0 16px; border: 1px solid rgba(0,0,0,.15); box-sizing: border-box; margin-top:0px;text-decoration: none;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size:14px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
+    height: 48px;
+    font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    background-color:#fff;
+}
+.NCTCL-container .se-link:hover{
+    text-decoration: none;
+}
+.NCTCL-container .se-link svg{
+    margin-right:10px;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+.NCTCL-container .NCTCL-titleText {
+    height:16px;
+    vertical-align: middle;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+    max-width: calc(100% - 19px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.NCTCL-container .NCTCL-clipurlText {
+    color:#333;
+    height:16px;
+    color:black;
+    vertical-align: middle;
+    font-size: 14px;
+    margin-left: 10px;
+    
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position:relative;
+    top:0.5px;
+}
+.NCTCL-container a.se-link .NCTCL-titleText {
+    color:#333 !important;
+}
+.NCTCL-container a.se-link .NCTCL-clipurlText{
+    color:#999 !important;
+}
+.NCTCL-container a.se-link:hover .NCTCL-titleText, .NCTCL-container a.se-link:hover .NCTCL-clipurlText {
+    color:#4a90e2 !important;
+}
+.noUnderLine{text-decoration:none;}
+.UnderLine{text-decoration: underline;}
+.se-media-meta-info-description::before, .se-media-meta-info-title::before{
+    content: 'NAVER';
+    font-weight: 900;
+    color: #2DB400;
+    font-size: 12px;
+    font-family: math;
+    height: 16px;
+    width: 16px;
+    margin-right: 10px;
+    background: #eee;
+    padding: 0 3px;
+    user-select: none;
+}
+
+
+.twitchClipFound .se-oglink-title::before
+/*,.twitchClipFound .NCTCL-titleText::before*/
+{
+    display: inline-block;
+    content: 'Twitch';
+    font-weight: 900;
+    color: #a778ff;
+    font-size: 12px;
+    font-family: math;
+    height: 20px;
+    width: 45px;
+    margin-right: 10px;
+    background: #eee;
+    position: relative;
+    user-select: none;
+    padding: 0 4px;
+    box-sizing:border-box;
+}

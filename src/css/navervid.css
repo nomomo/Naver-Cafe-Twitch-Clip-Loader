@@ -1,0 +1,32 @@
+.u_rmc_controls_btn div.naver_player_reload_btn {
+    color: #fff;
+    float: left;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    height: 16px;
+    line-height: normal;
+    cursor:pointer;
+}
+
+.u_rmc_controls_btn div.naver_player_reload_btn:hover {
+    color: #00e686;
+}
+
+.u_rmcplayer .u_rmcplayer_error_layer div.naver_player_reload_error_btn {
+    border-radius: 15px;
+    border: 2px solid #fff;
+    background: #eee;
+    padding: 10px;
+    text-shadow: 0 0 2px rgb(0 0 0 / 10%);
+    color: #333;
+    font-size: 14px;
+    line-height: 23px;
+    letter-spacing: -0.5px;
+    max-width: 370px;
+    font-weight: 300;
+    margin: 30px auto 0 auto;
+    cursor: pointer;
+    font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+}
+.u_rmcplayer .u_rmcplayer_error_layer div.naver_player_reload_error_btn:hover {
+    background: #fff;
+}
