@@ -135,7 +135,7 @@ const _settings = {
         category_name:"Youtube",
         depth: 1,
         type: "checkbox",
-        value: false,
+        value: true,
         title:"Youtube 관련 기능 사용",
         desc:"",
     },
@@ -199,7 +199,7 @@ const _settings = {
         category:"naver",
         depth: 1,
         type: "checkbox",
-        value: false,
+        value: true,
         title:"네이버 비디오 크기를 본문에 맞춤 & 비율을 16:9로 고정",
         desc:""
     },
