@@ -122,3 +122,32 @@ div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
     padding: 0 4px;
     box-sizing:border-box;
 }
+
+.NCTCLloader,
+.NCTCLloader:after {
+  border-radius: 50% !important;
+  width: 10vw !important;
+  height: 10vw !important;
+}
+.NCTCLloader {
+
+    position: absolute !important;
+    z-index: 10000 !important;
+    top: calc(50% - 5vw) !important;
+    left: calc(50% - 5vw) !important;
+    font-size: 10px !important;
+    text-indent: -9999em !important;
+    border-top: 1.1em solid rgba(255, 255, 255, 0.2) !important;
+    border-right: 1.1em solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 1.1em solid rgba(255, 255, 255, 0.2) !important;
+    border-left: 1.1em solid #ffffff !important;
+    animation: NCTCLload8 1.1s infinite linear !important;
+}
+@keyframes NCTCLload8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

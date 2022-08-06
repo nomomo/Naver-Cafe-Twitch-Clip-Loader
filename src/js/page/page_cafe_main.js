@@ -256,6 +256,8 @@ function convertVideoLinkToIframe($elem, options){
                             
                             //createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt);
                             createYTIframe(clipId, autoPlay, YTID, undefined, undefined, YTclipt, videoWidth, videoHeight);
+                            
+                            $parentContainer.find(".NCTCLloader").remove();
                             iframeNo += 1;
                         }
                         
@@ -431,6 +433,10 @@ export async function PAGE_CAFE_MAIN(){
                             $a.addClass("clicked");
                             $a.removeClass("hoverPlayButton");
 
+                            if(linkType === YOUTUBE_CLIP) {
+                                $a.prepend(`<div class="NCTCLloader"></div>`);
+                            }
+                            
                             if(GM_SETTINGS.autoPauseOtherClips){
                                 autoPauseVideo({
                                     "origin":"https://clips.twitch.tv",
@@ -453,6 +459,10 @@ export async function PAGE_CAFE_MAIN(){
                         $a.addClass("clicked");
                         $a.removeClass("hoverPlayButton");
                         
+                        if(linkType === YOUTUBE_CLIP) {
+                            $a.prepend(`<div class="NCTCLloader"></div>`);
+                        }
+
                         if(GM_SETTINGS.autoPauseOtherClips){
                             autoPauseVideo({
                                 "origin":"https://clips.twitch.tv",

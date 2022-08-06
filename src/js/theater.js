@@ -112,6 +112,14 @@ async function applyTheaterMode(){
                 `;
             }
 
+            // Youtube clip
+            theaterModeCSSText += `
+            .youtubeClipFound iframe.NCTCL-iframe-container{
+                width:${cwPure}px !important;
+                height:calc(${cwPure}px / 16.0 * 9.0) !important;
+            }
+            `;
+
             theaterModeCSSElem = GM_addStyle(theaterModeCSSText+`
                 #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
                 #cafe-body, #content-area, #front-cafe, #front-img, .footer {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
@@ -186,6 +194,14 @@ async function applyTheaterMode(){
                 }
                 `;
             }
+
+            // Youtube clip
+            theaterModeCSSText += `
+            .youtubeClipFound iframe.NCTCL-iframe-container{
+                width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;
+                height:calc(${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px / 16.0 * 9.0) !important;
+            }
+            `;
 
             $("html").removeClass("theaterMode");
             nonTheaterModeCSSElem = GM_addStyle(theaterModeCSSText + `
