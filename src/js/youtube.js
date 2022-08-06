@@ -43,7 +43,7 @@ export function onYTPlayerReady(event) {
     //event.target.pauseVideo();
 }
 export function onYTPlayerStateChange(event) {
-    console.log("event", event);
+    //console.log("event", event);
 
     var dataset;
     if(event.target.o !== undefined){
