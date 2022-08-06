@@ -13,7 +13,7 @@ import PAGE_YOUTUBE_EMBED from "./js/page/page_youtube_embed";
     'use strict';
 
     GLOBAL_INIT();
-    console.log("GLOBAL", GLOBAL);
+    //console.log("GLOBAL", GLOBAL);
 
     if(GLOBAL.isTopWindow && GLOBAL.isTwitch) return;
     if(GLOBAL.isTopWindow && GLOBAL.isNaverVideoEmbed) return;
