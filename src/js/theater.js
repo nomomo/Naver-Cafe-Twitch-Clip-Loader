@@ -77,6 +77,10 @@ async function applyTheaterMode(){
         isTheaterMode = await GM.getValue("theaterMode", false);
         if(theaterModeCSSElem !== undefined) $(theaterModeCSSElem).remove();
         if(nonTheaterModeCSSElem !== undefined) $(nonTheaterModeCSSElem).remove();
+        if(GLOBAL.isCafeWritingMode) {
+            NOMO_DEBUG("CafeWritingMode - NO TheaterMode");
+            return;
+        }
             
         var theaterModeCSSText = "";
         var $article_container;

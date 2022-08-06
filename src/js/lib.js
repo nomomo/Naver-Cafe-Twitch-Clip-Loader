@@ -856,7 +856,7 @@ export var GM_setting = (function ($, global, document) { //
                 GM_Setting_Debug_Toggle_Count = 0;
                 DEBUG = !DEBUG;
                 await GM.setValue("DEBUG", DEBUG);
-                message_(`DEBUG MODE : "${DEBUG ? "ON" : "OFF"}`, $g_elem);
+                message_(`DEBUG MODE : "${DEBUG ? "ON" : "OFF"}"`, $g_elem);
 
                 
                 if (DEBUG) {
