@@ -43,7 +43,17 @@ export function onYTPlayerReady(event) {
     //event.target.pauseVideo();
 }
 export function onYTPlayerStateChange(event) {
-    var clipId = event.target.o.dataset["clipId"];
+    console.log("event", event);
+
+    var dataset;
+    if(event.target.o !== undefined){
+        dataset = event.target.o.dataset; 
+    }
+    else if(event.target.i !== undefined){
+        dataset = event.target.i.dataset; 
+    }
+
+    var clipId = dataset["clipId"];
     var playerState = event.data == YT.PlayerState.ENDED ? '종료됨' : event.data == YT.PlayerState.PLAYING ? '재생 중' : event.data == YT.PlayerState.PAUSED ? '일시중지 됨' : event.data == YT.PlayerState.BUFFERING ? '버퍼링 중' : event.data == YT.PlayerState.CUED ? '재생준비 완료됨' : event.data == -1 ? '시작되지 않음' : '예외';
     NOMO_DEBUG("YOUTUBE PLAYER STATE CHANGED", clipId, event, playerState);
     if(GM_SETTINGS.autoPauseOtherClips){

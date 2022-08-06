@@ -427,6 +427,9 @@ export async function PAGE_CAFE_MAIN(){
                         if($a.hasClass("se-oglink-thumbnail")) $a.addClass("hoverPlayButton");
                         $a.on("click", function(e){
                             e.preventDefault();
+                            if($a.hasClass("clicked")) return;
+                            $a.addClass("clicked");
+                            $a.removeClass("hoverPlayButton");
 
                             if(GM_SETTINGS.autoPauseOtherClips){
                                 autoPauseVideo({
@@ -446,6 +449,9 @@ export async function PAGE_CAFE_MAIN(){
                     if($a.hasClass("se-oglink-thumbnail")) $a.addClass("hoverPlayButton");
                     $a.on("click", function(e){
                         e.preventDefault();
+                        if($a.hasClass("clicked")) return;
+                        $a.addClass("clicked");
+                        $a.removeClass("hoverPlayButton");
                         
                         if(GM_SETTINGS.autoPauseOtherClips){
                             autoPauseVideo({
