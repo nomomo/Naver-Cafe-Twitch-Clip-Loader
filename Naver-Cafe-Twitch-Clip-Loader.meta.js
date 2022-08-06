@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
-// @version     0.6.0
+// @version     0.6.1
 // @author      Nomo
 // @description Userscript that makes it easy to watch Twitch clips on Naver Cafe
 // @supportURL  https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues

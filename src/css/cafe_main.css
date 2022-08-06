@@ -30,6 +30,9 @@
 html body .se-section-oglink.twitchClipFound .se-oglink-thumbnail:after{
     border:0;
 }
+div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
+    filter:brightness(0.8);
+}
 
 .NCTCL-iframe-container {
     line-height:0 !important;

@@ -390,6 +390,7 @@ export async function PAGE_CAFE_MAIN(){
                             clipUrl = href;
                             removeOriginalLinks(href);
                             insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
+                            $elem.closest("div.se-component-content").addClass("youtubeClipFound");
                         }
                         else{
                             return;
