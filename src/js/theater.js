@@ -72,7 +72,7 @@ export async function THEATER_INIT(){
 
 var theaterModeCSSElem = undefined;
 var nonTheaterModeCSSElem = undefined;
-async function applyTheaterMode(){
+export async function applyTheaterMode(){
     try{
         isTheaterMode = await GM.getValue("theaterMode", false);
         if(theaterModeCSSElem !== undefined) $(theaterModeCSSElem).remove();
@@ -83,6 +83,12 @@ async function applyTheaterMode(){
         }
             
         var theaterModeCSSText = "";
+
+
+        if(GLOBAL.isNaverCafeMobile){
+            isTheaterMode = false;
+        }
+
         var $article_container;
         if(isTheaterMode){
             $("html").addClass("theaterMode");

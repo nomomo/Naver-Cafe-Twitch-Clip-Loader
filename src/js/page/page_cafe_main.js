@@ -28,8 +28,13 @@ export function autoPauseVideo(e){
                 pauseYTVideo(v.dataset.clipId);
             }
             else{
-                newData = {"type":"NCTCL", "event":"pause", "clipId":e.data.clipId};
-                v.contentWindow.postMessage(newData, postMessageUrl);
+                try{
+                    newData = {"type":"NCTCL", "event":"pause", "clipId":e.data.clipId};
+                    v.contentWindow.postMessage(newData, postMessageUrl);
+                }
+                catch(e){
+                    NOMO_DEBUG("ERROR FROM autoPauseVideo play event", e);
+                }
             }
             break;
         case "ended":
@@ -39,8 +44,13 @@ export function autoPauseVideo(e){
                     //playYTVideo(v.dataset.clipId);
                 }
                 else{
-                    newData = {"type":"NCTCL", "event":"play", "clipId":v.dataset.clipId};
-                    v.contentWindow.postMessage(newData, postMessageUrl);
+                    try{
+                        newData = {"type":"NCTCL", "event":"play", "clipId":v.dataset.clipId};
+                        v.contentWindow.postMessage(newData, postMessageUrl);
+                    }
+                    catch(e){
+                        NOMO_DEBUG("ERROR FROM autoPauseVideo play event", e);
+                    }
                 }
                 return false;
             }

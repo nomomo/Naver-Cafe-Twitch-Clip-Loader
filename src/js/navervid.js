@@ -7,6 +7,8 @@ export function NAVER_VIDEO_EVENT_INIT(){
     SET_NAVER_VIDEO_MAX_QUALITY();
     BIND_NAVER_VIDEO_RELOAD_EVENT();
     unsafeWindow.RELOAD_NAVER_PLAYER = RELOAD_NAVER_PLAYER;
+
+    NAVER_VIDEO_ENHANCED_CLICK_EVENT();
 }
 
 export function SET_NAVER_VIDEO_MAX_QUALITY(){
@@ -200,7 +202,7 @@ export function BIND_NAVER_VIDEO_RELOAD_EVENT(){
     });
 
     // add btn to naver player
-    if(GLOBAL.isNaverVideoEmbed){
+    if(GLOBAL.isNaverVideoEmbed || GM_SETTINGS.showNaverVideoRefreshBtnOnPlayer){
         $(document).arrive(".u_rmc_controls_btn", { onlyOnce: true, existing: true }, function (elem) {
             try{
                 var $elem = $(elem);
@@ -239,4 +241,72 @@ export function BIND_NAVER_VIDEO_RELOAD_EVENT(){
     });
 }
 
+var backgroundDblclicked = false;
+var dblclickSetTimeout = undefined;
+export function NAVER_VIDEO_ENHANCED_CLICK_EVENT(){
+    if(!GM_SETTINGS.NaverVideoEnhancedClickDebug) return;
+    NOMO_DEBUG("NAVER_VIDEO_ENHANCED_CLICK_EVENT");
+    Element.prototype._addEventListener = Element.prototype.addEventListener;
+    Element.prototype.addEventListener = function(a,b,c){
+        if(a.toLowerCase() === "mousedown"){
+            NOMO_DEBUG(`[NVEC] MOUSEDOWN EVENT HIJACKING. id = ${this.id}, nodeName = ${this.nodeName}`);
+            if(this.id.indexOf("rmcPlayer_") !== -1 && this.nodeName.toLowerCase() === "div"){
+                NOMO_DEBUG("[NVEC] FOUND MOUSEDOWN TARGET ELEMENT.", a,b,c,this);
+                let _b = b;
+                b = function(e){
+                    if(!e.NCTCL){
+                        return;
+                    }
+                    else{
+                        _b(e);
+                    }
+                };
+            }
+        }
 
+        if(a.toLowerCase() === "mouseup"){
+            NOMO_DEBUG(`[NVEC] MOUSEUP EVENT HIJACKING. id = ${this.id}, nodeName = ${this.nodeName}`);
+            if(this.id.indexOf("rmcPlayer_") !== -1 && this.nodeName.toLowerCase() === "div"){
+                NOMO_DEBUG("[NVEC] FOUND MOUSEUP TARGET ELEMENT.", a,b,c,this);
+                let _b = b;
+                b = function(e){
+                    var $target = $(e.target);
+                    var $parent = $target.closest(".u_rmcplayer");
+
+                    if($target.hasClass("u_rmcplayer_control") || $target.closest(".u_rmcplayer_control").length !== 0) return;
+
+                    var new_e = {};
+                    for(var key in e){
+                        if(key == "type"){
+                            new_e[key] = "mousedown";
+                        }
+                        else{
+                            new_e[key] = e[key];
+                        }
+                    }
+                    new_e["NCTCL"] = true;
+
+                    _b(new_e);
+                    _b(e);
+                    
+                    if(backgroundDblclicked){
+                        clearTimeout(dblclickSetTimeout);
+                        backgroundDblclicked = false;
+                        $parent.find("button.u_rmc_full_ic").click();
+                    }
+                    else{
+                        backgroundDblclicked = true;
+                        clearTimeout(dblclickSetTimeout);
+                        dblclickSetTimeout = setTimeout(function(){
+                            backgroundDblclicked = false;
+                        },300);
+                    }           
+                };
+            }
+        }
+
+        if(c==undefined)
+            c=false;
+        this._addEventListener(a,b,c);
+    };
+}

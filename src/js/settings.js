@@ -212,6 +212,24 @@ const _settings = {
         title:"네이버 비디오 Reload 버튼을 표시",
         desc:""
     },
+    showNaverVideoRefreshBtnOnPlayer: {
+        category:"naver",
+        depth: 2,
+        debug: true,
+        type: "checkbox",
+        value: false,
+        title:"네이버 비디오 플레이어에 항상 Reload 버튼을 표시",
+        desc:""
+    },
+    NaverVideoEnhancedClickDebug: {
+        category:"naver",
+        depth: 1,
+        debug: true,
+        type: "checkbox",
+        value: false,
+        title:"네이버 비디오 화면 클릭 동작 개선",
+        desc:""
+    },
     videoWidth : {
         category:"videoCommon",
         category_name: "공통",

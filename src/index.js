@@ -4,10 +4,11 @@ import GM_SETTINGS_INIT from "./js/settings";
 import PAGE_SETTING from "./js/page/page_setting";
 import {PAGE_CAFE_COMMON_INIT} from "./js/page/page_cafe_common";
 import PAGE_CAFE_TOP from "./js/page/page_cafe_top";
-import {PAGE_CAFE_MAIN} from "./js/page/page_cafe_main";
+import {PAGE_CAFE_MAIN, reCalculateIframeWidth} from "./js/page/page_cafe_main";
 import PAGE_TWITCH_EMBED from "./js/page/page_twitch_embed";
 import PAGE_NAVER_EMBED from "./js/page/page_naver_embed";
 import PAGE_YOUTUBE_EMBED from "./js/page/page_youtube_embed";
+import {applyTheaterMode} from "./js/theater";
 
 (async () => {
     'use strict';
@@ -43,6 +44,17 @@ import PAGE_YOUTUBE_EMBED from "./js/page/page_youtube_embed";
 
     // cafe main
     else if(GLOBAL.isNaverCafeMain){
+        PAGE_CAFE_MAIN();
+        return;
+    }
+
+    // cafe mobile
+    else if(GLOBAL.isNaverCafeMobile){
+        $(document).arrive("div#postContent .content", { existing: true }, function (elem) {
+            reCalculateIframeWidth($(elem).width());
+            applyTheaterMode();
+        });
+        PAGE_CAFE_COMMON_INIT();
         PAGE_CAFE_MAIN();
         return;
     }
