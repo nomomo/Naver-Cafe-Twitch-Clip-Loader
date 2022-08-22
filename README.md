@@ -49,8 +49,8 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ## FAQ
 
-- Q: 스크립트를 새 버전으로 업데이트 하려면 어떻게 하나요?<br />A: 주기적으로 자동 업데이트 되지만, Tampermonkey 대시보드에서 "최근 업데이트 일시"를 클릭하여 수동 업데이트가 가능합니다.<br />설치 링크를 다시 클릭하여 업데이트 할 수도 있습니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js)
-- Q: 스크립트를 업데이트 하기 싫은데 매일 업데이트 창이 떠요.<br />A: 다음과 같이 자동 업데이트를 해제하세요.<br />[Tampermonkey 대시보드] - [설치된 유저 스크립트] - [Naver-Cafe-Twitch-Clip_Loader] - [업데이트 확인 체크 해제] - [저장] 버튼 클릭<br />![DisableAutoUpdate](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_disable_autoupdate.png)
+- Q: 스크립트를 새 버전으로 업데이트 하려면 어떻게 하나요?<br />A: 주기적으로 자동 업데이트 되지만, Tampermonkey 대시보드에서 "최근 업데이트 일시"를 클릭하여 수동 업데이트가 가능합니다.<br />설치 링크를 다시 클릭하여 업데이트 할 수도 있습니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js)<br />
+- Q: 스크립트를 업데이트 하기 싫은데 매일 업데이트 창이 떠요.<br />A: 다음과 같이 자동 업데이트를 해제하세요.<br />[Tampermonkey 대시보드] - [설치된 유저 스크립트] - [Naver-Cafe-Twitch-Clip_Loader] - [업데이트 확인 체크 해제] - [저장 버튼 클릭]<br />![DisableAutoUpdate](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_disable_autoupdate.png)
 
 ## Bug report
 
