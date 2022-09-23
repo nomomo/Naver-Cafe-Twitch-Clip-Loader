@@ -61,6 +61,11 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 0.6.7 - Sep. 24, 2022
+
+- 이제 영화관 모드를 활성화하면 본문을 정가운데 위치하도록 정렬합니다.
+  - 이전처럼 사용하려면 [상세 설정 페이지] - [숨겨진 고급 기능 설정]을 활성화하고 [본문 가운데 정렬] 옵션을 끄세요.
+
 ### 0.6.6 - Sep. 23, 2022
 
 - 이제 "네이버 비디오를 항상 최대 품질로 시작" 옵션이 켜진 경우, 네이버 비디오 재생이 끝난 후 재시작 시 비디오 품질을 다시 최대로 설정합니다.

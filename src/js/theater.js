@@ -130,10 +130,26 @@ export async function applyTheaterMode(){
             }
             `;
 
-            theaterModeCSSElem = GM_addStyle(theaterModeCSSText+`
-                #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
+            // 본문 정렬
+            if(!GM_SETTINGS.theaterModeAlignCenter){
+                theaterModeCSSText += `
                 #cafe-body, #content-area, #front-cafe, #front-img, .footer {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
                 #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                `;
+            }
+            else{
+                theaterModeCSSText += `
+                #cafe-body, #content-area, #front-cafe, #front-img, .footer {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px) !important}
+                #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px) !important}
+
+                #group-area {position:absolute;top:0;left:-230px}
+                /*#main-area {position:absolute;top:0;left:0;}*/
+                .footer {display:none;}
+                `;
+            }
+
+            theaterModeCSSElem = GM_addStyle(theaterModeCSSText+`
+                #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
 
                 .twitchClipFound .se-oglink-thumbnail
                 {

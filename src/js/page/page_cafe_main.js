@@ -174,7 +174,7 @@ function insertNCTCLContainerDescription(linkType, $elem, clipId, clipurl){
             <div class="NCTCL-container" data-clip-id="${clipId}">
                 <div id="NCTCL-${clipId}" class="NCTCL-iframe-container" data-clip-id="${clipId}"></div>
                 <div class="NCTCL-description" data-clip-id="${clipId}" data-clip-url="${clipurl}">
-                    <a title="클릭 시 다음의 페이지로 이동합니다. ${clipurl}" href="${clipurl}" class="se-link" target="_blank">
+                    <a href="${clipurl}" class="se-link" target="_blank">
                         ${logoText}
                         ${titleText}
                         ${clipurlText}

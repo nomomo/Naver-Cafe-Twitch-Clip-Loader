@@ -322,6 +322,15 @@ const _settings = {
         title:"영화관 모드 버튼을 표시",
         desc:"카페 최상단 메뉴에 '영화관 모드' 버튼을 표시합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다."
     },
+    theaterModeAlignCenter : {
+        category:"theaterMode",
+        under_dev:true,
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"본문 가운데 정렬",
+        desc:"본문이 화면의 정 가운데 위치하도록 레이아웃을 수정합니다."
+    },
     useTheaterModeContentWidth : {
         category:"theaterMode",
         depth: 2,
