@@ -96,6 +96,13 @@ export function PAGE_CAFE_COMMON_INIT(){
     try{
         THEATER_INIT();
         DARKMODE_INIT();
+
+        // $("head").append(`
+        // <link rel="dns-prefetch" href="https://apis.naver.com/">
+        // <link rel="preconnect" href="https://apis.naver.com/">
+        // <link rel="dns-prefetch" href="https://gfp.veta.naver.com/">
+        // <link rel="preconnect" href="https://gfp.veta.naver.com/">
+        // `);
     }
     catch(e){
         NOMO_DEBUG("Error from theaterMode", e);

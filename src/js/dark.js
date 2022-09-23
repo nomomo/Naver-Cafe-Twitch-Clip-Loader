@@ -55,6 +55,10 @@ async function applyDarkMode(){
             $("html").attr("data-theme","dark");
 
         }
+        else
+        {
+            $("html").attr("data-theme","default");
+        }
     }
     catch(e){
         NOMO_DEBUG("Error from applyTheme", e);

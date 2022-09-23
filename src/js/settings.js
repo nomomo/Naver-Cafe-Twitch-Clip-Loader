@@ -303,6 +303,15 @@ const _settings = {
         title:"[실험실] 어두운 모드 버튼을 표시",
         desc:"카페 최상단 메뉴에 '어두운 모드' 버튼을 표시합니다."
     },
+    visitedArticleStyle : {
+        category:"etc",
+        under_dev:true,
+        depth: 1,
+        type: "checkbox",
+        value: false,
+        title:"[실험실] 글 목록에서 읽은 글의 제목을 흐릿하게 표시",
+        desc:""
+    },
     useTheaterMode : {
         category:"theaterMode",
         category_name: "영화관 모드",

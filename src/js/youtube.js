@@ -6,7 +6,7 @@ export function INSERT_YOUTUBE_SCRIPT(){
     if(!GM_SETTINGS.useYoutube) return;
 
     try{
-        $("head").prepend(`<script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>`);
+        $("head").prepend(`<script async type="text/javascript" src="https://www.youtube.com/iframe_api"></script>`);
     }
     catch(e){
         NOMO_DEBUG("FAIL TO LOAD YOUTUBE IFRAME API. TRY TO INSERT YT API MANUALLY", e);
@@ -15,11 +15,18 @@ export function INSERT_YOUTUBE_SCRIPT(){
     }
 
 }
-export function createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt, videoWidth, videoHeight){
+export function createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt, videoWidth, videoHeight, recur){
     try{
         if(YT === undefined) {
-            NOMO_DEBUG("There is no youtube iframe api (YT)");
-            return;
+            NOMO_DEBUG("There is no youtube iframe api yet, reload", clipId, recur);
+            if(recur < 5){
+                setTimeout(function(){
+                    createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt, videoWidth, videoHeight, recur + 1);
+                },(recur + 1) * 100);
+            }
+            else{
+                return;
+            }
         }
 
         var YTElemID = "NCTCL-"+clipId;

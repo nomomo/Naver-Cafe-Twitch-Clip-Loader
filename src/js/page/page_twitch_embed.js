@@ -116,10 +116,6 @@ export default function PAGE_TWITCH_EMBED(isTwitchVod, isTwitchMuted){
                 {
                     display:none !important;
                 }
-                html body .video-player__container
-                ,html body .video-player{
-                    background:unset;
-                }
             `);
 
             var backgroundDblclicked = false;
@@ -231,6 +227,14 @@ export default function PAGE_TWITCH_EMBED(isTwitchVod, isTwitchMuted){
             GM_addStyle(`
             html body .player-overlay-background--darkness-5 { background:unset !important; }
             html body button[data-a-target="player-overlay-play-button"] { display:none !important; }
+            html body .top-bar
+            {
+                display:none !important;
+            }
+            html body .video-player__container
+            ,html body .video-player{
+                background:unset;
+            }
             `);
         });
         video.addEventListener('pause', (e) => {

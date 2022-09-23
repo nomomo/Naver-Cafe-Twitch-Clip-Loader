@@ -1,7 +1,7 @@
 import {DEBUG, NOMO_DEBUG, escapeHtml} from "js/lib";
 import {INSERT_YOUTUBE_SCRIPT, YTPlayers, createYTIframe, onYTPlayerReady, onYTPlayerStateChange, pauseYTVideo} from "js/youtube";
 import css_cafe_main from "css/cafe_main.css";
-import {NAVER_VIDEO_EVENT_INIT} from "js/navervid.js";
+import {NAVER_VIDEO_EVENT_INIT, SET_NAVER_VIDEO_MAX_QUALITY_SUB} from "js/navervid.js";
 
 export function autoPauseVideo(e){
     if(!GM_SETTINGS.autoPauseOtherClips && !GM_SETTINGS.autoPlayNextClip) return;
@@ -265,7 +265,7 @@ function convertVideoLinkToIframe($elem, options){
                             //     .append(`<iframe ${lazy ? "loading='lazy'" : ""} class="NCTCL-iframe" data-clip-id="${clipId}" src="${iframeUrl}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);                               
                             
                             //createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt);
-                            createYTIframe(clipId, autoPlay, YTID, undefined, undefined, YTclipt, videoWidth, videoHeight);
+                            createYTIframe(clipId, autoPlay, YTID, undefined, undefined, YTclipt, videoWidth, videoHeight, 0);
                             
                             $parentContainer.find(".NCTCLloader").remove();
                             iframeNo += 1;
@@ -606,13 +606,36 @@ export async function PAGE_CAFE_MAIN(){
                         "data":{"type":"NCTCL", "event":"play", "clipId":$elem.attr("id")},
                     });
                 }
-
                 if($elem.hasClass("_FIRSTPLAYED")) return;
                 $elem.addClass("_FIRSTPLAYED");
             });
 
+            $(elem).on("playing", function (e) {
+                NOMO_DEBUG("Naver video playing", e);
+                var $elem = $(e.target);
+
+                if(GM_SETTINGS.naverVideoAutoMaxQuality && $elem.hasClass("_ENDED")){
+                    NOMO_DEBUG("ENDED & RESTART - RUN SET_NAVER_VIDEO_MAX_QUALITY_SUB");
+                    $elem.removeClass("_ENDED");
+                    setTimeout(function(){
+                        SET_NAVER_VIDEO_MAX_QUALITY_SUB($elem.closest("div.u_rmcplayer_container").find(".u_rmc_definition_ly").first(), true);
+                        
+                        setTimeout(function(){
+                            if(elem.paused){
+                                elem.play();
+                            }
+                        },200);
+                    },1);
+                }
+            });
+
             $(elem).on("pause", function (e) {
                 NOMO_DEBUG("Naver video paused", e);
+            });
+            
+            $(elem).on("ended", function (e) {
+                NOMO_DEBUG("Naver video ended", e);
+                $(elem).addClass("_ENDED");
             });
         }
         catch(e){
@@ -660,5 +683,12 @@ export async function PAGE_CAFE_MAIN(){
     }
     catch(e){
         NOMO_DEBUG("Error from FasterNoticeHide", e);
+    }
+
+    if(GM_SETTINGS.visitedArticleStyle){
+        GM_addStyle(`
+        div.inner_list a:visited, div.inner_list a:visited * {color:#ddd !important;}
+        html[data-theme='dark'] body div.inner_list a:visited, div.inner_list a:visited * {color:#454545 !important;}
+        `);
     }
 }

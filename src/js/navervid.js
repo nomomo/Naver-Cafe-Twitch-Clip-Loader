@@ -18,42 +18,49 @@ export function SET_NAVER_VIDEO_MAX_QUALITY(){
     $(document).arrive(".u_rmc_definition_ly", { existing: true }, function (elem) {
         setTimeout(function(){
             try{
-                NOMO_DEBUG("TRY TO SET BEST QUALITY");
-                var $elem = $(elem);
-                var $u_rmcplayer = $elem.closest(".u_rmcplayer");
-                if($u_rmcplayer.length === 0) {
-                    NOMO_DEBUG("no $u_rmcplayer");
-                    return;
-                }
-
-                if($u_rmcplayer.hasClass("_QSET")) {
-                    NOMO_DEBUG("ALREADY QSET");
-                    return;
-                }
-
-                var $qli = $(elem).find("li");
-                if($qli.length > 2){
-                    var $last = $qli.last();
-                    if($last.hasClass("u_rmc_on")) {
-                        NOMO_DEBUG("u_rmc_on - ALREADY QSET");
-                        return;
-                    }
-
-                    NOMO_DEBUG("BEST QUALITY SET", $last.text());
-                    $last.find("button").trigger("click");
-
-                    $u_rmcplayer.addClass("_QSET");
-                }
-                else{
-                    NOMO_DEBUG("no li elements for QSET");
-                }
-
+                SET_NAVER_VIDEO_MAX_QUALITY_SUB(elem, false);
             }
             catch(e){
                 NOMO_DEBUG("Error from naverVideoAutoMaxQuality arrive", e);
             }
         }, 1);
     });
+}
+
+export function SET_NAVER_VIDEO_MAX_QUALITY_SUB(elem, force){
+    NOMO_DEBUG("TRY TO SET BEST QUALITY");
+    var $elem = $(elem);
+    var $u_rmcplayer = $elem.closest(".u_rmcplayer");
+    if($u_rmcplayer.length === 0) {
+        NOMO_DEBUG("no $u_rmcplayer");
+        return;
+    }
+
+    if(force){
+        $u_rmcplayer.removeClass("_QSET");
+    }
+
+    if($u_rmcplayer.hasClass("_QSET")) {
+        NOMO_DEBUG("ALREADY QSET");
+        return;
+    }
+
+    var $qli = $(elem).find("li");
+    if($qli.length > 2){
+        var $last = $qli.last();
+        if($last.hasClass("u_rmc_on")) {
+            NOMO_DEBUG("u_rmc_on - ALREADY QSET");
+            return;
+        }
+
+        NOMO_DEBUG("BEST QUALITY SET", $last.text());
+        $last.find("button").trigger("click");
+
+        $u_rmcplayer.addClass("_QSET");
+    }
+    else{
+        NOMO_DEBUG("no li elements for QSET");
+    }
 }
 
 async function RELOAD_NAVER_PLAYER(id, errorelem){

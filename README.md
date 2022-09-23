@@ -61,6 +61,11 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+## 0.6.6 - Sep. 23, 2022
+
+- 이제 "네이버 비디오를 항상 최대 품질로 시작" 옵션이 켜진 경우, 네이버 비디오 재생이 끝난 후 재시작 시 비디오 품질을 다시 최대로 설정합니다.
+- [실험실] 글 목록에서 이미 읽은 글을 흐릿하게 표시하는 기능 추가
+
 ### 0.6.0 - Aug. 06, 2022
 
 - 이번 버전에서는 Youtube, Twitch VOD, Naver Video  관련 기능이 추가되었으며, 이에 따라 확장기능이 동작해야 하는 웹사이트(domain)가 추가되어 자동 업데이트 될 때 업그레이드 확인 화면이 나타날 수 있습니다.
