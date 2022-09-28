@@ -1,5 +1,4 @@
-
-import {autoPauseVideo} from "js/page/page_cafe_main";
+import {reCalculateIframeWidth, autoPauseVideo} from "js/page/page_cafe_main";
 
 export var YTPlayers = {};
 export function INSERT_YOUTUBE_SCRIPT(){
@@ -15,14 +14,17 @@ export function INSERT_YOUTUBE_SCRIPT(){
     }
 
 }
+
+// for yt clip
 export function createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt, videoWidth, videoHeight, recur){
     try{
-        if(YT === undefined) {
-            NOMO_DEBUG("There is no youtube iframe api yet, reload", clipId, recur);
-            if(recur < 5){
+        if(YT === undefined || !YT.loading) {
+            NOMO_DEBUG("[createYTIframe] There is no youtube iframe api yet, reload", clipId, recur);
+            if(recur < 10){
                 setTimeout(function(){
                     createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt, videoWidth, videoHeight, recur + 1);
                 },(recur + 1) * 100);
+                return;
             }
             else{
                 return;
@@ -59,6 +61,80 @@ export function createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt, 
     }
 }
 
+// to convert old yt
+export function createYTIframeArriveSub(elem, videoWidth, videoHeight, recur){
+    try{
+        if(YT === undefined || !YT.loading) {
+            NOMO_DEBUG("[createYTIframeArriveSub] There is no youtube iframe api yet, reload", recur);
+            if(recur < 10){
+                setTimeout(function(){
+                    createYTIframeArriveSub(elem, videoWidth, videoHeight, recur + 1);
+                },(recur + 1) * 100);
+                return;
+            }
+            else{
+                $(elem).closest("div.se-module-oembed").addClass("fired");
+                return;
+            }
+        }
+
+        var $elem = $(elem);
+        if($elem.parent(".fired").length !== 0) return;
+        $elem.closest("div.se-module-oembed").addClass("fired");
+        var src = $elem.attr("src");
+
+        if(/^https:\/\/www\.youtube\.com\/embed/.test(src)){
+            var YTID = src.match(/\/embed\/([a-zA-Z0-9-_]+)/);
+            var YTStart = src.match(/start=(\d+)/);
+            var YTEnd = src.match(/end=(\d+)/);
+
+            NOMO_DEBUG("Parse Youtube", YTID, YTStart, YTEnd);
+
+            if(YTID === null || YTID.length < 2) return;
+            YTID = YTID[1];
+            if(YTPlayers[YTID] !== undefined) return;
+
+            NOMO_DEBUG($elem, $elem.attr("src"));
+
+            var YTElemID = `NCTCL-${YTID}`;
+            var $newYTElem = $(`<div id="${YTElemID}" data-clip-id="${YTID}" class="NCTCL-YT-CONVERTED fired"></div>`);
+            $elem.after($newYTElem);
+
+            var $article_container = $("div.article_container");
+            if($article_container.length !== 0) {
+                reCalculateIframeWidth($article_container.width());
+            }
+
+            var YTOptions = {
+                "height": videoHeight,
+                "width": videoWidth,
+                "videoId": YTID,
+                "playerVars": {
+                    'autoplay': 0,
+                    'autohide': 1,
+                    'showinfo': 0,
+                    'controls': 1
+                },
+                "suggestedQuality":"hd1080", // highres hd1080
+                "events": {
+                    'onReady': onYTPlayerReady,
+                    'onStateChange': onYTPlayerStateChange
+                }
+            };
+            if(YTStart !== null && YTStart.length > 1) YTOptions["playerVars"]["start"] = YTStart[1];
+            if(YTEnd !== null && YTEnd.length > 1) YTOptions["playerVars"]["end"] = YTEnd[1];
+            YTPlayers[YTID] = new YT.Player(YTElemID, YTOptions);
+            
+            $elem.remove();
+            
+            NOMO_DEBUG("YT IFRAME CONVERTED", YTID);
+        }
+    }
+    catch(e){
+        NOMO_DEBUG("Error from arrive (for youtube)", e);
+    }
+}
+
 export function onYTPlayerReady(event) {
     //event.target.playVideo();
     //event.target.loadVideoById({'videoId':YTID, 'startSeconds':30});
@@ -78,8 +154,23 @@ export function onYTPlayerStateChange(event) {
         else if(event.target.s !== undefined && event.target.s.dataset !== undefined){
             dataset = event.target.s.dataset;
         }
+        else if(event.target.g !== undefined && event.target.g.dataset !== undefined){
+            dataset = event.target.g.dataset;
+        }
+        else if(event.target.m !== undefined && event.target.m.dataset !== undefined){
+            dataset = event.target.m.dataset;
+        }
 
-        var clipId = dataset["clipId"];
+
+
+        var clipId = "";
+        if(dataset === undefined) {
+            NOMO_DEBUG("clipId is undefined", event);
+            return;
+        }
+        else{
+            clipId = dataset["clipId"];
+        }
         var playerState = event.data == YT.PlayerState.ENDED ? '종료됨' : event.data == YT.PlayerState.PLAYING ? '재생 중' : event.data == YT.PlayerState.PAUSED ? '일시중지 됨' : event.data == YT.PlayerState.BUFFERING ? '버퍼링 중' : event.data == YT.PlayerState.CUED ? '재생준비 완료됨' : event.data == -1 ? '시작되지 않음' : '예외';
         NOMO_DEBUG("YOUTUBE PLAYER STATE CHANGED", clipId, event, playerState);
         if(GM_SETTINGS.autoPauseOtherClips){

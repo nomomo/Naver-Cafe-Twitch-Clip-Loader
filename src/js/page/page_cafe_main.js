@@ -1,5 +1,5 @@
 import {DEBUG, NOMO_DEBUG, escapeHtml} from "js/lib";
-import {INSERT_YOUTUBE_SCRIPT, YTPlayers, createYTIframe, onYTPlayerReady, onYTPlayerStateChange, pauseYTVideo} from "js/youtube";
+import {INSERT_YOUTUBE_SCRIPT, YTPlayers, createYTIframe, onYTPlayerReady, onYTPlayerStateChange, pauseYTVideo, createYTIframeArriveSub} from "js/youtube";
 import css_cafe_main from "css/cafe_main.css";
 import {NAVER_VIDEO_EVENT_INIT, SET_NAVER_VIDEO_MAX_QUALITY_SUB} from "js/navervid.js";
 
@@ -504,57 +504,10 @@ export async function PAGE_CAFE_MAIN(){
     //if(GM_SETTINGS.youtubeClipConvert || GM_SETTINGS.youtubeSetQuality || GM_SETTINGS.youtubeHidePauseOverlay){
         $(document).arrive("div.se-module-oembed iframe", { onlyOnce: true, existing: true }, function (elem) {
             try{
-                var $elem = $(elem);
-                if($elem.parent(".fired").length !== 0) return;
-                $elem.closest("div.se-module-oembed").addClass("fired");
-                var src = $elem.attr("src");
-    
-                if(/^https:\/\/www\.youtube\.com\/embed/.test(src)){
-                    var YTID = src.match(/\/embed\/([a-zA-Z0-9-_]+)/);
-                    var YTStart = src.match(/start=(\d+)/);
-                    var YTEnd = src.match(/end=(\d+)/);
-    
-                    NOMO_DEBUG("Parse Youtube", YTID, YTStart, YTEnd);
-    
-                    if(YTID === null || YTID.length < 2) return;
-                    YTID = YTID[1];
-                    if(YTPlayers[YTID] !== undefined) return;
-    
-                    NOMO_DEBUG($elem, $elem.attr("src"));
-        
-                    var YTElemID = `NCTCL-${YTID}`;
-                    $elem.after(`<div id="${YTElemID}" data-clip-id="${YTID}" class="NCTCL-YT-CONVERTED fired"></div>`);
-                    $elem.remove();
-    
-                    var $article_container = $("div.article_container");
-                    if($article_container.length !== 0) {
-                        reCalculateIframeWidth($article_container.width());
-                    }
-    
-                    var YTOptions = {
-                        "height": videoHeight,
-                        "width": videoWidth,
-                        "videoId": YTID,
-                        "playerVars": {
-                            'autoplay': 0,
-                            'autohide': 1,
-                            'showinfo': 0,
-                            'controls': 1
-                        },
-                        "suggestedQuality":"hd1080", // highres hd1080
-                        "events": {
-                            'onReady': onYTPlayerReady,
-                            'onStateChange': onYTPlayerStateChange
-                        }
-                    };
-                    if(YTStart !== null && YTStart.length > 1) YTOptions["playerVars"]["start"] = YTStart[1];
-                    if(YTEnd !== null && YTEnd.length > 1) YTOptions["playerVars"]["end"] = YTEnd[1];
-                    YTPlayers[YTID] = new YT.Player(YTElemID, YTOptions);
-                    NOMO_DEBUG("YT IFRAME CONVERTED", YTID);
-                }
+                createYTIframeArriveSub(elem, videoWidth, videoHeight, 0);
             }
             catch(e){
-                NOMO_DEBUG("Error from arrive (for youtube)", e);
+                NOMO_DEBUG("Error from arrive createYTIframeArriveSub", e);
             }
         });
     }
