@@ -499,6 +499,16 @@ export async function PAGE_CAFE_MAIN(){
         }
     });
 
+    // NCTCL-description link click event - autoPauseOtherClips
+    if(GM_SETTINGS.autoPauseOtherClips){
+        $(document).on("click", ".NCTCL-description a", function(){
+            autoPauseVideo({
+                "origin":"https://clips.twitch.tv",
+                "data":{"type":"NCTCL", "event":"play", "clipId":"STOP_ALL"},
+            });
+        });
+    }
+
     // 기존에 존재하는 Youtube 영상을 다시 변환한다.
     if(GM_SETTINGS.useYoutube){
     //if(GM_SETTINGS.youtubeClipConvert || GM_SETTINGS.youtubeSetQuality || GM_SETTINGS.youtubeHidePauseOverlay){

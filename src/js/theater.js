@@ -99,7 +99,7 @@ export async function applyTheaterMode(){
             // youtubeForceWidthHeight
             if(GM_SETTINGS.useYoutube && GM_SETTINGS.youtubeForceWidthHeight){
                 theaterModeCSSText += `
-                .se-module-oembed {
+                .se-module-oembed.oembed_NCTCL {
                     box-sizing:border-box;
                     padding-top:unset !important;
                     width:${cwPure}px !important;
@@ -109,18 +109,19 @@ export async function applyTheaterMode(){
             }
 
             // naverVideoForceWidthHeight
-            if(GM_SETTINGS.naverVideoForceWidthHeight){
-                theaterModeCSSText += `
-                .se-section-video
-                ,.se-component.se-video
-                ,.se-component.se-video .se-component-content
-                {
-                    max-width:${cwPure}px !important;
-                    /*max-height:calc(${cwPure}px / 16.0 * 9.0 + 130px) !important;*/
-                    width:${cwPure}px !important;
-                }
-                `;
+            // theater mode 에서는 항상 켠다.
+            //if(GM_SETTINGS.naverVideoForceWidthHeight){
+            theaterModeCSSText += `
+            .se-section-video
+            ,.se-component.se-video
+            ,.se-component.se-video .se-component-content
+            {
+                max-width:${cwPure}px !important;
+                /*max-height:calc(${cwPure}px / 16.0 * 9.0 + 130px) !important;*/
+                width:${cwPure}px !important;
             }
+            `;
+            //}
 
             // Youtube clip
             theaterModeCSSText += `
@@ -198,7 +199,7 @@ export async function applyTheaterMode(){
             // youtubeForceWidthHeight
             if(GM_SETTINGS.useYoutube && GM_SETTINGS.youtubeForceWidthHeight){
                 theaterModeCSSText += `
-                .se-module-oembed {
+                .se-module-oembed.oembed_NCTCL {
                     box-sizing:border-box;
                     padding-top:unset !important;
                     width:${contentWidth * Number(Number(GM_SETTINGS.videoWidth)) / 100.0}px !important;

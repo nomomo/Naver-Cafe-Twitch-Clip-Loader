@@ -61,6 +61,10 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 0.7.0 - Oct. 14, 2022
+
+- 카페 글에 삽입된 Instagram 게시물이 제대로 표시되지 않는 문제 수정
+
 ### 0.6.7 - Sep. 24, 2022
 
 - 이제 영화관 모드를 활성화하면 본문을 정가운데 위치하도록 정렬합니다.

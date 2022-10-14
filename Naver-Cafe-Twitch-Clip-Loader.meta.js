@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
-// @version     0.6.9
+// @version     0.7.0
 // @author      Nomo
 // @description Naver Cafe 에서 트위치 클립을 편하게 볼 수 있도록 해주는 유저스크립트 확장
 // @supportURL  https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues

@@ -84,6 +84,7 @@ export function createYTIframeArriveSub(elem, videoWidth, videoHeight, recur){
         var src = $elem.attr("src");
 
         if(/^https:\/\/www\.youtube\.com\/embed/.test(src)){
+            $elem.closest("div.se-module-oembed").addClass("oembed_NCTCL");
             var YTID = src.match(/\/embed\/([a-zA-Z0-9-_]+)/);
             var YTStart = src.match(/start=(\d+)/);
             var YTEnd = src.match(/end=(\d+)/);
