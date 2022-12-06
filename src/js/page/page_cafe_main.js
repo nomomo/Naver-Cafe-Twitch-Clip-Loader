@@ -1,7 +1,14 @@
 import {DEBUG, NOMO_DEBUG, escapeHtml} from "js/lib";
-import {INSERT_YOUTUBE_SCRIPT, YTPlayers, createYTIframe, onYTPlayerReady, onYTPlayerStateChange, pauseYTVideo, createYTIframeArriveSub} from "js/youtube";
+import {INSERT_YOUTUBE_SCRIPT, YTPlayers, YTConvertedCount, createYTIframe, onYTPlayerReady, onYTPlayerStateChange, pauseYTVideo, createYTIframeArriveSub, YTClipInfo, getYTClipPageInfoXHR} from "js/youtube";
 import css_cafe_main from "css/cafe_main.css";
 import {NAVER_VIDEO_EVENT_INIT, SET_NAVER_VIDEO_MAX_QUALITY_SUB} from "js/navervid.js";
+
+// jquery utils
+// $.fn.isFired = () => { return $(this).hasClass("fired"); };
+// $.fn.getSeVideo = () => { return $(this).closest(".se-video"); };
+// $.fn.getSeSectionOglink = () => { return $(this).closest("div.se-section-oglink"); };
+// $.fn.getSeComponentContent = () => { return $(this).closest("div.se-component-content"); };
+// $.fn.getArticleContainer = () => { return $(this).closest("div.article_container"); };
 
 export function autoPauseVideo(e){
     if(!GM_SETTINGS.autoPauseOtherClips && !GM_SETTINGS.autoPlayNextClip) return;
@@ -234,47 +241,31 @@ function convertVideoLinkToIframe($elem, options){
 
         case YOUTUBE_CLIP:
             NOMO_DEBUG("YOUTUBE xmlHttpRequest");
-            //var YTStart = href.match(/start=(\d+)/);
-            //var YTEnd = href.match(/end=(\d+)/);
-            //if(YTStart !== null){ YTStart = YTStart[1]; } else { YTStart = undefined; }
-            //if(YTEnd !== null){ YTEnd = YTEnd[1]; } else { YTEnd = undefined; }
-            GM.xmlHttpRequest({
-                method: "GET",
-                url: href,
-                headers: {},
-                onload: function(response) {
-                    if(response.status === 200){
-                        var rpt = response.responseText;
-                        //NOMO_DEBUG("rpt", rpt);
-                        var rpt_match = rpt.match(/<link itemprop="embedUrl" href="([a-zA-Z0-9-_./:=&;?]+)">/);
-                        if(rpt_match !== null){
-                            iframeUrl = rpt_match[1];
-                            //NOMO_DEBUG(rpt_match);
-                            NOMO_DEBUG(iframeUrl);
-                            $parentContainer.find(".se-oglink-thumbnail").hide();
-
-                            var YTID = iframeUrl.match(/\/embed\/([a-zA-Z0-9-_]+)/);
-                            if(YTID === null) { return; } else { YTID = YTID[1]; }
-                            NOMO_DEBUG("YTID = ", YTID, "clipId = ", clipId);
-                            
-                            var YTclipt = iframeUrl.match(/clipt=([a-zA-Z0-9-_]+)/);
-                            if(YTclipt !== null){ YTclipt = YTclipt[1]; } else { YTclipt = undefined; }
-
-                            ////$(`.NCTCL-iframe-container[data-clip-id='${clipId}']`)
-                            // $(`#NCTCL-${clipId}`)
-                            //     .append(`<iframe ${lazy ? "loading='lazy'" : ""} class="NCTCL-iframe" data-clip-id="${clipId}" src="${iframeUrl}&autoplay=${autoPlay}&muted=${muted}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);                               
-                            
-                            //createYTIframe(clipId, autoPlay, YTID, YTStart, YTEnd, YTclipt);
-                            createYTIframe(clipId, autoPlay, YTID, undefined, undefined, YTclipt, videoWidth, videoHeight, 0);
-                            
-                            $parentContainer.find(".NCTCLloader").remove();
-                            iframeNo += 1;
-                        }
-                        
-                    }
+            getYTClipPageInfoXHR(clipId, href, 0, function(){
+                if(YTClipInfo[clipId] !== undefined && YTClipInfo[clipId].loaded) {
+                    iframeUrl = YTClipInfo[clipId].url;
+                    $parentContainer.find(".se-oglink-thumbnail").hide();
+    
+                    var YTID = iframeUrl.match(/\/embed\/([a-zA-Z0-9-_]+)/);
+                    if(YTID === null) { return; } else { YTID = YTID[1]; }
+                    NOMO_DEBUG("YTID = ", YTID, "clipId = ", clipId);
+                    
+                    var YTclipt = iframeUrl.match(/clipt=([a-zA-Z0-9-_]+)/);
+                    if(YTclipt !== null){ YTclipt = YTclipt[1]; } else { YTclipt = undefined; }
+    
+                    createYTIframe(clipId, autoPlay, YTID, undefined, undefined, YTclipt, videoWidth, videoHeight, 0);
+                    
+                    $parentContainer.find(".NCTCLloader").remove();
+                    iframeNo += 1;
+                }
+                else{
+                    NOMO_DEBUG("YTClipInfo[clipId] FAIL", YTClipInfo[clipId], $parentContainer);
+                    $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[Naver Cafe Twitch Clip Loader ${GLOBAL.version}]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
+                    $parentContainer.find(".NCTCLloader").remove();
                 }
             });
             break;
+            
         default:
             break;
         }
@@ -310,6 +301,7 @@ function removeOriginalLinks(url){
     }
 }
 
+
 var p0 = 0;
 export async function PAGE_CAFE_MAIN(){
     // add dns-prefetch and preconnect header
@@ -341,6 +333,21 @@ export async function PAGE_CAFE_MAIN(){
     // Youtube video
     INSERT_YOUTUBE_SCRIPT();
 
+    const regexs = {
+        TWITCH_CLIP: /^https?:\/\/(?:clips\.twitch\.tv\/|www\.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/)([a-zA-Z0-9-_]+)/,
+        TWITCH_VOD: /(?:^https?:\/\/www\.twitch.tv\/videos\/(\d+)\??(t=[hms0-9]+)?|^https?:\/\/www\.twitch.tv\/.+\/v\/(\d+)\??[a-zA-Z0-9=-_]*(&t=[hms0-9]+)?)/,
+        YOUTUBE_CLIP: /^https?:\/\/(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9-_]+)/
+    };
+
+    // var matchRes = {"found":false, "type": null, "res": null };
+    // for(var key in regexs){
+    //     var match = input.match(regexs[key]);
+    //     if(match !== null) {
+    //         matchRes = {"found": true, "type": key, "res": match };
+    //         break;
+    //     }
+    // }
+
     // Twitch, Youtube clip 링크 찾기
     var regex_twitch_clip = /^https?:\/\/(?:clips\.twitch\.tv\/|www\.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/)([a-zA-Z0-9-_]+)/;
     var regex_twitch_vod = /^https?:\/\/www\.twitch.tv\/videos\/(\d+)\?(t=[hms0-9]+)?/;
@@ -363,7 +370,11 @@ export async function PAGE_CAFE_MAIN(){
             setTimeout(function(){
                 var linkType;
                 var $a = $elem.find("a.se-oglink-thumbnail").first();
-                if($a.length === 0) return; // thumbnail 이 없는 것은 제외한다.
+                var $imgThumbnail = $elem.find("img.se-oglink-thumbnail-resource").first();
+                if($a.length === 0 || $imgThumbnail.length === 0) return; // thumbnail 이 없는 것은 제외한다.
+
+                NOMO_DEBUG("a = ", $a);
+                NOMO_DEBUG("img = ", $imgThumbnail);
 
                 var href = $a.attr("href");
                 var match = href.match(regex_twitch_clip);
@@ -403,6 +414,44 @@ export async function PAGE_CAFE_MAIN(){
                             removeOriginalLinks(href);
                             insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
                             $elem.closest("div.se-component-content").addClass("youtubeClipFound");
+
+                            // IntersectionObserver to get storyboard image
+                            if(GM_SETTINGS.youtubeClipStoryBoardImage){                                
+                                const rootMarginHeight = Math.max(1080, window.screen.height);
+                                const options = { root: null, threshold:[0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
+                                NOMO_DEBUG("typeof IntersectionObserver = ", typeof IntersectionObserver);
+                                const io = new IntersectionObserver((entries, observer) => {
+                                    entries.forEach(entry => {
+                                        // entry와 observer 출력
+                                        NOMO_DEBUG('entry:', entry);
+                                        NOMO_DEBUG('observer:', observer);
+
+                                        $a = $elem.find("a.se-oglink-thumbnail").first();
+                                        $imgThumbnail = $elem.find("img.se-oglink-thumbnail-resource").first();
+                                        if($a.length === 0 || $imgThumbnail.length === 0) return; // thumbnail 이 없는 것은 제외한다.
+
+                                        getYTClipPageInfoXHR(clipId, href, 0, function(){
+                                            NOMO_DEBUG("getYTClipPageInfoXHR callback by IntersectionObserver");
+
+                                            if(YTClipInfo === undefined || YTClipInfo[clipId] === undefined || YTClipInfo[clipId].foundStoryBoardUrl === undefined || YTClipInfo[clipId].foundStoryBoardSeq === undefined){
+                                                var $parentContainer = $elem.closest("div.se-section-oglink");
+                                                NOMO_DEBUG("YTClipInfo[clipId] FAIL", YTClipInfo[clipId], $parentContainer);
+                                                $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[Naver Cafe Twitch Clip Loader ${GLOBAL.version}]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
+                                                $parentContainer.find(".NCTCLloader").remove();
+                                                return;
+                                            }
+                                            // se-oglink-thumbnail-resource
+                                            $elem.find(".se-oglink-thumbnail-resource").first().fadeOut(50, function(){
+                                                $elem.find(".se-oglink-thumbnail-resource").first().attr("src", YTClipInfo[clipId].foundStoryBoardUrl).fadeIn(400);
+                                            });
+                                        });
+                                        if (entry.intersectionRatio > 0.0) {
+                                            observer.unobserve(entry.target);
+                                        }
+                                    });
+                                }, options);
+                                io.observe($elem.closest("div.se-component-content")[0]);
+                            }
                         }
                         else{
                             return;
@@ -499,6 +548,7 @@ export async function PAGE_CAFE_MAIN(){
         }
     });
 
+    
     // NCTCL-description link click event - autoPauseOtherClips
     if(GM_SETTINGS.autoPauseOtherClips){
         $(document).on("click", ".NCTCL-description a", function(){
@@ -511,10 +561,37 @@ export async function PAGE_CAFE_MAIN(){
 
     // 기존에 존재하는 Youtube 영상을 다시 변환한다.
     if(GM_SETTINGS.useYoutube){
-    //if(GM_SETTINGS.youtubeClipConvert || GM_SETTINGS.youtubeSetQuality || GM_SETTINGS.youtubeHidePauseOverlay){
         $(document).arrive("div.se-module-oembed iframe", { onlyOnce: true, existing: true }, function (elem) {
             try{
-                createYTIframeArriveSub(elem, videoWidth, videoHeight, 0);
+                var $elem = $(elem);
+                if($elem.closest(".YTiframeContainer").length !== 0) {
+                    return;
+                }
+                var $container = $(`<div class="YTiframeContainer" style="width:100%;height:100%"></div>`);
+                var src = $elem.attr("src");
+                $elem.after($container);
+                $elem.remove();
+                YTConvertedCount += 1;
+
+                if(!GM_SETTINGS.youtubeLazyLoad || YTConvertedCount == 1){
+                    createYTIframeArriveSub($container, src, videoWidth, videoHeight, 0);
+                }
+                // YT lazy load
+                else{
+                    NOMO_DEBUG("LAZYLOAD", src);
+                    const rootMarginHeight = Math.max(1080, window.screen.height);
+                    const options = { root: null, threshold:[0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
+                    const io = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            if (entry.intersectionRatio > 0.0) {
+                                createYTIframeArriveSub($container, src, videoWidth, videoHeight, 0);
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, options);
+                    io.observe($container[0]);
+                }
+
             }
             catch(e){
                 NOMO_DEBUG("Error from arrive createYTIframeArriveSub", e);
@@ -522,6 +599,7 @@ export async function PAGE_CAFE_MAIN(){
         });
     }
 
+    
     // fixFullScreenScrollChange
     var parentHtml = parent.document.querySelector("html");
     var lastScrollY = parentHtml.scrollTop;

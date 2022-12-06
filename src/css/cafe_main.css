@@ -151,3 +151,27 @@ div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
     transform: rotate(360deg);
   }
 }
+
+.YTClipFailContainer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 100;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.YTClipFailContainer .YTClipFailContent{
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    max-width: 80%;
+    border-radius: 15px;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 16px;
+    color: #fff;
+    line-height: 160%;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+}
