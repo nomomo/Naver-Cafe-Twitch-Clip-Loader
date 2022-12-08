@@ -457,34 +457,11 @@ html
     filter:brightness(10);
 }
 
-.NCTCL-container svg {
-    display:none;
-}
-
 .se-media-meta-info-description::before, .se-media-meta-info-title::before{
     background-color:var(--NCTCL-background-color) !important;
 }
 .skin-1080 .twitchClipFound .se-oglink-url{
     color:#a778ff !important;
-}
-.skin-1080 .twitchClipFound .se-oglink-title::before
-,.skin-1080 .NCTCL-titleText::before
-{
-    display: inline-block;
-    content: 'Twitch';
-    font-weight: 900;
-    color: #a778ff;
-    font-size: 12px;
-    font-family: math;
-    height: 20px;
-    width: 45px;
-    margin-right: 10px;
-    background: unset;
-    background-color: var(--NCTCL-background-color);
-    position: relative;
-    user-select: none;
-    padding: 0 4px;
-    box-sizing:border-box;
 }
 .skin-1080 .twitchClipFound .se-oglink-title::before{
     top:-1px;

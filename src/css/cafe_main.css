@@ -33,6 +33,9 @@ html body .se-section-oglink.twitchClipFound .se-oglink-thumbnail:after{
 div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
     filter:brightness(0.8);
 }
+.se-component-content.streamableFound .NCTCL-container, .se-component-content.streamableFound .NCTCL-iframe-container{
+    background-color: black;
+}
 
 .NCTCL-iframe-container {
     line-height:0 !important;
@@ -150,4 +153,28 @@ div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
   100% {
     transform: rotate(360deg);
   }
+}
+
+.YTClipFailContainer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 100;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.YTClipFailContainer .YTClipFailContent{
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    max-width: 80%;
+    border-radius: 15px;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 16px;
+    color: #fff;
+    line-height: 160%;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
 }

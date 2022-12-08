@@ -119,6 +119,15 @@ const _settings = {
         title:"클립 재생이 끝난 후 계속 시청 및 연관된 클립 오버레이을 숨김",
         desc:""
     },
+    twitch_clip_always_show_volume_controller : {
+        category:"advanced",
+        under_dev:true,
+        depth: 2,
+        type: "checkbox",
+        value: false,
+        title:"볼륨 컨트롤러를 항상 표시",
+        desc:""
+    },
     twitch_clip_time_update_after_end : {
         category:"advanced",
         debug:true,
@@ -139,12 +148,30 @@ const _settings = {
         title:"Youtube 관련 기능 사용",
         desc:"",
     },
+    youtubeLazyLoad : {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        under_dev:true,
+        title:"Youtube 영상에 대하여 게으른 로딩 방식 적용",
+        desc:"Youtube 영상이 많은 게시물에서 순간적으로 브라우저가 멈추는 것을 일부 개선합니다.",
+    },
     youtubeClipConvert : {
         category:"youtube",
         depth: 2,
         type: "checkbox",
         value: true,
         title:"Youtube 클립 링크 섬네일 클릭 시 비디오로 변환",
+        desc:"",
+    },
+    youtubeClipStoryBoardImage : {
+        category:"youtube",
+        depth: 3,
+        type: "checkbox",
+        value: true,
+        under_dev:true,
+        title:"Youtube 클립 섬네일을 스토리보드 이미지로 대체",
         desc:"",
     },
     youtubeForceWidthHeight: {
@@ -183,6 +210,17 @@ const _settings = {
         value: true,
         title:"일시정지 시 동영상 더보기를 숨김",
         desc:""
+    },
+
+    // Streamable
+    useStreamable : {
+        category:"Streamable",
+        category_name:"Streamable",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"Streamable 섬네일을 비디오로 변환 ",
+        desc:"",
     },
 
     // Naver Video

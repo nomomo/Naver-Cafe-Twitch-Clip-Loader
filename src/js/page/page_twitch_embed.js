@@ -48,6 +48,12 @@ export default function PAGE_TWITCH_EMBED(isTwitchVod, isTwitchMuted){
                 background:#666;
                 cursor:default;
             }
+            .opacity_1{
+                opacity:1 !important;
+            }
+            .opacity_transition{
+                transition: opacity 0.2s !important;
+            }
         `);
 
     // set_volume_when_stream_starts
@@ -223,6 +229,17 @@ export default function PAGE_TWITCH_EMBED(isTwitchVod, isTwitchMuted){
 
             if($e.hasClass("_FIRSTPLAYED")) return;
             
+            // show volume controller for 5s
+            $(".volume-slider__slider-container").addClass("opacity_1").addClass("opacity_transition");
+            if(!GM_SETTINGS.twitch_clip_always_show_volume_controller){
+                setTimeout(function(){
+                    $(".volume-slider__slider-container").removeClass("opacity_1");
+                },5000);
+                setTimeout(function(){
+                    $(".volume-slider__slider-container").removeClass("opacity_transition");
+                },6000);
+            }
+
             $e.addClass("_FIRSTPLAYED");
             GM_addStyle(`
             html body .player-overlay-background--darkness-5 { background:unset !important; }
