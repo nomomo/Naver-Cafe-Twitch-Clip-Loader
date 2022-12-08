@@ -740,6 +740,10 @@ export async function PAGE_CAFE_MAIN(){
                 NOMO_DEBUG("Naver video ended", e);
                 $(elem).addClass("_ENDED");
             });
+
+            if(GM_SETTINGS.alwaysShowVolumeController){
+                $(elem).closest(".se-component-content").find(".u_rmc_volume_area").addClass("u_rmc_volume_control_hover");
+            }
         }
         catch(e){
             NOMO_DEBUG("Error from video arrive", e);

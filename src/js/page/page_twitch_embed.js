@@ -231,7 +231,7 @@ export default function PAGE_TWITCH_EMBED(isTwitchVod, isTwitchMuted){
             
             // show volume controller for 5s
             $(".volume-slider__slider-container").addClass("opacity_1").addClass("opacity_transition");
-            if(!GM_SETTINGS.twitch_clip_always_show_volume_controller){
+            if(!GM_SETTINGS.alwaysShowVolumeController){
                 setTimeout(function(){
                     $(".volume-slider__slider-container").removeClass("opacity_1");
                 },5000);
