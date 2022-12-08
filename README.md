@@ -63,7 +63,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ### 0.8.0 - Dec. 08, 2022
 
-- Streamable 링크의 섬네일을 비디오로 변환하는 기능을 지원합니다. 예) https://streamable.com/w1em8h
+- Streamable 링크의 섬네일을 비디오로 변환하는 기능을 지원합니다.
 - Youtube 동영상이 많이 삽입된 글을 열람 시 브라우저가 멈추는 것을 개선합니다. (Cafe 에 삽입된 모든 Youtube 동영상에 대해 게으른 로딩 방식을 적용)
 - 이제 Twitch 및 Naver Video 에서 볼륨 컨트롤러를 자동으로 숨기지 않습니다. (상세 설정에서 원래대로 돌릴 수 있습니다.)
 
