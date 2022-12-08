@@ -135,6 +135,7 @@ export function reCalculateIframeWidth(width){
 const TWITCH_CLIP = 0;
 const TWITCH_VOD = 1;
 const YOUTUBE_CLIP = 10;
+const STREAMABLE = 20;
 function insertNCTCLContainerDescription(linkType, $elem, clipId, clipurl){
     try{
         var $parentContainer = $elem.closest("div.se-section-oglink");
@@ -157,14 +158,12 @@ function insertNCTCLContainerDescription(linkType, $elem, clipId, clipurl){
         //$("head").append(`<link rel="preload" crossorigin href="https://clips.twitch.tv/embed?clip=${clipId}&parent=${document.location.href.split("/")[2]}&autoplay=false&muted=true" as="document">`);          
 
         var logoText = "";
-        if(linkType === YOUTUBE_CLIP){
-            logoText = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 461.001 461.001" style="enable-background:new 0 0 461.001 461.001;" xml:space="preserve">
-                <g>
-                    <path style="fill:#F61C0D;" d="M365.257,67.393H95.744C42.866,67.393,0,110.259,0,163.137v134.728c0,52.878,42.866,95.744,95.744,95.744h269.513c52.878,0,95.744-42.866,95.744-95.744V163.137C461.001,110.259,418.135,67.393,365.257,67.393z M300.506,237.056l-126.06,60.123c-3.359,1.602-7.239-0.847-7.239-4.568V168.607c0-3.774,3.982-6.22,7.348-4.514l126.06,63.881C304.363,229.873,304.298,235.248,300.506,237.056z"/>
-                </g>
-            </svg>`;
-        }
-        else{
+        switch(linkType){
+        default:
+            break;
+
+        case TWITCH_CLIP:
+        case TWITCH_VOD:
             logoText = `
             <svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="14" height="14" viewBox="0 0 256 256" xml:space="preserve">
                 <g transform="translate(128 128) scale(0.72 0.72)" style="">
@@ -175,6 +174,24 @@ function insertNCTCLContainerDescription(linkType, $elem, clipId, clipurl){
                     </g>
                 </g>
             </svg>`;
+            break;
+
+        case YOUTUBE_CLIP:
+            logoText = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 461.001 461.001" style="enable-background:new 0 0 461.001 461.001;" xml:space="preserve">
+                <g>
+                    <path style="fill:#F61C0D;" d="M365.257,67.393H95.744C42.866,67.393,0,110.259,0,163.137v134.728c0,52.878,42.866,95.744,95.744,95.744h269.513c52.878,0,95.744-42.866,95.744-95.744V163.137C461.001,110.259,418.135,67.393,365.257,67.393z M300.506,237.056l-126.06,60.123c-3.359,1.602-7.239-0.847-7.239-4.568V168.607c0-3.774,3.982-6.22,7.348-4.514l126.06,63.881C304.363,229.873,304.298,235.248,300.506,237.056z"/>
+                </g>
+            </svg>`;
+            break;
+
+        case STREAMABLE:
+            logoText = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 64 64"><defs><style>.cls-1{fill:#0f90fa;}</style></defs>
+                <g>
+                    <path class="cls-1" d="M45.11,15.76c-2.84,0-5.8,1.72-7.58,3.4-2.89,2.38-12.44,17-12.44,17l0,.05a8.12,8.12,0,1,1,0-9.39l4.07-6.4A15.77,15.77,0,1,0,18.42,47.7a13.57,13.57,0,0,0,11.06-5.15s5.12-7.07,7.2-10.42c1.89-3,4-8.28,8.59-8.28a8.17,8.17,0,0,1,8.19,8.47,8.58,8.58,0,0,1-8.39,8.75A8.23,8.23,0,0,1,39,38.3l-4,6.32A16.19,16.19,0,0,0,61.35,32,16.27,16.27,0,0,0,45.11,15.76Z"/>
+                </g>
+            </svg>`;
+            break;
         }
 
         $parentContainer.append(`
@@ -222,6 +239,37 @@ function convertVideoLinkToIframe($elem, options){
             return;
         }
 
+        ///////////////////////////////////////////////////////
+        // // get clip info from gql api
+        // clipId = "DarkWildVultureKlappa-wMbvD3s1EYj0_Hg0";   // test
+        // // get clip info
+        // var fetchres = fetch("https://gql.twitch.tv/gql", {
+        //     "headers": {
+        //         "client-id": "kimne78kx3ncx6brgo4mv6wki5h1ko",
+        //         "content-type": "text/plain;charset=UTF-8",
+        //     },
+        //     "referrer": "https://clips.twitch.tv/",
+        //     "body": `"[{"operationName":"ClipsBroadcasterInfo","variables"{"slug":"${clipId}"},"extensions"{"persistedQuery"{"version"1,"sha256Hash":"ce258d9536360736605b42db697b3636e750fdb14ff0a7da8c7225bdc2c07e8a"}}},{"operationName":"ClipsTitle","variables"{"slug":"${clipId}"},"extensions"{"persistedQuery"{"version"1,"sha256Hash":"f6cca7f2fdfbfc2cecea0c88452500dae569191e58a265f97711f8f2a838f5b4"}}},{"operationName":"ClipsView","variables"{"slug":"${clipId}","isCommunityMomentsFeatureEnabled"true},"extensions"{"persistedQuery"{"version"1,"sha256Hash":"46e80db2f20f65bdc8125b871be148b32dd6a92f0509f27d8d43e02b63386808"}}}]"`,
+        //     "method": "POST",
+        //     "credentials": "omit"
+        // });
+
+        // // get VideoAccessToken_Clip
+        // fetch("https://gql.twitch.tv/gql", {
+        //     "headers": {
+        //         "client-id": "kimne78kx3ncx6brgo4mv6wki5h1ko",
+        //         "content-type": "text/plain;charset=UTF-8",
+        //     },
+        //     "referrer": "https://clips.twitch.tv/",
+        //     "body": `"[{"operationName":"VideoAccessToken_Clip","variables":{"slug":"${clipId}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11"}}}]"`,
+        //     "method": "POST",
+        //     "credentials": "omit"
+        // });
+        // var fetchjson = await fetchres.json();
+        // NOMO_DEBUG("fetchjson = ", fetchjson);
+        ///////////////////////////////////////////////////////
+
+
         switch(linkType){
         case TWITCH_CLIP:
             iframeUrl = `https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}`;
@@ -264,6 +312,14 @@ function convertVideoLinkToIframe($elem, options){
                     $parentContainer.find(".NCTCLloader").remove();
                 }
             });
+            break;
+
+        case STREAMABLE:
+            iframeUrl = `https://streamable.com/e/${clipId}?parent=${parentHref}&autoplay=${autoPlay?"1":"0"}&muted=${muted?"1":"0"}&hd=1&loop=0&nocontrols=0`;
+            $parentContainer.find(".se-oglink-thumbnail").hide();
+            $(`#NCTCL-${clipId}`)
+                .append(`<iframe ${lazy ? "loading='lazy'" : ""} class="NCTCL-iframe" data-clip-id="${clipId}" src="${iframeUrl}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
+            iframeNo += 1;
             break;
             
         default:
@@ -333,39 +389,19 @@ export async function PAGE_CAFE_MAIN(){
     // Youtube video
     INSERT_YOUTUBE_SCRIPT();
 
-    const regexs = {
-        TWITCH_CLIP: /^https?:\/\/(?:clips\.twitch\.tv\/|www\.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/)([a-zA-Z0-9-_]+)/,
-        TWITCH_VOD: /(?:^https?:\/\/www\.twitch.tv\/videos\/(\d+)\??(t=[hms0-9]+)?|^https?:\/\/www\.twitch.tv\/.+\/v\/(\d+)\??[a-zA-Z0-9=-_]*(&t=[hms0-9]+)?)/,
-        YOUTUBE_CLIP: /^https?:\/\/(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9-_]+)/
-    };
-
-    // var matchRes = {"found":false, "type": null, "res": null };
-    // for(var key in regexs){
-    //     var match = input.match(regexs[key]);
-    //     if(match !== null) {
-    //         matchRes = {"found": true, "type": key, "res": match };
-    //         break;
-    //     }
-    // }
 
     // Twitch, Youtube clip 링크 찾기
-    var regex_twitch_clip = /^https?:\/\/(?:clips\.twitch\.tv\/|www\.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/)([a-zA-Z0-9-_]+)/;
-    var regex_twitch_vod = /^https?:\/\/www\.twitch.tv\/videos\/(\d+)\?(t=[hms0-9]+)?/;
-    var regex_twitch_vod2 = /^https?:\/\/www\.twitch.tv\/.+\/v\/(\d+)\?[a-zA-Z0-9=-_]*(&t=[hms0-9]+)?/;
-    var regex_youtube_clip = /^https?:\/\/(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9-_]+)/;
     $(document).arrive("div.se-module-oglink", { onlyOnce: true, existing: true }, function (elem) {
         try{
-            if(DEBUG){
-                if(p0 === 0){
-                    p0 = Number(new Date());
-                }
-                NOMO_DEBUG("PERFORMANCE CHECK", Number(new Date()) - p0);
-            }
-
             var $elem = $(elem);
             if($elem.hasClass("fired")) return;
             $elem.addClass("fired");
             $elem.parent("div.se-section-oglink").addClass("fired");
+
+            if(DEBUG){
+                if(p0 === 0) p0 = Number(new Date());
+                NOMO_DEBUG("PERFORMANCE CHECK", Number(new Date()) - p0);
+            }
 
             setTimeout(function(){
                 var linkType;
@@ -373,95 +409,119 @@ export async function PAGE_CAFE_MAIN(){
                 var $imgThumbnail = $elem.find("img.se-oglink-thumbnail-resource").first();
                 if($a.length === 0 || $imgThumbnail.length === 0) return; // thumbnail 이 없는 것은 제외한다.
 
+                var href = $a.attr("href");
                 NOMO_DEBUG("a = ", $a);
                 NOMO_DEBUG("img = ", $imgThumbnail);
 
-                var href = $a.attr("href");
-                var match = href.match(regex_twitch_clip);
+                ////////////////////////////////////////////////////////////////////////////////////////////////
+                const regexs = {};
+                if(GM_SETTINGS.use){
+                    regexs[TWITCH_CLIP] = /^https?:\/\/(?:clips\.twitch\.tv\/|www\.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/)([a-zA-Z0-9-_]+)/;
+                    regexs[TWITCH_VOD] = /(?:^https?:\/\/www\.twitch.tv\/videos\/(\d+)\??(t=[hms0-9]+)?|^https?:\/\/www\.twitch.tv\/.+\/v\/(\d+)\??[a-zA-Z0-9=-_]*(&t=[hms0-9]+)?)/;
+                }
+                if(GM_SETTINGS.useYoutube && GM_SETTINGS.youtubeClipConvert){
+                    regexs[YOUTUBE_CLIP] = /^https?:\/\/(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9-_]+)/;
+                }
+                if(GM_SETTINGS.useStreamable){
+                    regexs[STREAMABLE] = /^https?:\/\/streamable\.com\/(?:e\/)?([a-zA-Z0-9-_]+)/;
+                }
+
+                var matchRes = {"found":false, "type": null, "res": null };
+                for(var key in regexs){
+                    var match = href.match(regexs[key]);
+                    if(match !== null) {
+                        matchRes = {"found": true, "type": Number(key), "res": match };
+                        break;
+                    }
+                }
+                if(!matchRes.found) return;
+                NOMO_DEBUG("matchRes", matchRes);
 
                 var clipId, clipUrl, clipOption = "";
-                if(GM_SETTINGS.use && match !== null){
+
+                switch(matchRes.type){    
+                default:
+                    NOMO_DEBUG("CANNOT FOUND TYPE", matchRes.type);
+                    return;
+                    
+                case TWITCH_CLIP:
                     linkType = TWITCH_CLIP;
                     clipId = match[1];
                     clipUrl = `https://clips.twitch.tv/${clipId}`;
                     removeOriginalLinks(href);
                     insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
-                    //NOMO_DEBUG("TWITCH CILP FOUND, CLIP ID = ", clipId);
-                }
-                else {
-                    match = href.match(regex_twitch_vod);
-                    if(GM_SETTINGS.use && match === null){
-                        match = href.match(regex_twitch_vod2);
-                    }
-                    if(GM_SETTINGS.use && match !== null){
-                        linkType = TWITCH_VOD;
-                        clipId = match[1];
-                        if(match[2] !== undefined){
-                            clipUrl = `https://www.twitch.tv/videos/${clipId}?${match[2].replace("?","").replace("&","")}`;
-                            clipOption = "&"+match[2].replace("?","").replace("&","");
-                        }
-                        else{
-                            clipUrl = `https://www.twitch.tv/videos/${clipId}`;
-                        }
-                        insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
-                    }
-                    else if(GM_SETTINGS.useYoutube && GM_SETTINGS.youtubeClipConvert){
-                        match = href.match(regex_youtube_clip);
-                        if(match !== null){                            
-                            linkType = YOUTUBE_CLIP;
-                            clipId = match[1];
-                            clipUrl = href;
-                            removeOriginalLinks(href);
-                            insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
-                            $elem.closest("div.se-component-content").addClass("youtubeClipFound");
+                    break;
 
-                            // IntersectionObserver to get storyboard image
-                            if(GM_SETTINGS.youtubeClipStoryBoardImage){                                
-                                const rootMarginHeight = Math.max(1080, window.screen.height);
-                                const options = { root: null, threshold:[0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
-                                NOMO_DEBUG("typeof IntersectionObserver = ", typeof IntersectionObserver);
-                                const io = new IntersectionObserver((entries, observer) => {
-                                    entries.forEach(entry => {
-                                        // entry와 observer 출력
-                                        NOMO_DEBUG('entry:', entry);
-                                        NOMO_DEBUG('observer:', observer);
-
-                                        $a = $elem.find("a.se-oglink-thumbnail").first();
-                                        $imgThumbnail = $elem.find("img.se-oglink-thumbnail-resource").first();
-                                        if($a.length === 0 || $imgThumbnail.length === 0) return; // thumbnail 이 없는 것은 제외한다.
-
-                                        getYTClipPageInfoXHR(clipId, href, 0, function(){
-                                            NOMO_DEBUG("getYTClipPageInfoXHR callback by IntersectionObserver");
-
-                                            if(YTClipInfo === undefined || YTClipInfo[clipId] === undefined || YTClipInfo[clipId].foundStoryBoardUrl === undefined || YTClipInfo[clipId].foundStoryBoardSeq === undefined){
-                                                var $parentContainer = $elem.closest("div.se-section-oglink");
-                                                NOMO_DEBUG("YTClipInfo[clipId] FAIL", YTClipInfo[clipId], $parentContainer);
-                                                $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[Naver Cafe Twitch Clip Loader ${GLOBAL.version}]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
-                                                $parentContainer.find(".NCTCLloader").remove();
-                                                return;
-                                            }
-                                            // se-oglink-thumbnail-resource
-                                            $elem.find(".se-oglink-thumbnail-resource").first().fadeOut(50, function(){
-                                                $elem.find(".se-oglink-thumbnail-resource").first().attr("src", YTClipInfo[clipId].foundStoryBoardUrl).fadeIn(400);
-                                            });
-                                        });
-                                        if (entry.intersectionRatio > 0.0) {
-                                            observer.unobserve(entry.target);
-                                        }
-                                    });
-                                }, options);
-                                io.observe($elem.closest("div.se-component-content")[0]);
-                            }
-                        }
-                        else{
-                            return;
-                        }
+                case TWITCH_VOD:
+                    linkType = TWITCH_VOD;
+                    clipId = match[1];
+                    if(match[2] !== undefined){
+                        clipUrl = `https://www.twitch.tv/videos/${clipId}?${match[2].replace("?","").replace("&","")}`;
+                        clipOption = "&"+match[2].replace("?","").replace("&","");
                     }
                     else{
-                        return;
+                        clipUrl = `https://www.twitch.tv/videos/${clipId}`;
                     }
+                    // removeOriginalLinks(href);   // VOD 의 경우 원본 링크를 제거하지 않는다.
+                    insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
+                    break;
+
+                case YOUTUBE_CLIP:
+                    linkType = YOUTUBE_CLIP;
+                    clipId = match[1];
+                    clipUrl = href;
+                    removeOriginalLinks(href);
+                    insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
+                    $elem.closest("div.se-component-content").addClass("youtubeClipFound");
+
+                    // IntersectionObserver to get storyboard image
+                    if(GM_SETTINGS.youtubeClipStoryBoardImage){                                
+                        const rootMarginHeight = Math.max(1080, window.screen.height) * 1.5;
+                        const options = { root: null, threshold:[0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
+                        NOMO_DEBUG("typeof IntersectionObserver = ", typeof IntersectionObserver);
+                        const io = new IntersectionObserver((entries, observer) => {
+                            entries.forEach(entry => {
+                                $a = $elem.find("a.se-oglink-thumbnail").first();
+                                $imgThumbnail = $elem.find("img.se-oglink-thumbnail-resource").first();
+                                if($a.length === 0 || $imgThumbnail.length === 0) return; // thumbnail 이 없는 것은 제외한다.
+
+                                getYTClipPageInfoXHR(clipId, href, 0, function(){
+                                    NOMO_DEBUG("getYTClipPageInfoXHR callback by IntersectionObserver");
+
+                                    if(YTClipInfo === undefined || YTClipInfo[clipId] === undefined || YTClipInfo[clipId].foundStoryBoardUrl === undefined || YTClipInfo[clipId].foundStoryBoardSeq === undefined){
+                                        var $parentContainer = $elem.closest("div.se-section-oglink");
+                                        NOMO_DEBUG("YTClipInfo[clipId] FAIL", YTClipInfo[clipId], $parentContainer);
+                                        $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[Naver Cafe Twitch Clip Loader ${GLOBAL.version}]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
+                                        $parentContainer.find(".NCTCLloader").remove();
+                                        return;
+                                    }
+                                    // se-oglink-thumbnail-resource
+                                    $elem.find(".se-oglink-thumbnail-resource").first().fadeOut(50, function(){
+                                        $elem.find(".se-oglink-thumbnail-resource").first().attr("src", YTClipInfo[clipId].foundStoryBoardUrl).fadeIn(400);
+                                    });
+                                });
+                                if (entry.intersectionRatio > 0.0) {
+                                    observer.unobserve(entry.target);
+                                }
+                            });
+                        }, options);
+                        io.observe($elem.closest("div.se-component-content")[0]);
+                    }
+                    break;
+
+                case STREAMABLE:
+                    $elem.closest("div.se-component-content").addClass("streamableFound");
+                    $elem.addClass("streamableFound");
+                    linkType = STREAMABLE;
+                    clipId = match[1];
+                    clipUrl = `https://streamable.com/${clipId}`;
+                    removeOriginalLinks(href);
+                    insertNCTCLContainerDescription(linkType, $elem, clipId, clipUrl);
+                    break;
                 }
 
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////
                 var isAutoConvert = (GM_SETTINGS.method === "autoLoad");
                 if(linkType === YOUTUBE_CLIP) isAutoConvert = false;
 
@@ -559,6 +619,7 @@ export async function PAGE_CAFE_MAIN(){
         });
     }
 
+
     // 기존에 존재하는 Youtube 영상을 다시 변환한다.
     if(GM_SETTINGS.useYoutube){
         $(document).arrive("div.se-module-oembed iframe", { onlyOnce: true, existing: true }, function (elem) {
@@ -579,7 +640,7 @@ export async function PAGE_CAFE_MAIN(){
                 // YT lazy load
                 else{
                     NOMO_DEBUG("LAZYLOAD", src);
-                    const rootMarginHeight = Math.max(1080, window.screen.height);
+                    const rootMarginHeight = Math.max(1080, window.screen.height) * 1.5;
                     const options = { root: null, threshold:[0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
                     const io = new IntersectionObserver((entries, observer) => {
                         entries.forEach(entry => {
@@ -630,6 +691,7 @@ export async function PAGE_CAFE_MAIN(){
     catch(e){
         NOMO_DEBUG("Error from fixFullScreenScrollChange", e);
     }
+
 
     // naver video 에 autoPauseVideo 적용
     $(document).arrive("video", { onlyOnce: true, existing: true }, function (elem) {
@@ -696,11 +758,13 @@ export async function PAGE_CAFE_MAIN(){
         // }
     });
 
+
     // Naver Cafe Clip Reload
     NAVER_VIDEO_EVENT_INIT();
     GM_addStyle(`.u_rmc_controls_btn div.naver_player_reload_btn {padding-top:3px;}`);
 
-    //FasterNoticeHide
+
+    // FasterNoticeHide
     try{
         if(DEBUG){
             let savedNOTICE_OPEN = localStorage.getItem('NOTICE_OPEN');
@@ -725,6 +789,7 @@ export async function PAGE_CAFE_MAIN(){
     catch(e){
         NOMO_DEBUG("Error from FasterNoticeHide", e);
     }
+
 
     if(GM_SETTINGS.visitedArticleStyle){
         GM_addStyle(`

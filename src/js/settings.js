@@ -212,6 +212,17 @@ const _settings = {
         desc:""
     },
 
+    // Streamable
+    useStreamable : {
+        category:"Streamable",
+        category_name:"Streamable",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"Streamable 섬네일을 비디오로 변환 ",
+        desc:"",
+    },
+
     // Naver Video
     naverVideoAutoMaxQuality: {
         category:"naver",
