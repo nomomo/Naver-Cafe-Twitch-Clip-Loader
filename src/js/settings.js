@@ -268,9 +268,17 @@ const _settings = {
         title:"네이버 비디오 화면 클릭 동작 개선",
         desc:""
     },
+    alwaysShowVolumeController : {
+        category:"videoCommon",
+        category_name: "Video 공통",
+        depth: 1,
+        type: "checkbox",
+        value: false,
+        title:"볼륨 컨트롤바를 항상 표시",
+        desc:"Youtube, Twitch, Naver Video 에서 볼륨 컨트롤바를 항상 표시합니다."
+    },
     videoWidth : {
         category:"videoCommon",
-        category_name: "공통",
         depth:1,
         under_dev:true,
         type: "text",
@@ -287,15 +295,6 @@ const _settings = {
         value: true,
         title:"비디오 재생 시 다른 재생 중인 비디오 일시정지",
         desc:"Youtube, Twitch Clip, Naver Video 를 재생 시, 다른 재생 중인 모든 비디오를 일시정지 합니다. 다음 동영상을 재생하기 위하여 이전 동영상을 정지할 필요가 없습니다. (엄청 편하다!)"
-    },
-    alwaysShowVolumeController : {
-        category:"videoCommon",
-        under_dev:true,
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title:"볼륨 컨트롤러를 항상 표시",
-        desc:"Twitch Clip 및 Naver Video 에서 볼륨 컨트롤러를 항상 표시합니다."
     },
     fixFullScreenScrollChange: {
         category:"etc",
