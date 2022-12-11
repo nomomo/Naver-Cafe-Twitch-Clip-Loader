@@ -249,7 +249,7 @@ function convertVideoLinkToIframe($elem, options){
         //         "content-type": "text/plain;charset=UTF-8",
         //     },
         //     "referrer": "https://clips.twitch.tv/",
-        //     "body": `"[{"operationName":"ClipsBroadcasterInfo","variables"{"slug":"${clipId}"},"extensions"{"persistedQuery"{"version"1,"sha256Hash":"ce258d9536360736605b42db697b3636e750fdb14ff0a7da8c7225bdc2c07e8a"}}},{"operationName":"ClipsTitle","variables"{"slug":"${clipId}"},"extensions"{"persistedQuery"{"version"1,"sha256Hash":"f6cca7f2fdfbfc2cecea0c88452500dae569191e58a265f97711f8f2a838f5b4"}}},{"operationName":"ClipsView","variables"{"slug":"${clipId}","isCommunityMomentsFeatureEnabled"true},"extensions"{"persistedQuery"{"version"1,"sha256Hash":"46e80db2f20f65bdc8125b871be148b32dd6a92f0509f27d8d43e02b63386808"}}}]"`,
+        //     "body": `[{"operationName":"ClipsBroadcasterInfo","variables":{"slug":"${clipId}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"ce258d9536360736605b42db697b3636e750fdb14ff0a7da8c7225bdc2c07e8a"}}},{"operationName":"ClipsTitle","variables":{"slug":"${clipId}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"f6cca7f2fdfbfc2cecea0c88452500dae569191e58a265f97711f8f2a838f5b4"}}},{"operationName":"ClipsView","variables":{"slug":"${clipId}","isCommunityMomentsFeatureEnabled":true},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"46e80db2f20f65bdc8125b871be148b32dd6a92f0509f27d8d43e02b63386808"}}}]`,
         //     "method": "POST",
         //     "credentials": "omit"
         // });
@@ -261,7 +261,7 @@ function convertVideoLinkToIframe($elem, options){
         //         "content-type": "text/plain;charset=UTF-8",
         //     },
         //     "referrer": "https://clips.twitch.tv/",
-        //     "body": `"[{"operationName":"VideoAccessToken_Clip","variables":{"slug":"${clipId}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11"}}}]"`,
+        //     "body": `[{"operationName":"VideoAccessToken_Clip","variables":{"slug":"${clipId}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11"}}}]`,
         //     "method": "POST",
         //     "credentials": "omit"
         // });
@@ -269,9 +269,26 @@ function convertVideoLinkToIframe($elem, options){
         // NOMO_DEBUG("fetchjson = ", fetchjson);
         ///////////////////////////////////////////////////////
 
+        ///////////////////////////////////////////////////////
+        // https://dthumb-phinf.pstatic.net/?src=%22https%3A%2F%2Fclips-media-assets2.twitch.tv%2Fcwhij1r7S00PncrSIvpk1g%2FAT-cm%257Ccwhij1r7S00PncrSIvpk1g-social-preview.jpg%22&type=ff500_300
+        // https://clips-media-assets2.twitch.tv/cwhij1r7S00PncrSIvpk1g/AT-cm%7Ccwhij1r7S00PncrSIvpk1g.mp4
 
         switch(linkType){
         case TWITCH_CLIP:
+            // if(DEBUG){
+            //     var fetchres = fetch("https://gql.twitch.tv/gql", {
+            //         "headers": {
+            //             "client-id": "kimne78kx3ncx6brgo4mv6wki5h1ko",
+            //             "content-type": "text/plain;charset=UTF-8",
+            //         },
+            //         "referrer": "https://clips.twitch.tv/",
+            //         "body": `[{"operationName":"ClipsBroadcasterInfo","variables":{"slug":"${clipId}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"ce258d9536360736605b42db697b3636e750fdb14ff0a7da8c7225bdc2c07e8a"}}},{"operationName":"ClipsTitle","variables":{"slug":"${clipId}"},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"f6cca7f2fdfbfc2cecea0c88452500dae569191e58a265f97711f8f2a838f5b4"}}},{"operationName":"ClipsView","variables":{"slug":"${clipId}","isCommunityMomentsFeatureEnabled":true},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"46e80db2f20f65bdc8125b871be148b32dd6a92f0509f27d8d43e02b63386808"}}}]`,
+            //         "method": "POST",
+            //         "credentials": "omit"
+            //     })
+            //         .then((response) => response.json())
+            //         .then((data) => console.log(data));
+            // }
             iframeUrl = `https://clips.twitch.tv/embed?clip=${clipId}&parent=${parentHref}&autoplay=${autoPlay}&muted=${muted}`;
             $parentContainer.find(".se-oglink-thumbnail").hide();
             $(`#NCTCL-${clipId}`)

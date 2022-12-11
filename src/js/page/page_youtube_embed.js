@@ -102,7 +102,28 @@ function YOUTUBE_EMBED_SET_QUALITY_POST(){
     YTPlayer.setPlaybackQuality(TYTQ);
 
     NOMO_DEBUG(`YTQ CHANGED. ${CYTQ} -> ${TYTQ}`);
+    
 
+
+    // alwaysShowVolumeController
+    if(GM_SETTINGS.alwaysShowVolumeController){
+        //$(".ytp-chrome-controls").addClass(".ytp-volume-slider-active");
+        GM_addStyle(`
+        .ytp-time-display-allow-autohide {
+            display: none;
+        }
+        .ytp-volume-panel {
+            width: 52px;
+            margin-right: 3px;
+            -webkit-transition: margin .2s cubic-bezier(0,0,0.2,1),width .2s cubic-bezier(0,0,0.2,1);
+            transition: margin .2s cubic-bezier(0,0,0.2,1),width .2s cubic-bezier(0,0,0.2,1);
+        }
+        .ytp-big-mode .ytp-volume-panel {
+            width: 78px;
+            margin-right: 5px;
+        }
+        `);
+    }
 }
 
 function set_ls_YTQ(){
