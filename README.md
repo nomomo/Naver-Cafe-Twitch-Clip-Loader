@@ -61,6 +61,10 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 0.9.0 - Dec. XX, 2022
+
+- Afreecatv VOD 링크의 섬네일을 비디오로 변환하는 기능을 지원합니다.
+
 ### 0.8.0b - Dec. 12, 2022
 
 - 이제 상세 설정의 볼륨 컨트롤바를 항상 표시 옵션이 Youtube 영상에 대해서도 동작합니다.

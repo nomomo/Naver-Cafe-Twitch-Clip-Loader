@@ -214,13 +214,66 @@ const _settings = {
 
     // Streamable
     useStreamable : {
-        category:"Streamable",
+        category:"streamable",
         category_name:"Streamable",
         depth: 1,
         type: "checkbox",
         value: true,
         title:"Streamable 섬네일을 비디오로 변환 ",
         desc:"",
+    },
+
+    // Afreecatv
+    useAftv : {
+        category:"aftv",
+        category_name:"Afreecatv",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"Afreecatv 섬네일을 비디오로 변환 ",
+        desc:"",
+    },
+    aftvShowChat: {
+        category:"aftv",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"가능한 경우 채팅을 표시",
+        desc:""
+    },
+    aftvHideRecommend: {
+        category:"aftv",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"가능한 경우 재생 중 추천 영상 메뉴를 숨김",
+        desc:""
+    },
+    aftvHideRecommendAfterEnd: {
+        category:"aftv",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"재생이 끝난 후 추천 영상 메뉴를 숨김",
+        desc:""
+    },
+    aftvAutoMaxQuality: {
+        category:"aftv",
+        debug: true,
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"가능한 경우 Afreecatv 비디오를 항상 최대 품질로 시작",
+        desc:""
+    },
+    aftvBeautifier: {
+        category:"aftv",
+        under_dev: true,
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"가능한 경우 Afreecatv 플레이어를 더욱 보기 좋게 만듦",
+        desc:""
     },
 
     // Naver Video

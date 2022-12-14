@@ -18,4 +18,6 @@ export default function GLOBAL_INIT(){
     GLOBAL.isTwitchMuted = (GLOBAL.isTwitch && document.location.href.indexOf("muted=true") !== -1);
     GLOBAL.isYoutubeEmbed = /^https:\/\/www\.youtube\.com\/embed\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isCafeWritingMode = (/^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/articles\/\d+\/modify/.test(GLOBAL.initLocationUrl) || /^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/menus\/\d+\/articles\/write\?/.test(GLOBAL.initLocationUrl));
+    GLOBAL.isStreamableEmbed = /^https?:\/\/streamable\.com\/e\//.test(GLOBAL.initLocationUrl);
+    GLOBAL.isAftvEmbed = /^https?:\/\/vod\.afreecatv\.com\/player\//.test(GLOBAL.initLocationUrl);
 }
