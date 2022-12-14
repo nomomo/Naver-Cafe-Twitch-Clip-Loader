@@ -4,7 +4,7 @@ const WebpackUserscript = require('webpack-userscript');
 const TerserPlugin = require('terser-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var PACKAGE = require('./package.json');
-const my_project_name = PACKAGE.name;
+const my_project_name = "Naver-Cafe-VOD-Loader";//PACKAGE.name;
 
 console.log("__dirname", __dirname);
 
@@ -12,8 +12,7 @@ module.exports = {
     entry: path.join(__dirname, './src/index.js'),
     output: {
         path: path.resolve(__dirname),
-        //filename: my_project_name+'.js'
-        filename: process.env.NODE_ENV === "production" ? my_project_name + '.js' : my_project_name + '.unminified.js'
+        filename: my_project_name+'.js'
     },
     resolve: {
         modules: [
@@ -58,7 +57,7 @@ module.exports = {
     // },
     plugins: [
         new WebpackUserscript({
-            headers: path.join(__dirname, './src/headers.json'),
+            headers: path.join(__dirname, './src/headers_NCVL.json'),
             pretty: true
         })
     ]

@@ -4,10 +4,13 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "development": "cross-env NODE_ENV=development webpack --mode development --progress --hide-modules --config=webpack.config.js",
-    "production": "cross-env NODE_ENV=production webpack --mode production --progress --hide-modules --config=webpack.config.js",
-    "build-all": "npm run development && npm run production",
-    "watch": "cross-env NODE_ENV=production webpack --mode development --watch --progress --hide-modules --config=webpack.config.js"
+    "dev_NCTCL": "cross-env NODE_ENV=development webpack --mode development --progress --hide-modules --config=webpack_NCTCL.config.js",
+    "prod_NCTCL": "cross-env NODE_ENV=production webpack --mode production --progress --hide-modules --config=webpack_NCTCL.config.js",
+    "watch_NCTCL": "cross-env NODE_ENV=production webpack --mode development --watch --progress --hide-modules --config=webpack_NCTCL.config.js",
+    "dev_NCVL": "cross-env NODE_ENV=development webpack --mode development --progress --hide-modules --config=webpack_NCVL.config.js",
+    "prod_NCVL": "cross-env NODE_ENV=production webpack --mode production --progress --hide-modules --config=webpack_NCVL.config.js",
+    "watch_NCVL": "cross-env NODE_ENV=production webpack --mode development --watch --progress --hide-modules --config=webpack_NCVL.config.js",
+    "prod_build_all": "npm run prod_NCTCL && npm run prod_NCVL"
   },
   "author": "Nomo",
   "license": "MIT",

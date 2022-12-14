@@ -1,0 +1,49 @@
+{ 
+  "name": "Naver-Cafe-VOD-Loader",
+  "namespace": "Naver-Cafe-Twitch-Clip-Loader",
+  "author": "Nomo",
+  "description": "Naver Cafe 에서 외부 VOD를 편하게 볼 수 있도록 해주는 유저스크립트 확장",
+  "match": [
+    "https://cafe.naver.com/*",
+    "https://clips.twitch.tv/*parent=cafe.naver.com*",
+    "https://player.twitch.tv/*parent=cafe.naver.com*",
+    "https://serviceapi.nmv.naver.com/*",
+    "https://www.youtube.com/embed/*origin=https%3A%2F%2Fcafe.naver.com*"
+  ],
+  "icon": "https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/logo.png",
+  "homepageURL": "https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/",
+  "supportURL": "https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues",
+  "downloadURL": "https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-VOD-Loader.user.js",
+  "updateURL": "https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-VOD-Loader.user.js",
+  "run-at": "document-start",
+  "require": [
+    "https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js",
+    "https://code.jquery.com/jquery-3.6.0.min.js"
+  ],
+  "grant": [
+    "GM.addStyle",
+    "GM_addStyle",
+    "GM.getValue",
+    "GM_getValue",
+    "GM.setValue",
+    "GM_setValue",
+    "GM.deleteValue",
+    "GM_deleteValue",
+    "GM.listValues",
+    "GM_listValues",
+    "GM.info",
+    "GM_info",
+    "GM.xmlHttpRequest",
+    "GM_xmlhttpRequest",
+    "GM.registerMenuCommand",
+    "GM_registerMenuCommand",
+    "GM.addValueChangeListener",
+    "GM_addValueChangeListener",
+    "GM.removeValueChangeListener",
+    "GM_removeValueChangeListener",
+    "unsafeWindow"
+  ],
+  "connect":[
+    "youtube.com"
+  ]
+}
