@@ -2,6 +2,7 @@ import { NOMO_DEBUG } from "./lib";
 
 window.GLOBAL = {};
 export default function GLOBAL_INIT(){
+    GLOBAL.scriptName = (GM.info.script.name || GM_info.script.name);
     GLOBAL.version = (GM.info.script.version || GM_info.script.version);
     GLOBAL.isTopWindow = window.self === window.top;
     GLOBAL.initLocationUrl = document.location.href;

@@ -2,7 +2,6 @@ import {reCalculateIframeWidth, autoPauseVideo} from "js/page/page_cafe_main";
 import { NOMO_DEBUG } from "./lib";
 
 export var YTPlayers = {};
-export var YTConvertedCount = 0;
 export function INSERT_YOUTUBE_SCRIPT(){
     if(!GM_SETTINGS.useYoutube) return;
 

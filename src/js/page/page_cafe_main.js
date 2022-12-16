@@ -1,5 +1,5 @@
 import {DEBUG, NOMO_DEBUG, escapeHtml} from "js/lib";
-import {INSERT_YOUTUBE_SCRIPT, YTPlayers, YTConvertedCount, createYTIframe, onYTPlayerReady, onYTPlayerStateChange, pauseYTVideo, createYTIframeArriveSub, YTClipInfo, getYTClipPageInfoXHR} from "js/youtube";
+import {INSERT_YOUTUBE_SCRIPT, YTPlayers, createYTIframe, onYTPlayerReady, onYTPlayerStateChange, pauseYTVideo, createYTIframeArriveSub, YTClipInfo, getYTClipPageInfoXHR} from "js/youtube";
 import css_cafe_main from "css/cafe_main.css";
 import {NAVER_VIDEO_EVENT_INIT, SET_NAVER_VIDEO_MAX_QUALITY_SUB} from "js/navervid.js";
 
@@ -12,9 +12,6 @@ import {NAVER_VIDEO_EVENT_INIT, SET_NAVER_VIDEO_MAX_QUALITY_SUB} from "js/naverv
 
 export function autoPauseVideo(e){
     if(!GM_SETTINGS.autoPauseOtherClips && !GM_SETTINGS.autoPlayNextClip) return;
-    if(e.data.type === "NCTCL"){
-        NOMO_DEBUG("autoPauseVideo", e.data);
-    }
     if(((e.origin === "https://clips.twitch.tv" || e.origin === "https://player.twitch.tv" || e.origin === "https://vod.afreecatv.com") && e.data.type === "NCTCL") === false) return;
     if(e.data.clipId === undefined || e.data.clipId === "") return;
     
@@ -190,7 +187,7 @@ function insertNCTCLContainerDescription(linkType, $elem, clipId, clipurl){
 
         case STREAMABLE:
             logoText = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 64 64"><defs><style>.cls-1{fill:#0f90fa;}</style></defs>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 64 64"><defs><style>.cls-1{fill:#0f90fa;}</style></defs>
                 <g>
                     <path class="cls-1" d="M45.11,15.76c-2.84,0-5.8,1.72-7.58,3.4-2.89,2.38-12.44,17-12.44,17l0,.05a8.12,8.12,0,1,1,0-9.39l4.07-6.4A15.77,15.77,0,1,0,18.42,47.7a13.57,13.57,0,0,0,11.06-5.15s5.12-7.07,7.2-10.42c1.89-3,4-8.28,8.59-8.28a8.17,8.17,0,0,1,8.19,8.47,8.58,8.58,0,0,1-8.39,8.75A8.23,8.23,0,0,1,39,38.3l-4,6.32A16.19,16.19,0,0,0,61.35,32,16.27,16.27,0,0,0,45.11,15.76Z"/>
                 </g>
@@ -199,12 +196,10 @@ function insertNCTCLContainerDescription(linkType, $elem, clipId, clipurl){
 
         case AFTV_VOD:
             logoText = `
-            <svg viewBox="0 0 69.15 75.91" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-            <clipPath id="a">
+            <svg viewBox="0 0 69.15 75.91" width="18px" height="18px" style="margin-top:-2px;" xmlns="http://www.w3.org/2000/svg">
             <path d="M2.14,65A108.54,108.54,0,0,1,0,43.19a100.16,100.16,0,0,1,1.33-17.07,20.93,20.93,0,0,1,.71-2.77,11.1,11.1,0,0,1,6.35-6.74A28.88,28.88,0,0,1,13.26,15a83.71,83.71,0,0,1,19.15-2.37h.45A78.06,78.06,0,0,1,51.77,15a49.58,49.58,0,0,1,5.15,1.68s5.07,2,6.42,6.67A24.76,24.76,0,0,1,64,26a114.94,114.94,0,0,1,1.36,17.21,110.06,110.06,0,0,1-2.2,21.93v0a10.05,10.05,0,0,1-7.66,7.75l-.36.07a115.36,115.36,0,0,1-22.46,2.2A115.39,115.39,0,0,1,10.26,73l-.5-.1A10,10,0,0,1,4,69.2,8.83,8.83,0,0,1,2.14,65Z" fill="none"/>
-            </clipPath>
             <path d="M50.22,1.27a2.33,2.33,0,0,1-1.36,3.25l-14.11,6.41a4.66,4.66,0,0,1-4.37-.1l-9.12-4.32a2.34,2.34,0,0,1-.61-3.44h0A2.3,2.3,0,0,1,24,2.81l7,5.64a2.47,2.47,0,0,0,2.19.52A3,3,0,0,0,34,8.6L46.91.33a2.35,2.35,0,0,1,3.31.94Z" fill="#0545b1"/>
-            <g clip-path="url(#a)">
+            <g>
             <path d="m68.24 27.38c-1-7.4-2.7-11.63-12.33-13.81a105.8 105.8 0 0 0-20.14-2.57c-1.09-0.05-2.19-0.05-3.29 0a105.71 105.71 0 0 0-20.13 2.58c-7.13 1.62-9.92 4.35-11.29 8.67-0.24 0.76 2.06-0.45 1.89 0.41s0.53 12.21 0.4 13.17c-1 7.29-4.24 7.61-4.24 7.87a134.72 134.72 0 0 0 0.89 16.3c1 7.4 2.71 11.62 12.34 13.81 8.68 2 15 1.83 20.13 2.06h3.29c5.16-0.23 11.45-0.1 20.14-2.06 9.63-2.19 11.34-6.41 12.33-13.81a132.48 132.48 0 0 0 0.9-16.31c0-0.14-1.45-3-2.88-6.78-0.14-0.37-1.08 1.57-1.22 1.19-1-2.74-1.09-8.12-1.41-10.85-0.04-0.44 4.68 0.56 4.62 0.13z" fill="#0545b1"/>
             <path d="m43.87 33.56c-0.07-2.56-0.1-5.08 0-7.61a5.56 5.56 0 0 1 2.58-4.79 6.39 6.39 0 0 1 5.83-0.29c3 1.33 6.82 3.37 6.82 3.37 2.21 1.2 4.07 2.21 6.39 3.72a2.5 2.5 0 0 1 0.35 0.21 5.63 5.63 0 0 1 0.07 9.45c-2.2 1.46-4.11 2.85-6.37 4.25a60 60 0 0 1-5.93 3.31 7.37 7.37 0 0 1-6.32 0.32 6.14 6.14 0 0 1-3-4.94s-0.29-2.79-0.42-7z" fill="#00bbed"/>
             <path d="m47.75 53.93c-7.31 6.8-23.16 6.81-30.27 0a1.44 1.44 0 0 0-2 2.07c8.21 7.84 25.8 7.85 34.21 0a1.43 1.43 0 1 0-1.95-2.1z" fill="#fff"/>
@@ -349,14 +344,14 @@ function convertVideoLinkToIframe($elem, options){
                 }
                 else{
                     NOMO_DEBUG("YTClipInfo[clipId] FAIL", YTClipInfo[clipId], $parentContainer);
-                    $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[Naver Cafe Twitch Clip Loader ${GLOBAL.version}]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
+                    $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[[${GLOBAL.scriptName} v${GLOBAL.version}]]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
                     $parentContainer.find(".NCTCLloader").remove();
                 }
             });
             break;
 
         case STREAMABLE:
-            iframeUrl = `https://streamable.com/e/${clipId}?parent=${parentHref}&autoplay=${autoPlay?"1":"0"}&muted=${muted?"1":"0"}&hd=1&loop=0&nocontrols=0`;
+            iframeUrl = `https://streamable.com/e/${clipId}?parent=${parentHref}&autoplay=${autoPlay?"1":"0"}&muted=${muted?"1":"0"}&hd=1&loop=0`;  // &nocontrols=0
             $parentContainer.find(".se-oglink-thumbnail").hide();
             $(`#NCTCL-${clipId}`)
                 .append(`<iframe ${lazy ? "loading='lazy'" : ""} class="NCTCL-iframe" data-clip-id="${clipId}" src="${iframeUrl}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
@@ -469,6 +464,7 @@ export async function PAGE_CAFE_MAIN(){
     // Twitch, Youtube clip 링크 찾기
     $(document).arrive("div.se-module-oglink", { onlyOnce: true, existing: true }, function (elem) {
         try{
+            var clipId = undefined, clipUrl, clipOption = "";
             var $elem = $(elem);
             if($elem.hasClass("fired")) return;
             $elem.addClass("fired");
@@ -479,17 +475,25 @@ export async function PAGE_CAFE_MAIN(){
                 NOMO_DEBUG("PERFORMANCE CHECK", Number(new Date()) - p0);
             }
 
-            setTimeout(function(){
-                var linkType;
-                var $a = $elem.find("a.se-oglink-thumbnail").first();
-                var $imgThumbnail = $elem.find("img.se-oglink-thumbnail-resource").first();
-                if($a.length === 0 || $imgThumbnail.length === 0) return; // thumbnail 이 없는 것은 제외한다.
+            var linkType;
+            var $a = $elem.find("a.se-oglink-thumbnail").first();
+            var $imgThumbnail = $elem.find("img.se-oglink-thumbnail-resource").first();
+            if($a.length === 0 || $imgThumbnail.length === 0) return; // thumbnail 이 없는 것은 제외한다.
+            var href = $a.attr("href");
 
-                var href = $a.attr("href");
+            // 이미지 로드에 실패하는 경우 대충 안내 메시지를 보여준다.
+            $imgThumbnail.on("error", function(e){
+                NOMO_DEBUG("IMG ERROR", e);
+                if(clipId !== undefined && $("#NCTCL-"+clipId).length !== 0){
+                    $("#NCTCL-"+clipId).html(`<div class="thumbnailRemoved" style="min-height:${videoHeight === 0 ? 800.0 / 16.0 * 9.0 : videoHeight}px"><div style="width:100%;text-align:center">[${GLOBAL.scriptName} v${GLOBAL.version}]<br />섬네일 이미지 로드에 실패했습니다. 아마 페이지가 사라진 것 같습니다.</div></div>`);
+                }
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+            setTimeout(function(){
                 NOMO_DEBUG("a = ", $a);
                 NOMO_DEBUG("img = ", $imgThumbnail);
-
-                ////////////////////////////////////////////////////////////////////////////////////////////////
                 const regexs = {};
                 if(GM_SETTINGS.use){
                     regexs[TWITCH_CLIP] = /^https?:\/\/(?:clips\.twitch\.tv\/|www\.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/)([a-zA-Z0-9-_]+)/;
@@ -515,8 +519,6 @@ export async function PAGE_CAFE_MAIN(){
                 }
                 if(!matchRes.found) return;
                 NOMO_DEBUG("matchRes", matchRes);
-
-                var clipId, clipUrl, clipOption = "";
 
                 switch(matchRes.type){    
                 default:
@@ -583,7 +585,7 @@ export async function PAGE_CAFE_MAIN(){
                                     if(YTClipInfo === undefined || YTClipInfo[clipId] === undefined || YTClipInfo[clipId].foundStoryBoardUrl === undefined || YTClipInfo[clipId].foundStoryBoardSeq === undefined){
                                         var $parentContainer = $elem.closest("div.se-section-oglink");
                                         NOMO_DEBUG("YTClipInfo[clipId] FAIL", YTClipInfo[clipId], $parentContainer);
-                                        $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[Naver Cafe Twitch Clip Loader ${GLOBAL.version}]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
+                                        $parentContainer.append(`<a href="${href}" target="_blank"><div class="YTClipFailContainer"><div class="YTClipFailContent">[[${GLOBAL.scriptName} v${GLOBAL.version}]]<br />Youtube Clip 정보를 가져오는데 실패했습니다.<br />클릭하면 Youtube 페이지가 새 창으로 열립니다.</div></div></a>`);
                                         $parentContainer.find(".NCTCLloader").remove();
                                         return;
                                     }
@@ -700,6 +702,7 @@ export async function PAGE_CAFE_MAIN(){
                         convertVideoLinkToIframe($(e.target), {"linkType":linkType, "href":href, "clipId":clipId, "autoPlay":GM_SETTINGS.clickRequiredAutoPlay, "muted":isClickRequiredMuted, "option":clipOption, "lazy":false});
                     });
                 }
+                
                 $elem.addClass("twitchClipFound");
                 $elem.closest("div.se-section-oglink").addClass("twitchClipFound");
                 $elem.closest("div.se-component-content").addClass("twitchClipFound");
@@ -727,6 +730,7 @@ export async function PAGE_CAFE_MAIN(){
 
 
     // 기존에 존재하는 Youtube 영상을 다시 변환한다.
+    var YTConvertedCount = 0;
     if(GM_SETTINGS.useYoutube){
         $(document).arrive("div.se-module-oembed iframe", { onlyOnce: true, existing: true }, function (elem) {
             try{
@@ -802,32 +806,33 @@ export async function PAGE_CAFE_MAIN(){
     // naver video 에 autoPauseVideo 적용
     $(document).arrive("video", { onlyOnce: true, existing: true }, function (elem) {
         try{
-            if($(elem).hasClass("_FIRSTPLAYED")) return;
+            var $elem = $(elem);
+            if($elem.hasClass("_FIRSTPLAYED")) return;
 
-            $(elem).on("play", function (e) {
+            $elem.on("play", function (e) {
                 NOMO_DEBUG("Naver video played", e);
-                var $elem = $(e.target);
+                let $target = $(e.target);
 
                 // autoPauseOtherClipsForNaverVideo
                 if(GM_SETTINGS.autoPauseOtherClips){    //  && GM_SETTINGS.autoPauseOtherClipsForNaverVideo
                     autoPauseVideo({
                         "origin":"https://clips.twitch.tv",
-                        "data":{"type":"NCTCL", "event":"play", "clipId":$elem.attr("id")},
+                        "data":{"type":"NCTCL", "event":"play", "clipId":$target.attr("id")},
                     });
                 }
-                if($elem.hasClass("_FIRSTPLAYED")) return;
-                $elem.addClass("_FIRSTPLAYED");
+                if($target.hasClass("_FIRSTPLAYED")) return;
+                $target.addClass("_FIRSTPLAYED");
             });
 
-            $(elem).on("playing", function (e) {
+            $elem.on("playing", function (e) {
                 NOMO_DEBUG("Naver video playing", e);
-                var $elem = $(e.target);
+                let $target = $(e.target);
 
-                if(GM_SETTINGS.naverVideoAutoMaxQuality && $elem.hasClass("_ENDED")){
+                if(GM_SETTINGS.naverVideoAutoMaxQuality && $target.hasClass("_ENDED")){
                     NOMO_DEBUG("ENDED & RESTART - RUN SET_NAVER_VIDEO_MAX_QUALITY_SUB");
-                    $elem.removeClass("_ENDED");
+                    $target.removeClass("_ENDED");
                     setTimeout(function(){
-                        SET_NAVER_VIDEO_MAX_QUALITY_SUB($elem.closest("div.u_rmcplayer_container").find(".u_rmc_definition_ly").first(), true);
+                        SET_NAVER_VIDEO_MAX_QUALITY_SUB($target.closest("div.u_rmcplayer_container").find(".u_rmc_definition_ly").first(), true);
                         
                         setTimeout(function(){
                             if(elem.paused){
@@ -838,18 +843,23 @@ export async function PAGE_CAFE_MAIN(){
                 }
             });
 
-            $(elem).on("pause", function (e) {
+            $elem.on("pause", function (e) {
                 NOMO_DEBUG("Naver video paused", e);
             });
             
-            $(elem).on("ended", function (e) {
+            $elem.on("ended", function (e) {
                 NOMO_DEBUG("Naver video ended", e);
-                $(elem).addClass("_ENDED");
+                $elem.addClass("_ENDED");
             });
 
+            var $seComponentContent = $elem.closest(".se-component-content");
             if(GM_SETTINGS.alwaysShowVolumeController){
-                $(elem).closest(".se-component-content").find(".u_rmc_volume_area").addClass("u_rmc_volume_control_hover");
+                $seComponentContent.find(".u_rmc_volume_area").addClass("u_rmc_volume_control_hover");
             }
+
+            var naverCafeLogo = `<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;user-select: none;" viewBox="0 0 96 96" height="18px" width="18px"><g id="g10" inkscape:label="Image" inkscape:groupmode="layer"><rect y="5e-07" x="5e-07" height="96" width="96" id="rect865" style="fill:#1dc800;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" /><path style="fill:#ffffff;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 22.810019,26.075075 h 18.03984 l 16.57371,24.254979 V 26.106948 H 75.367786 V 74.106947 H 57.391689 L 40.881729,50.075074 v 24.095618 h -18.16733 z" id="path40" /></g></svg> `;
+            $seComponentContent.find(".se-media-meta-info-title").prepend(naverCafeLogo);
+            $seComponentContent.find(".se-media-meta-info-description").prepend(naverCafeLogo);
         }
         catch(e){
             NOMO_DEBUG("Error from video arrive", e);

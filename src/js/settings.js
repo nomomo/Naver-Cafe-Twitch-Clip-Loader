@@ -259,7 +259,6 @@ const _settings = {
     },
     aftvAutoMaxQuality: {
         category:"aftv",
-        debug: true,
         depth: 2,
         type: "checkbox",
         value: true,

@@ -33,12 +33,30 @@ html body .se-section-oglink.twitchClipFound .se-oglink-thumbnail:after{
 div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
     filter:brightness(0.8);
 }
+div.se-module-oglink.aftvFound img.se-oglink-thumbnail-resource{
+    filter:brightness(0.8);
+}
 .se-component-content.streamableFound .NCTCL-container, .se-component-content.streamableFound .NCTCL-iframe-container{
     background-color: black;
 }
-
 .NCTCL-iframe-container {
     line-height:0 !important;
+}
+.NCTCL-iframe-container .thumbnailRemoved {
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 0px solid;
+    border-color: rgba(0,0,0,.15);
+    background: white;
+    line-height: 160%;
+    color: black;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding: 10px 18px;
+    box-sizing: border-box;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
 }
 .NCTCL-container .NCTCL-description {
     margin-top:0.25px;
@@ -92,6 +110,11 @@ div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
 }
 .noUnderLine{text-decoration:none;}
 .UnderLine{text-decoration: underline;}
+
+.se-media-meta-info-title-text, .se-media-meta-info-description{
+    vertical-align: middle !important;
+}
+/*
 .se-media-meta-info-description::before, .se-media-meta-info-title::before{
     content: 'NAVER';
     font-weight: 900;
@@ -105,7 +128,7 @@ div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
     padding: 0 3px;
     user-select: none;
 }
-
+*/
 
 .twitchClipFound .se-oglink-title::before
 /*,.twitchClipFound .NCTCL-titleText::before*/

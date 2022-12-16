@@ -168,7 +168,7 @@ async function RELOAD_NAVER_PLAYER(id, errorelem){
         var $errorelem = $(errorelem);
 
         if($errorelem.hasClass("naver_player_reload_error_btn")){
-            $errorelem.html(`[Naver Cafe Twitch Clip Loader ${GLOBAL.version}]<br /> 플레이어 로드에 실패했습니다. 페이지를 직접 새로고침 하세요.`);
+            $errorelem.html(`[[${GLOBAL.scriptName} v${GLOBAL.version}]]<br /> 플레이어 로드에 실패했습니다. 페이지를 직접 새로고침 하세요.`);
         }
         else{
             $errorelem.hide();

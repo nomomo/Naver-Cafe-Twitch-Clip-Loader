@@ -46,7 +46,6 @@ export default function PAGE_AFTV_EMBED(){
     
         /*재생바 투명도*/
         #afreecatv_player .progress{
-            opacity:0.5;
             padding:7px 0 !important; /* mouse on 시 재생바 커지는 것 방지 */
         }
         #afreecatv_player .progress .progress_track{
@@ -59,7 +58,7 @@ export default function PAGE_AFTV_EMBED(){
             opacity:0.7 !important;
         }
         #afreecatv_player .progress .progress_track{
-            background-color: rgba(0.6, 0.6, 0.6, 0.1) !important;
+            background-color: rgba(0.6, 0.6, 0.6, 0.3) !important;
         }
     
         /*volume slider 투명도*/
@@ -116,6 +115,21 @@ export default function PAGE_AFTV_EMBED(){
         }
     }
 
+    // set_volume_when_stream_starts
+    var is_volume_changed = false;
+    if(GM_SETTINGS.set_volume_when_stream_starts){
+        try{
+            localStorage.setItem('volume', GM_SETTINGS.target_start_volume);
+    
+            if(GM_SETTINGS.target_start_volume !== 0){
+                localStorage.setItem('muted', {default:Number(false)});
+            }
+        }
+        catch(e){
+            NOMO_DEBUG("Error from set_volume_when_stream_starts");
+        }
+    }
+
 
     // arrive video
     $(document).arrive("video.af_video", { onlyOnce: true, existing: true }, function (elem) {
@@ -161,25 +175,6 @@ export default function PAGE_AFTV_EMBED(){
         });
         // video.addEventListener('timeupdate', (e) => {
         // });
-        
-        // // set_volume_when_stream_starts
-        // try {
-        //     if(!isTwitchMuted && GM_SETTINGS.set_volume_when_stream_starts && !is_volume_changed){
-        //         NOMO_DEBUG("set_volume");
-        //         if(video.volume !== undefined){
-        //             NOMO_DEBUG("MUTE?", video.muted, "CURRENT VOLUME", video.volume, "TARGET VOLUME", GM_SETTINGS.target_start_volume);
-        //             setTimeout(function(){
-        //                 if(GM_SETTINGS.target_start_volume !== 0.0){
-        //                     video.muted = false;
-        //                 }
-        //                 video.volume = GM_SETTINGS.target_start_volume;
-        //                 is_volume_changed = true;
-        //             },100);
-        //         }
-        //     }
-        // } catch (e) {
-        //     NOMO_DEBUG("ERROR FROM set_volume_when_stream_starts", e);
-        // }
     });
 
 

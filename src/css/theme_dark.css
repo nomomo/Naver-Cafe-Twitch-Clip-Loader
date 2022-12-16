@@ -457,9 +457,11 @@ html
     filter:brightness(10);
 }
 
+/*
 .se-media-meta-info-description::before, .se-media-meta-info-title::before{
     background-color:var(--NCTCL-background-color) !important;
 }
+*/
 .skin-1080 .twitchClipFound .se-oglink-url{
     color:#a778ff !important;
 }
