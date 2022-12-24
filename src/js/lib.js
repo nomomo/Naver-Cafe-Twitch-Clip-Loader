@@ -4,7 +4,7 @@
 export var DEBUG = false;
 export async function DEBUG_INIT(){
     DEBUG = await GM.getValue("DEBUG", false);
-    unsafeWindow.NCTCL_DEBUG_TOGGLE = function(){DEBUG=!DEBUG;GM.setValue("DEBUG", DEBUG);return `DEBUG = ${DEBUG}`;};
+    unsafeWindow.NCCL_DEBUG_TOGGLE = function(){DEBUG=!DEBUG;GM.setValue("DEBUG", DEBUG);return `DEBUG = ${DEBUG}`;};
 }
 
 export function isDEBUG(){
@@ -15,7 +15,7 @@ export function NOMO_DEBUG( /**/ ) {
     if (DEBUG) {
         var args = arguments, args_length = args.length, args_copy = args;
         for (var i = args_length; i > 0; i--) args[i] = args_copy[i - 1];
-        args[0] = "[NCTCL]  ";
+        args[0] = "[NCCL]  ";
         args.length = args_length + 1;
         console.log.apply(console, args);
     }
@@ -24,7 +24,7 @@ export function NOMO_WARN( /**/ ) {
     if (DEBUG) {
         var args = arguments, args_length = args.length, args_copy = args;
         for (var i = args_length; i > 0; i--) args[i] = args_copy[i - 1];
-        args[0] = "[NCTCL]  ";
+        args[0] = "[NCCL]  ";
         args.length = args_length + 1;
         console.warn.apply(console, args);
     }
@@ -33,7 +33,7 @@ export function NOMO_ERROR( /**/ ) {
     if (DEBUG) {
         var args = arguments, args_length = args.length, args_copy = args;
         for (var i = args_length; i > 0; i--) args[i] = args_copy[i - 1];
-        args[0] = "[NCTCL]  ";
+        args[0] = "[NCCL]  ";
         args.length = args_length + 1;
         console.error.apply(console, args);
     }

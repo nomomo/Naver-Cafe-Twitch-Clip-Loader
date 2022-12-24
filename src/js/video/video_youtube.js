@@ -87,8 +87,8 @@ export class VideoYoutube extends VideoBase {
             }
         }
 
-        const YTElemID = "NCTCL-"+this.id;
-        this.$iframe = (`<div class="NCTCL_iframe" id="${YTElemID}"></div>`);
+        const YTElemID = "NCCL-"+this.id;
+        this.$iframe = (`<div class="NCCL_iframe" id="${YTElemID}"></div>`);
         this.$iframeContainer.append(this.$iframe);
 
         let YTOptions = {
@@ -119,7 +119,7 @@ export class VideoYoutube extends VideoBase {
         this.YTPlayer.muted = this.muted;
         NOMO_DEBUG("CREATE YTPlayer", this.id, YTOptions, this.YTPlayer);
 
-        this.$iframe = this.$iframeContainer.find(".NCTCL_iframe");
+        this.$iframe = this.$iframeContainer.find(".NCCL_iframe");
         let that = this;
         setTimeout(function(){that.$iframe.attr("title", "");},1000);
     }
@@ -218,7 +218,7 @@ export class VideoYoutube extends VideoBase {
                     that.ytid = rpt_match7[1];
                     that.foundStoryBoardUrl = undefined;
                     that.foundStoryBoardSeq = undefined;
-                    
+
                     NOMO_DEBUG("getYTClipPageInfoXHR Succeed", that.ytid, that.clipt);
 
                     // find image in storyboard

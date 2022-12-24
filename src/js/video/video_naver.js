@@ -18,8 +18,8 @@ export class VideoNaver extends VideoBase {
 
     static init(){
         window.addEventListener("message", function(e){
-            if(e.origin === "https://serviceapi.nmv.naver.com" && e.data.type === "NCTCL_NAVERVID_RELOAD"){
-                NOMO_DEBUG("NCTCL_NAVERVID_RELOAD message from serviceapi.nmv.naver.com", e.data);
+            if(e.origin === "https://serviceapi.nmv.naver.com" && e.data.type === "NCCL_NAVERVID_RELOAD"){
+                NOMO_DEBUG("NCCL_NAVERVID_RELOAD message from serviceapi.nmv.naver.com", e.data);
                 if(e.data.seq !== undefined){
                     VideoBase.videos[e.data.seq].parseNewInkeyAndReloadPlayer(e.data.beginTime);
                 }

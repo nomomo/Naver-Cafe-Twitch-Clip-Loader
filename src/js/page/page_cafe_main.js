@@ -37,7 +37,7 @@ export async function PAGE_CAFE_MAIN(){
     }
 
     // 설명란 링크 좌클릭 시 현재 재생 중인 비디오 모두 정지
-    $(document).on("click", "a.NCTCL_description", function(){
+    $(document).on("click", "a.NCCL_description", function(){
         VideoBase.stopAll();
     });
 
@@ -273,7 +273,7 @@ export async function PAGE_CAFE_MAIN(){
                     originalUrl:src,
                     url:src,
                     // clippy 의 경우 iframe 내에 cloudflarestream 에 대한 iframe 이 다시 한 번 삽입됨
-                    //iframeUrl:`https://clippy.kr/clip/${match[1]}/embed?parent=cafe.naver.com&extension=NCTCL`,
+                    //iframeUrl:`https://clippy.kr/clip/${match[1]}/embed?parent=cafe.naver.com&extension=NCCL`,
                     iframeUrl:`https://clippy.kr/clip/${match[1]}/embed`,
                     title:title,
                     desc:desc,

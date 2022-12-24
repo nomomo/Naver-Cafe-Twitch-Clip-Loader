@@ -1,7 +1,7 @@
 import { NOMO_DEBUG } from "js/lib.js";
 import { VideoBase } from "js/video/video_common.js";
 
-const gfycatLogo = `<img class="NCTCL_video_logo" src="https://gfycat.com/assets/favicons/favicon-32x32.png" width="18px" height"18px" />`;
+const gfycatLogo = `<img class="NCCL_video_logo" src="https://gfycat.com/assets/favicons/favicon-32x32.png" width="18px" height"18px" />`;
 
 export class VideoGfycat extends VideoBase {
     constructor(options) {

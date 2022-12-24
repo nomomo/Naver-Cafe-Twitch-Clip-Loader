@@ -28,6 +28,6 @@ export default function PAGE_SETTING(){
         head.appendChild(link);
     }
 
-    document.title = "Naver-Cafe-Twitch-Clip-Loader 상세 설정 페이지";
+    document.title = "Naver-Cafe-Clip-Loader 상세 설정 페이지";
     GM_setting.createlayout($("body"));
 }

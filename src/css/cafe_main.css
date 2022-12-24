@@ -1,15 +1,15 @@
-.NCTCL_container {
+.NCCL_container {
     position: relative;
 }
-.NCTCL_container .NCTCL_iframe_container {
+.NCCL_container .NCCL_iframe_container {
     display:flex;
     background-color: #000;
 }
-.NCTCL_container .NCTCL_iframe {
+.NCCL_container .NCCL_iframe {
     width:100%;
     height:100%;
 }
-.NCTCL_container .NCTCL_description {
+.NCCL_container .NCCL_description {
     display: flex;
     align-items:center;
     padding: 0 16px;
@@ -27,13 +27,13 @@
     font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
     background-color:#fff;
 }
-body #app .NCTCL_container .NCTCL_description svg,
-body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
+body #app .NCCL_container .NCCL_description svg,
+body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
     flex-shrink: 0;
     margin-right:10px;
     user-select: none;
 }
-.NCTCL_container .NCTCL_description .NCTCL_title {
+.NCCL_container .NCCL_description .NCCL_title {
     flex-shrink: 0;
     color:#333;
     font-size:14px;
@@ -44,7 +44,7 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
     max-width: calc(100% - 18px);
     padding:3px 0;
 }
-.NCTCL_container .NCTCL_description .NCTCL_link {
+.NCCL_container .NCCL_description .NCCL_link {
     color:#999;
     font-size:12px;
     text-overflow: ellipsis;
@@ -52,21 +52,21 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
     padding:5px 0 3px 0;
 }
 
-.NCTCL_container[data-NCTCL-type='NAVER_VID']  {
+.NCCL_container[data-NCCL-type='NAVER_VID']  {
     margin-top:30px;
 }
 
-.NCTCL_container .NCTCL_thumbnail_container{
+.NCCL_container .NCCL_thumbnail_container{
     flex-grow: 1;
     position: relative;
     cursor: pointer;
 }
-.NCTCL_container .NCTCL_thumbnail{
+.NCCL_container .NCCL_thumbnail{
     width:100%;
     height:100%;
     object-fit: cover;
 }
-.NCTCL_container .NCTCL_thumbnail_container.playbtn::before{
+.NCCL_container .NCCL_thumbnail_container.playbtn::before{
     content: '▶️';
     font-size: 15vw;
     width: 16vw;
@@ -91,7 +91,7 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
     transition: background-color 150ms linear;
     text-shadow: 3px 3px 15px rgb(0 0 0 / 30%);
 }
-.NCTCL_container .NCTCL_thumbnail_container.playbtn:hover::before{
+.NCCL_container .NCCL_thumbnail_container.playbtn:hover::before{
     background-color:rgba(255,255,255,0.2);
     box-shadow: 0px 0px 1vw rgb(0 0 0 / 40%);
     opacity:1.0;
@@ -99,15 +99,15 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
 
 
 
-.NCTCL_container .NCTCL_loader_container {
+.NCCL_container .NCCL_loader_container {
 }
-.NCTCL_container .NCTCL_loader,
-.NCTCL_container .NCTCL_loader:after {
+.NCCL_container .NCCL_loader,
+.NCCL_container .NCCL_loader:after {
   border-radius: 50% !important;
   width: 15vw !important;
   height: 15vw !important;
 }
-.NCTCL_container .NCTCL_loader {
+.NCCL_container .NCCL_loader {
     box-sizing: border-box;
     position: absolute !important;
     z-index: 10000 !important;
@@ -119,9 +119,9 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
     border-right: 2em solid rgba(255, 255, 255, 0.3) !important;
     border-bottom: 2em solid rgba(255, 255, 255, 0.3) !important;
     border-left: 2em solid #ffffff !important;
-    animation: NCTCLload8 1.1s infinite linear !important;
+    animation: NCCLload8 1.1s infinite linear !important;
 }
-@keyframes NCTCLload8 {
+@keyframes NCCLload8 {
   0% {
     transform: rotate(0deg);
   }
@@ -129,7 +129,7 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
     transform: rotate(360deg);
   }
 }
-.NCTCL_container .NCTCL_loader_desc_container {
+.NCCL_container .NCCL_loader_desc_container {
     position: absolute;
     top: calc(50% - 5vw);
     left: calc(50% - 5vw);
@@ -143,7 +143,7 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
     align-items: center;
     text-align: center;
 }
-.NCTCL_container .NCTCL_loader_desc {
+.NCCL_container .NCCL_loader_desc {
     width: 100%;
     font-size: 16px !important;
     font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif !important;
@@ -151,7 +151,7 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
 
 
 
-.NCTCL_container .NCTCL_error_container {
+.NCCL_container .NCCL_error_container {
     position: absolute;
     top: calc(50% - 20px);
     max-width: 90%;
@@ -169,22 +169,22 @@ body #app .NCTCL_container .NCTCL_description img.NCTCL_video_logo {
     font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif !important;
     line-height: 130%;
 }
-.NCTCL_container .NCTCL_error{
+.NCCL_container .NCCL_error{
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.NCTCL_container .NCTCL_error_container a{
+.NCCL_container .NCCL_error_container a{
     color:#00e686;
 }
-.NCTCL_container .NCTCL_error_container a:hover{
+.NCCL_container .NCCL_error_container a:hover{
     filter:brightness(1.1);
 }
 
 
 
 
-.NCTCL_container .NCTCL_iframe_container[data-NCTCL-type="TIKTOK"]{
+.NCCL_container .NCCL_iframe_container[data-NCCL-type="TIKTOK"]{
     box-sizing: border-box;
     border-top: 1px solid #ddd;
     border-left: 1px solid #ddd;

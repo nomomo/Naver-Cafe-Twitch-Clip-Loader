@@ -23,7 +23,7 @@ import { PageBase } from "js/page/page_common.js";
     if(GLOBAL.isTopWindow && GLOBAL.isNaverVideoEmbed) return;
     if(!GLOBAL.isTopWindow && GLOBAL.isTwitch && !GLOBAL.isParentNaverCafe) return;
 
-    console.log("[NCTCL]   Naver-Cafe-Twitch-Clip-Loader", document.location.href);
+    console.log("[NCCL]   Naver-Cafe-Clip-Loader", document.location.href);
     
     await DEBUG_INIT();
     await GM_SETTINGS_INIT();

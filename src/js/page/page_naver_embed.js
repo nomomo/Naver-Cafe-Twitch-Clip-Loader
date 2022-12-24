@@ -218,7 +218,7 @@ export class PageNaver extends PageBase {
         if(this.reloaded) return;
         this.reloaded = true;
         $(".naver_player_reload_error_btn").addClass("reloaded");
-        window.parent.postMessage({"type":"NCTCL_NAVERVID_RELOAD", "seq":this.seq, "loop":this.loop, "beginTime":this.lastTime}, "https://cafe.naver.com");
+        window.parent.postMessage({"type":"NCCL_NAVERVID_RELOAD", "seq":this.seq, "loop":this.loop, "beginTime":this.lastTime}, "https://cafe.naver.com");
     }
 
     setMaxQuality(force){

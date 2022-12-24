@@ -77,7 +77,7 @@ export class VideoBase {
         VideoBase.updateVideoSize();
 
         window.addEventListener("message", function(e){
-            if(e.data.type === "NCTCL"){
+            if(e.data.type === "NCCL"){
                 NOMO_DEBUG("received postMessage (embed -> naver)", e.data);
                 NOMO_DEBUG("VideoBase.videos", VideoBase.videos);
                 if(e.data.seq === undefined || e.data.seq === "") return;
@@ -100,7 +100,7 @@ export class VideoBase {
         NOMO_DEBUG("VideoBase - updateVideoSize");
         var videoWidth = String(Math.max(GM_SETTINGS.videoWidth, 1.0));
         GM_addStyle(`
-            .NCTCL_iframe_container {
+            .NCCL_iframe_container {
                 width:${videoWidth}%;
                 aspect-ratio:calc(16 / 9);
             }
@@ -127,19 +127,19 @@ export class VideoBase {
         NOMO_DEBUG("VideoBase - play", this.id);
         if(!this.$iframe || !this.iframeLoaded) return;
         this.autoPlayPauseOthers("play");
-        let newData = {"type":"NCTCL", "event":"play", "seq":this.seq};
+        let newData = {"type":"NCCL", "event":"play", "seq":this.seq};
         this.$iframe.get(0).contentWindow.postMessage(newData, this.postMessageUrl);
     }
     pause(){
         NOMO_DEBUG("VideoBase - pause", this.id);
         if(!this.$iframe || !this.iframeLoaded) return;
-        let newData = {"type":"NCTCL", "event":"pause", "seq":this.seq};
+        let newData = {"type":"NCCL", "event":"pause", "seq":this.seq};
         this.$iframe.get(0).contentWindow.postMessage(newData, this.postMessageUrl);
     }
     stop(){
         NOMO_DEBUG("VideoBase - stop", this.id);
         if(!this.$iframe || !this.iframeLoaded) return;
-        let newData = {"type":"NCTCL", "event":"pause", "seq":this.seq};
+        let newData = {"type":"NCCL", "event":"pause", "seq":this.seq};
         this.$iframe.get(0).contentWindow.postMessage(newData, this.postMessageUrl);
     }
 
@@ -221,22 +221,22 @@ export class VideoBase {
         let that = this;
 
         // insert main container
-        this.$container = $(`<div class="NCTCL_container" data-NCTCL-type=${this.typeName}></div>`);
-        this.$iframeContainer = $(`<div class="NCTCL_iframe_container" data-NCTCL-type=${this.typeName}></div>`);
+        this.$container = $(`<div class="NCCL_container" data-NCCL-type=${this.typeName}></div>`);
+        this.$iframeContainer = $(`<div class="NCCL_iframe_container" data-NCCL-type=${this.typeName}></div>`);
 
         // insert thumbnail container
-        this.$thumbnailContainer = $(`<div class="NCTCL_thumbnail_container" data-NCTCL-type=${this.typeName}></div>`);
+        this.$thumbnailContainer = $(`<div class="NCCL_thumbnail_container" data-NCCL-type=${this.typeName}></div>`);
         if(GM_SETTINGS.convertMethod !== "autoLoad" && this.thumbnailUrl){
-            this.$thumbnail = $(`<img loading="lazy" class="NCTCL_thumbnail" src="${this.thumbnailUrl}" data-NCTCL-type=${this.typeName} />`)
+            this.$thumbnail = $(`<img loading="lazy" class="NCCL_thumbnail" src="${this.thumbnailUrl}" data-NCCL-type=${this.typeName} />`)
                 .on("load", function(e){that.thumbnailLoaded(e);});
             this.$thumbnailContainer.append(this.$thumbnail);
         }
         this.$iframeContainer.append(this.$thumbnailContainer);
 
         // loader
-        this.$loader = $(`<div class="NCTCL_loader_container" style="display:none;">
-        <div class="NCTCL_loader"></div>
-        <div class="NCTCL_loader_desc_container"><div class="NCTCL_loader_desc">Loading...</div></div>
+        this.$loader = $(`<div class="NCCL_loader_container" style="display:none;">
+        <div class="NCCL_loader"></div>
+        <div class="NCCL_loader_desc_container"><div class="NCCL_loader_desc">Loading...</div></div>
         </div>`);
         this.$thumbnailContainer.append(this.$loader);
         if(this.parseDataRequired){
@@ -247,20 +247,20 @@ export class VideoBase {
         }
 
         // title and description
-        this.$title = $(`<div class="NCTCL_title" data-NCTCL-type=${this.typeName}>${this.title ? this.title : (this.desc ? this.desc : "제목없음")}</div>`);
+        this.$title = $(`<div class="NCCL_title" data-NCCL-type=${this.typeName}>${this.title ? this.title : (this.desc ? this.desc : "제목없음")}</div>`);
         let url = (this.url || this.originalUrl);
         if(url){
             this.$desc = $(`
-            <a href="${this.url}" class="NCTCL_description" target="_blank" data-NCTCL-type=${this.typeName}>
+            <a href="${this.url}" class="NCCL_description" target="_blank" data-NCCL-type=${this.typeName}>
                 ${this.logoSVG ? this.logoSVG : ""}
             </a>
             `);
-            this.$link = $(`<div class="NCTCL_link" data-NCTCL-type=${this.typeName}>${this.url ? "("+this.url+")" : ""}</div>`);
+            this.$link = $(`<div class="NCCL_link" data-NCCL-type=${this.typeName}>${this.url ? "("+this.url+")" : ""}</div>`);
             this.$desc.append(this.$title).append(this.$link);
         }
         else{
             this.$desc = $(`
-            <div class="NCTCL_description">
+            <div class="NCCL_description">
                 ${this.logoSVG ? this.logoSVG : ""}
             </div>
             `);
@@ -369,7 +369,7 @@ export class VideoBase {
         //NOMO_DEBUG("VideoBase - createIframe");
         let that = this;
         this.iframeLoaded = false;
-        this.$iframe = $(`<iframe class="NCTCL_iframe" data-NCTCL-type="${this.typeName}" data-NCTCL-id="${this.id}" src="${this.iframeUrl}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
+        this.$iframe = $(`<iframe class="NCCL_iframe" data-NCCL-type="${this.typeName}" data-NCCL-id="${this.id}" src="${this.iframeUrl}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
         this.$iframe.on("load", function(){
             that.iframeLoaded = true;
         });
@@ -435,7 +435,7 @@ export class VideoBase {
         }
         else if(!this.$iframe){
             NOMO_DEBUG("create $thumbnail");
-            this.$thumbnail = $(`<img class="NCTCL_thumbnail" src="${this.thumbnailUrl}" data-NCTCL-type=${this.typeName} />`);
+            this.$thumbnail = $(`<img class="NCCL_thumbnail" src="${this.thumbnailUrl}" data-NCCL-type=${this.typeName} />`);
             this.$thumbnailContainer.empty().append(this.$thumbnail);
         }
     }
@@ -458,7 +458,7 @@ export class VideoBase {
         if(this.$error){
             this.$error.remove();
         }
-        this.$error = $(`<div class="NCTCL_error_container"><div class="NCTCL_error">${html}</div></div>`);
+        this.$error = $(`<div class="NCCL_error_container"><div class="NCCL_error">${html}</div></div>`);
         this.$iframeContainer.append(this.$error);
     }
     hideError(){

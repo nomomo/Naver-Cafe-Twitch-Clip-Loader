@@ -2,7 +2,7 @@ import {NOMO_DEBUG} from "js/lib";
 import theme_dark from "css/theme_dark.css";
 
 var isDarkMode = false;
-var $darkModeBtn = $(`<span title="[NCTCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다." id="darkModeBtn">어두운 모드 ${isDarkMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
+var $darkModeBtn = $(`<span title="[NCCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다." id="darkModeBtn">어두운 모드 ${isDarkMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
     .on("click", async () => {
         NOMO_DEBUG("어두운 모드", isDarkMode , "->", !isDarkMode);
         isDarkMode = !isDarkMode;
@@ -47,7 +47,7 @@ async function applyDarkMode(){
     try{
         isDarkMode = await GM.getValue("darkMode", false);
         NOMO_DEBUG("어두운 모드", isDarkMode);
-        $darkModeBtn.attr("title", `[NCTCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다.`);
+        $darkModeBtn.attr("title", `[NCCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다.`);
         if(themeCSSElem !== undefined) $(themeCSSElem).remove();
         if(isDarkMode){
             themeCSSElem = GM_addStyle(theme_dark.toString().replace(/(\.skin-1080)/g, "html[data-theme='dark'] body"));

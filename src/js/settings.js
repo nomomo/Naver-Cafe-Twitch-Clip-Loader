@@ -150,7 +150,7 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: true,
-        title:"naver 관련 기능 사용",
+        title:"Naver 관련 기능 사용",
         desc:""
     },
     naverVideoAutoMaxQuality: {

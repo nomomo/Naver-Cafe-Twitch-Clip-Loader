@@ -67,7 +67,7 @@ export default function PAGE_CAFE_TOP(){
             var wn = (ww > 930 ? 930 : ww/5*4);
             var left  = (ww/2)-(wn/2),
                 top = (wh/2)-(wh/5*4/2);
-            window.open("https://cafe.naver.com/NaverCafeTwitchClipLoaderSettings/","winname",
+            window.open("https://cafe.naver.com/NaverCafeClipLoaderSettings/","winname",
                 "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4+",top="+top+",left="+left);
         });
         GM.registerMenuCommand("상세 설정 열기 (현재 창)", openSettingsMenu);

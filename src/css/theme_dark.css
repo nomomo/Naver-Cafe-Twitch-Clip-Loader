@@ -1,17 +1,17 @@
 
 :root{
-    --NCTCL-font-color:#FFF;
-    --NCTCL-background-color:#202020;
-    --NCTCL-border-color:#383838;
+    --NCCL-font-color:#FFF;
+    --NCCL-background-color:#202020;
+    --NCCL-border-color:#383838;
 
     
-    --NCTCL-font-color-lighter:#AAA;
-    --NCTCL-background-color-lighter:#303030;
-    --NCTCL-border-color-lighter:#383838;
+    --NCCL-font-color-lighter:#AAA;
+    --NCCL-background-color-lighter:#303030;
+    --NCCL-border-color-lighter:#383838;
     
-    --NCTCL-font-color-lightest:#AAA;
-    --NCTCL-background-color-lightest:#404040;
-    --NCTCL-border-color-lightest:#484848;
+    --NCCL-font-color-lightest:#AAA;
+    --NCCL-background-color-lightest:#404040;
+    --NCCL-border-color-lightest:#484848;
 }
 
 *::-webkit-scrollbar { background: #505050 !important; }
@@ -93,7 +93,7 @@ h1,h2,h3,h4,h5,h6
 ,.skin-1080 .LowLevelAccessGuide .list_explanation li
 ,.skin-1080 .LowLevelAccessGuide .list_level .desc
 {
-    color:var(--NCTCL-font-color) !important;
+    color:var(--NCCL-font-color) !important;
 }
 
 .skin-1080 .ia-info-data .gm-tcol-c
@@ -142,7 +142,7 @@ h1,h2,h3,h4,h5,h6
 ,.skin-1080 .list_sub_tab .link
 ,.skin-1080 .LowLevelAccessGuide .txt_level .level
 {
-    color:var(--NCTCL-font-color-lighter) !important;
+    color:var(--NCCL-font-color-lighter) !important;
 }
 
 /* space */
@@ -152,7 +152,7 @@ h1,h2,h3,h4,h5,h6
 ,.RelatedArticlesTabContainer__tab button[aria-pressed=true]:after
 ,.skin-1080 .prev-next .pgR:before
 {
-    background-color:var(--NCTCL-border-color) !important;
+    background-color:var(--NCCL-border-color) !important;
 }
 
 .skin-1080 .CommentBox
@@ -183,13 +183,13 @@ h1,h2,h3,h4,h5,h6
 ,.skin-1080 .article-board tbody td
 ,.skin-1080 .search_result .learn_more.is_selected + .search_input
 {
-    border-color:var(--NCTCL-border-color);
+    border-color:var(--NCCL-border-color);
 }
 
 
 .skin-1080 .list_sub_tab .on .link
 {
-    border-color:var(--NCTCL-border-color-lightest);
+    border-color:var(--NCCL-border-color-lightest);
 }
 
 /* normal */
@@ -205,16 +205,16 @@ html
 ,.skin-1080 .prev-next
 ,.skin-1080 .prev-next a
 ,.skin-1080 .list-search
-,.NCTCL_container .NCTCL_description
-,.NCTCL_container .NCTCL_description .NCTCL_title
+,.NCCL_container .NCCL_description
+,.NCCL_container .NCCL_description .NCCL_title
 {
-    color:var(--NCTCL-font-color);
-    background-color:var(--NCTCL-background-color);
-    border-color:var(--NCTCL-border-color);
+    color:var(--NCCL-font-color);
+    background-color:var(--NCCL-background-color);
+    border-color:var(--NCCL-border-color);
 }
 
 .skin-1080 .search_result .search_input{
-    border:1px solid var(--NCTCL-border-color);
+    border:1px solid var(--NCCL-border-color);
 }
 
 
@@ -296,9 +296,9 @@ html
 ,.skin-1080 .LowLevelAccessGuide .guide_box
 ,.skin-1080 .select_component2 .select_list
 {
-    color:var(--NCTCL-font-color);
-    background-color:var(--NCTCL-background-color-lighter);
-    border-color:var(--NCTCL-border-color);
+    color:var(--NCCL-font-color);
+    background-color:var(--NCCL-background-color-lighter);
+    border-color:var(--NCCL-border-color);
 }
 
 .skin-1080 #nomo_settings
@@ -311,23 +311,23 @@ html
 ,.skin-1080 #naver-gnb #gnb-menu .gnb_txt
 ,.skin-1080 .LowLevelAccessGuide .cafe_level_info
 {
-    color:var(--NCTCL-font-color);
-    background-color:var(--NCTCL-background-color-lightest) !important;
-    border-color:var(--NCTCL-border-color) !important;
+    color:var(--NCCL-font-color);
+    background-color:var(--NCCL-background-color-lightest) !important;
+    border-color:var(--NCCL-border-color) !important;
 }
 .skin-1080 #nomo_settings #GM_setting input
 ,.skin-1080 #nomo_settings #GM_setting .btn-default
 ,.skin-1080 #nomo_settings #GM_setting .btn-primary
 ,.skin-1080 #nomo_settings #GM_setting .form-control
 {
-    color:var(--NCTCL-font-color);
-    background-color:var(--NCTCL-background-color-lighter);
-    border-color:var(--NCTCL-border-color);
+    color:var(--NCCL-font-color);
+    background-color:var(--NCCL-background-color-lighter);
+    border-color:var(--NCCL-border-color);
 }
 .skin-1080 #nomo_settings a
 ,.skin-1080 #nomo_settings a:hover
 ,.skin-1080 #nomo_settings a:focus{
-    color:var(--NCTCL-font-color-lighter) !important;
+    color:var(--NCCL-font-color-lighter) !important;
 }
 #GM_setting .GM_setting_under_dev .GM_setting_title{
     color:#c9adff;
@@ -363,9 +363,9 @@ html
 ,.skin-1080 #cafe-menu .cafe-menu-tit.frst a
 ,.skin-1080 .input_search_area .btn-search-green
 {
-    color:var(--NCTCL-font-color);
-    background-color:var(--NCTCL-background-color-lightest);
-    border-color:var(--NCTCL-border-color-lightest);
+    color:var(--NCCL-font-color);
+    background-color:var(--NCCL-background-color-lightest);
+    border-color:var(--NCCL-border-color-lightest);
 }
 
 /* 공지 */
@@ -380,15 +380,15 @@ html
 
 /* 글쓰기 */
 .skin-1080 .setting_area, .skin-1080 .setting_area *{
-    color:var(--NCTCL-font-color-lighter);
-    background-color:var(--NCTCL-background-color-lighter);
-    border-color:var(--NCTCL-border-color-lighter);
+    color:var(--NCCL-font-color-lighter);
+    background-color:var(--NCCL-background-color-lighter);
+    border-color:var(--NCCL-border-color-lighter);
 }
 
 /*emoji*/
 .CommentBox .comment_list .CommentItemSticker .comment_sticker_link .image
 ,.se-viewer .se-sticker-image{
-    background-color:var(--NCTCL-background-color-lightest);
+    background-color:var(--NCCL-background-color-lightest);
 }
 
 .ArticleTool .button_comment .svg-icon
@@ -458,6 +458,6 @@ html
 
 /*
 .se-media-meta-info-description::before, .se-media-meta-info-title::before{
-    background-color:var(--NCTCL-background-color) !important;
+    background-color:var(--NCCL-background-color) !important;
 }
 */

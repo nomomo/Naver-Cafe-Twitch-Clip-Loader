@@ -60,7 +60,7 @@ export class PageBase {
 
 
         window.addEventListener("message", function(e){
-            if(e.origin === "https://cafe.naver.com" && e.data.type === "NCTCL"){
+            if(e.origin === "https://cafe.naver.com" && e.data.type === "NCCL"){
                 NOMO_DEBUG("received postMessage (naver -> embed)", that.seq, that.id, e.data);
                 if(e.data.seq === undefined || e.data.seq === "" || that.video === undefined) return;
                 switch(e.data.event){
@@ -112,16 +112,16 @@ export class PageBase {
 
     onPlay(e){
         NOMO_DEBUG("Play - ", this.id);
-        //if(GM_SETTINGS.autoPauseOtherClips) window.parent.postMessage({"type":"NCTCL", "event":"play", "seq":this.seq}, "https://cafe.naver.com");
-        if(GM_SETTINGS.autoPauseOtherClips) this.sendPostMessage({"type":"NCTCL", "event":"play", "seq":this.seq});
+        //if(GM_SETTINGS.autoPauseOtherClips) window.parent.postMessage({"type":"NCCL", "event":"play", "seq":this.seq}, "https://cafe.naver.com");
+        if(GM_SETTINGS.autoPauseOtherClips) this.sendPostMessage({"type":"NCCL", "event":"play", "seq":this.seq});
     }
     onPause(e){
         NOMO_DEBUG("Pause - ", this.id);
-        //if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"pause", "clipId":this.id}, "https://cafe.naver.com");
+        //if(GM_SETTINGS.autoPauseOtherClips || GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCCL", "event":"pause", "clipId":this.id}, "https://cafe.naver.com");
     }
     onEnded(e){
-        //if(GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCTCL", "event":"ended", "seq":this.seq}, "https://cafe.naver.com");
-        if(GM_SETTINGS.autoPlayNextClip) this.sendPostMessage({"type":"NCTCL", "event":"ended", "seq":this.seq});
+        //if(GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCCL", "event":"ended", "seq":this.seq}, "https://cafe.naver.com");
+        if(GM_SETTINGS.autoPlayNextClip) this.sendPostMessage({"type":"NCCL", "event":"ended", "seq":this.seq});
     }
     onPlaying(e){
         //

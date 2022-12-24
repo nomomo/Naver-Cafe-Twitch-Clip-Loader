@@ -28,7 +28,7 @@ export default function GLOBAL_INIT(){
     GLOBAL.isNaverCafeMobile = /(^https:\/\/m\.cafe\.naver\.com\/)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isTwitchClip = /(^https:\/\/clips\.twitch\.tv\/)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isTwitchVod = /(^https:\/\/player\.twitch\.tv\/)/.test(GLOBAL.initLocationUrl);
-    GLOBAL.isSettingWindow = /(^https:\/\/cafe\.naver\.com\/NaverCafeTwitchClipLoaderSettings)/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isSettingWindow = /(^https:\/\/cafe\.naver\.com\/NaverCafeClipLoaderSettings)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isTwitch = (GLOBAL.isTwitchClip || GLOBAL.isTwitchVod);
     GLOBAL.isNaverVideoEmbed = /(^https:\/\/serviceapi\.nmv\.naver\.com(\/ugc)?\/view\/ugcPlayer)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isParentNaverCafe = /(parent=(cafe|www)?\.?naver\.com)/.test(GLOBAL.initLocationUrl);

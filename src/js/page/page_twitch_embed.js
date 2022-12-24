@@ -42,7 +42,7 @@ class PageTwitch extends PageBase{
             background-color:rgba(255,255,255,0.2);
             box-shadow: 0px 0px 1vw rgb(0 0 0 / 40%);
         }
-        .NCTCLVideoDeletedNotice{
+        .NCCLVideoDeletedNotice{
             position: absolute;
             font-size: 2vw;
             width: 100%;
@@ -52,7 +52,7 @@ class PageTwitch extends PageBase{
             flex: 1 1 100%;
             background-color: #eee;
         }
-        .NCTCLVideoDeletedNotice .text{
+        .NCCLVideoDeletedNotice .text{
             text-align:center;
             width:100%;
         }
