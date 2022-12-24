@@ -69,6 +69,9 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 - "섬네일 클릭 시" 옵션이 Naver 동영상에 대해서도 적용되도록 변경했습니다.
 - Afreecatv VOD, Clippy, Kakao TV, Dailymotion, gfycat, Tiktok 에 대한 지원이 추가되었습니다.
 - 이제 삽입된 모든 동영상의 비율이 16:9로 고정됩니다. (Tiktok, gfycat 등 일부 플랫폼 제외)
+- Naver video 관련
+  - Naver video 위에서 클릭한 상태로 마우스를 살짝 움직인 후 떼면 클릭이 씹히는 Naver Player 의 문제를 개선했습니다.
+  - 이제 Naver video 화면을 더블클릭하여 전체화면을 할 수 있습니다.
 - 기본 설정 변경
   - 클립 링크 변환 시점을 "페이지 로딩 시"가 기본이 되도록 변경했습니다.
   - Twitch 링크 변환 기능이 기본으로 꺼지도록 변경했습니다. 해외 사용자의 경우 상세 설정에서 다시 활성화해야 합니다.
