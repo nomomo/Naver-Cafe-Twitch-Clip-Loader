@@ -240,6 +240,23 @@ export class VideoYoutube extends VideoBase {
                             that.foundStoryBoardSeq = seq;
 
                             that.updateThumbnail(that.foundStoryBoardUrl);
+
+                            // shift image
+                            let translateX = "0";
+                            let translateY = "0";
+                            if(seq >= 0 && seq < 10){
+                                translateY = "calc(100% / 5)";
+                            }
+                            else if(seq >= 15 && seq < 25){
+                                translateY = "calc(-100% / 5)";
+                            }
+                            if(seq % 5 === 0 || seq % 5 === 1){
+                                translateX = "calc(100% / 5)";
+                            }
+                            else if(seq % 5 === 3 || seq % 5 === 4){
+                                translateX = "calc(-100% / 5)";
+                            }
+                            that.$thumbnail.css("border","1px solid #eee").css("transform", `scale(calc(5/3)) translate(${translateX}, ${translateY})`);
                         }
                     }
 

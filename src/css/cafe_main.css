@@ -60,6 +60,7 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
     flex-grow: 1;
     position: relative;
     cursor: pointer;
+    overflow: hidden;
 }
 .NCCL_container .NCCL_thumbnail{
     width:100%;
