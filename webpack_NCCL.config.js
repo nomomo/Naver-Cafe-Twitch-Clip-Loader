@@ -4,7 +4,7 @@ const WebpackUserscript = require('webpack-userscript');
 const TerserPlugin = require('terser-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var PACKAGE = require('./package.json');
-const my_project_name = "Naver-Cafe-VOD-Loader";//PACKAGE.name;
+const my_project_name = "Naver-Cafe-Clip-Loader";//PACKAGE.name;
 
 console.log("__dirname", __dirname);
 
@@ -57,7 +57,7 @@ module.exports = {
     // },
     plugins: [
         new WebpackUserscript({
-            headers: path.join(__dirname, './src/headers_NCVL.json'),
+            headers: path.join(__dirname, './src/headers_NCCL.json'),
             pretty: true
         })
     ]

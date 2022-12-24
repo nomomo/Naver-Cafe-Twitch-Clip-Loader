@@ -1,19 +1,18 @@
-# Naver-Cafe-Twitch-Clip-Loader
+# Naver-Cafe-Clip-Loader
 
-- 본 UserScript 는 네이버 카페 글에서 Twitch 클립 링크를 재생 가능한 비디오로 변환해줍니다. (엄청 편하다!)
+- 본 UserScript 는 네이버 카페 글에서 자체 지원되지 않는 외부 동영상 링크를 재생 가능한 비디오로 변환해줍니다. (엄청 편하다!)
+  - Youtube Clip, Twitch(해외 사용자의 경우) Clip, Afreecatv VOD, Streamable, Clippy, Kakao TV, Dailymotion, gfycat, Tiktok
 - 네이버 카페에서 전체화면 후 해제 시 스크롤이 이상한 위치로 이동하는 문제를 해결해줍니다.
-- 설정에서 링크를 비디오로 변환할 시점을 선택할 수 있습니다. (페이지 로딩 시 자동 변환 or 섬네일 링크 클릭 시 변환)
-- 설명 동영상: [https://www.youtube.com/watch?v=USr6AtvKslc](https://www.youtube.com/watch?v=USr6AtvKslc)
 
 ## Preview
 
-- 아래 그림과 같이 Twitch Clip 의 섬네일이 있는 링크를 재생 가능한 비디오로 변환해줍니다.
+- 아래 그림과 같이 Youtube Clip 의 섬네일이 있는 링크를 재생 가능한 비디오로 변환해줍니다.
 
 ![Preview](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_01.png)
 
 ## Install
 
-Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
+Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 ### STEP 1. ScriptManager
 
@@ -28,7 +27,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 ### STEP 2. UserScript
 
 - 유저스크립트 관리 확장기능 설치 후, 아래의 링크를 클릭하여 스크립트를 설치합니다.
-  - [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js) from [https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js)
+  - Install from [https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js)
 
 이것으로 설치는 끝입니다. 즐겁게 사용하세요~
 
@@ -39,7 +38,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ## Settings
 
-- Naver Cafe 에 접속한 상태에서, Toolbar 의 Tampermonkey 아이콘 - Naver-Cafe-Twitch-Clip-Loader - 상세 설정 열기를 클릭하여 설정을 변경할 수 있습니다.
+- Naver Cafe 에 접속한 상태에서, Toolbar 의 Tampermonkey 아이콘 - Naver-Cafe-Clip-Loader - 상세 설정 열기를 클릭하여 설정을 변경할 수 있습니다.
 
 ![Open Settings Menu](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_preview_02.png)
 
@@ -49,7 +48,7 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ## FAQ
 
-- Q: 스크립트를 새 버전으로 업데이트 하려면 어떻게 하나요?<br />A: 주기적으로 자동 업데이트 되지만, Tampermonkey 대시보드에서 "최근 업데이트 일시"를 클릭하여 수동 업데이트가 가능합니다.<br />설치 링크를 다시 클릭하여 업데이트 할 수도 있습니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Twitch-Clip-Loader.user.js)<br /><br />
+- Q: 스크립트를 새 버전으로 업데이트 하려면 어떻게 하나요?<br />A: 주기적으로 자동 업데이트 되지만, Tampermonkey 대시보드에서 "최근 업데이트 일시"를 클릭하여 수동 업데이트가 가능합니다.<br />설치 링크를 다시 클릭하여 업데이트 할 수도 있습니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js)<br /><br />
 - Q: 스크립트를 업데이트 하기 싫은데 매일 업데이트 창이 떠요.<br />A: 다음과 같이 자동 업데이트를 해제하세요.<br />[Tampermonkey 대시보드] - [설치된 유저 스크립트] - [Naver-Cafe-Twitch-Clip_Loader] - [설정] - [업데이트 확인 체크 해제] - [저장 버튼 클릭]<br />![DisableAutoUpdate](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_disable_autoupdate.png)
 
 ## Bug report
@@ -61,9 +60,15 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 - Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-### 0.9.0 - Dec. XX, 2022
+### 1.0.0 - Dec. 24, 2022
 
-- Afreecatv VOD 링크의 섬네일을 비디오로 변환하는 기능을 지원합니다.
+- 내부 구조 개선으로 스크립트 동작이 빨라졌습니다.
+- Naver 동영상이 많이 삽입된 글을 열람 시 브라우저가 멈추는 것을 개선합니다. (Cafe 에 삽입된 모든 Naver 동영상에 대해 게으른 로딩 방식을 적용)
+- 클립 링크 변환 시점을 "페이지 로딩 시"가 기본이 되도록 변경했습니다.
+- "섬네일 클릭 시" 옵션이 Naver 동영상에 대해서도 적용되도록 변경했습니다.
+- Afreecatv VOD, Clippy, Kakao TV, Dailymotion, gfycat, Tiktok 에 대한 지원이 추가되었습니다.
+  - 일부 기능의 경우 수동 업데이트가 필요합니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js)
+- 그 외 설정 옵션이 통합 및 개편 되었습니다. 상세 설정창에서 확인해보세요.
 
 ### 0.8.0b - Dec. 12, 2022
 
@@ -182,4 +187,4 @@ Naver-Cafe-Twitch-Clip-Loader 의 설치 방법을 설명합니다.
 
 ## Happy??
 
-<a href="https://www.buymeacoffee.com/nomomo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="60"></a>　<a href="https://toon.at/donate/636947867320352181" target="_blank"><img src="https://raw.githubusercontent.com/nomomo/Addostream/master/assets/toonation_b11.png" height="60" alt="Donate with Toonation" /></a>
+<a href="https://www.buymeacoffee.com/nomomo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="60"></a>
