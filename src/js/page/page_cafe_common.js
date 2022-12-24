@@ -48,8 +48,8 @@ function improvedRefresh(){
             }
 
             // condition 3 : 예외 목록에 있지 않음
-            var except = ["https://cafe.naver.com/MyCafeListGNBView.nhn"];
-            for(var i=0;i<except.length;i++){
+            let except = ["https://cafe.naver.com/MyCafeListGNBView.nhn"];
+            for(let i=0;i<except.length;i++){
                 if(document.location.href.indexOf(except[i]) !== -1){
                     NOMO_DEBUG("예외 목록에 포함된 URL", except[i], document.location.href);
                     return;
@@ -97,12 +97,6 @@ export function PAGE_CAFE_COMMON_INIT(){
         THEATER_INIT();
         DARKMODE_INIT();
 
-        // $("head").append(`
-        // <link rel="dns-prefetch" href="https://apis.naver.com/">
-        // <link rel="preconnect" href="https://apis.naver.com/">
-        // <link rel="dns-prefetch" href="https://gfp.veta.naver.com/">
-        // <link rel="preconnect" href="https://gfp.veta.naver.com/">
-        // `);
     }
     catch(e){
         NOMO_DEBUG("Error from theaterMode", e);

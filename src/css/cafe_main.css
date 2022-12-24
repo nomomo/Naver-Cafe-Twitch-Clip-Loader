@@ -1,5 +1,73 @@
-.twitchClipFound .se-oglink-thumbnail.hoverPlayButton::before{
-    content: '▶️';
+.NCCL_container {
+    position: relative;
+}
+.NCCL_container .NCCL_iframe_container {
+    display:flex;
+    background-color: #000;
+}
+.NCCL_container .NCCL_iframe {
+    width:100%;
+    height:100%;
+}
+.NCCL_container .NCCL_description {
+    display: flex;
+    align-items:center;
+    padding: 0 16px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    margin-top:0px;
+    text-decoration: none;
+    width: 100%;
+    height: 40px;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
+    font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    background-color:#fff;
+}
+body #app .NCCL_container .NCCL_description svg,
+body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
+    flex-shrink: 0;
+    margin-right:10px;
+    user-select: none;
+}
+.NCCL_container .NCCL_description .NCCL_title {
+    flex-shrink: 0;
+    color:#333;
+    font-size:14px;
+    font-weight: 700;
+    margin-right: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: calc(100% - 18px);
+    padding:3px 0;
+}
+.NCCL_container .NCCL_description .NCCL_link {
+    color:#999;
+    font-size:12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding:5px 0 3px 0;
+}
+
+.NCCL_container[data-NCCL-type='NAVER_VID']  {
+    margin-top:30px;
+}
+
+.NCCL_container .NCCL_thumbnail_container{
+    flex-grow: 1;
+    position: relative;
+    cursor: pointer;
+}
+.NCCL_container .NCCL_thumbnail{
+    width:100%;
+    height:100%;
+    object-fit: cover;
+}
+.NCCL_container .NCCL_thumbnail_container.playbtn::before{
+    content: '▶';
     font-size: 15vw;
     width: 16vw;
     height: 16vw;
@@ -21,132 +89,39 @@
     -webkit-transition: background-color 150ms linear;
     -ms-transition: background-color 150ms linear;
     transition: background-color 150ms linear;
+    text-shadow: 3px 3px 15px rgb(0 0 0 / 30%);
 }
-.twitchClipFound .se-oglink-thumbnail.hoverPlayButton:hover::before{
+.NCCL_container .NCCL_thumbnail_container.playbtn:hover::before{
     background-color:rgba(255,255,255,0.2);
     box-shadow: 0px 0px 1vw rgb(0 0 0 / 40%);
     opacity:1.0;
 }
-html body .se-section-oglink.twitchClipFound .se-oglink-thumbnail:after{
-    border:0;
-}
-div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
-    filter:brightness(0.8);
-}
-.se-component-content.streamableFound .NCTCL-container, .se-component-content.streamableFound .NCTCL-iframe-container{
-    background-color: black;
-}
-
-.NCTCL-iframe-container {
-    line-height:0 !important;
-}
-.NCTCL-container .NCTCL-description {
-    margin-top:0.25px;
-}
-.NCTCL-container .se-link{
-    display: flex; align-items:center; padding: 0 16px; border: 1px solid rgba(0,0,0,.15); box-sizing: border-box; margin-top:0px;text-decoration: none;
-    overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size:14px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
-    height: 48px;
-    font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
-    background-color:#fff;
-}
-.NCTCL-container .se-link:hover{
-    text-decoration: none;
-}
-.NCTCL-container .se-link svg{
-    margin-right:10px;
-    flex-shrink: 0;
-    vertical-align: middle;
-}
-.NCTCL-container .NCTCL-titleText {
-    height:16px;
-    vertical-align: middle;
-    font-size: 16px;
-    font-weight: 700;
-    flex-shrink: 0;
-    max-width: calc(100% - 19px);
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-.NCTCL-container .NCTCL-clipurlText {
-    color:#333;
-    height:16px;
-    color:black;
-    vertical-align: middle;
-    font-size: 14px;
-    margin-left: 10px;
-    
-    text-overflow: ellipsis;
-    overflow: hidden;
-    position:relative;
-    top:0.5px;
-}
-.NCTCL-container a.se-link .NCTCL-titleText {
-    color:#333 !important;
-}
-.NCTCL-container a.se-link .NCTCL-clipurlText{
-    color:#999 !important;
-}
-.NCTCL-container a.se-link:hover .NCTCL-titleText, .NCTCL-container a.se-link:hover .NCTCL-clipurlText {
-    color:#4a90e2 !important;
-}
-.noUnderLine{text-decoration:none;}
-.UnderLine{text-decoration: underline;}
-.se-media-meta-info-description::before, .se-media-meta-info-title::before{
-    content: 'NAVER';
-    font-weight: 900;
-    color: #2DB400;
-    font-size: 12px;
-    font-family: nanumgothic, sans-serif;
-    height: 16px;
-    width: 16px;
-    margin-right: 10px;
-    background: #eee;
-    padding: 0 3px;
-    user-select: none;
-}
 
 
-.twitchClipFound .se-oglink-title::before
-/*,.twitchClipFound .NCTCL-titleText::before*/
-{
-    display: inline-block;
-    content: 'Twitch';
-    font-weight: 900;
-    color: #a778ff;
-    font-size: 12px;
-    font-family: math;
-    height: 20px;
-    width: 45px;
-    margin-right: 10px;
-    background: #eee;
-    position: relative;
-    user-select: none;
-    padding: 0 4px;
-    box-sizing:border-box;
-}
 
-.NCTCLloader,
-.NCTCLloader:after {
+.NCCL_container .NCCL_loader_container {
+}
+.NCCL_container .NCCL_loader,
+.NCCL_container .NCCL_loader:after {
   border-radius: 50% !important;
-  width: 10vw !important;
-  height: 10vw !important;
+  width: 15vw !important;
+  height: 15vw !important;
 }
-.NCTCLloader {
-
+.NCCL_container .NCCL_loader {
+    box-sizing: border-box;
     position: absolute !important;
     z-index: 10000 !important;
-    top: calc(50% - 5vw) !important;
-    left: calc(50% - 5vw) !important;
+    top: calc(50% - 7.5vw) !important;
+    left: calc(50% - 7.5vw) !important;
     font-size: 10px !important;
     text-indent: -9999em !important;
-    border-top: 1.1em solid rgba(255, 255, 255, 0.2) !important;
-    border-right: 1.1em solid rgba(255, 255, 255, 0.2) !important;
-    border-bottom: 1.1em solid rgba(255, 255, 255, 0.2) !important;
-    border-left: 1.1em solid #ffffff !important;
-    animation: NCTCLload8 1.1s infinite linear !important;
+    border-top: 2em solid rgba(255, 255, 255, 0.3) !important;
+    border-right: 2em solid rgba(255, 255, 255, 0.3) !important;
+    border-bottom: 2em solid rgba(255, 255, 255, 0.3) !important;
+    border-left: 2em solid #ffffff !important;
+    animation: NCCLload8 1.1s infinite linear !important;
 }
-@keyframes NCTCLload8 {
+@keyframes NCCLload8 {
   0% {
     transform: rotate(0deg);
   }
@@ -154,27 +129,65 @@ div.se-component-content.youtubeClipFound img.se-oglink-thumbnail-resource{
     transform: rotate(360deg);
   }
 }
-
-.YTClipFailContainer{
+.NCCL_container .NCCL_loader_desc_container {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    z-index: 100;
-    cursor: pointer;
+    top: calc(50% - 5vw);
+    left: calc(50% - 5vw);
+    color: #fff;
+    text-shadow: 0 0 1px rgb(0 0 0 / 70%), 0 0 3px rgb(0 0 0 / 50%), 0 0 5px rgb(0 0 0 / 60%);
+    z-index: 10000;
+    width: 10vw;
+    height: 10vw;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
+    text-align: center;
+}
+.NCCL_container .NCCL_loader_desc {
+    width: 100%;
+    font-size: 16px !important;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif !important;
 }
 
-.YTClipFailContainer .YTClipFailContent{
+
+
+.NCCL_container .NCCL_error_container {
+    position: absolute;
+    top: calc(50% - 20px);
+    max-width: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
     padding: 20px;
-    background: rgba(0,0,0,0.7);
-    max-width: 80%;
-    border-radius: 15px;
-    text-align: center;
-    margin: 0 auto;
-    font-size: 16px;
+    z-index: 999999;
+    font-size: 14px !important;
+    background: rgba(0,0,0,0.85);
     color: #fff;
-    line-height: 160%;
-    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    border: none;
+    box-shadow: 0 0 4px rgb(0 0 0 / 70%), 0 0 4px rgb(255 255 255 / 70%);
+    box-sizing: border-box;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif !important;
+    line-height: 130%;
+}
+.NCCL_container .NCCL_error{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.NCCL_container .NCCL_error_container a{
+    color:#00e686;
+}
+.NCCL_container .NCCL_error_container a:hover{
+    filter:brightness(1.1);
+}
+
+
+
+
+.NCCL_container .NCCL_iframe_container[data-NCCL-type="TIKTOK"]{
+    box-sizing: border-box;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
 }

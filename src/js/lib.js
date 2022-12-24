@@ -4,19 +4,43 @@
 export var DEBUG = false;
 export async function DEBUG_INIT(){
     DEBUG = await GM.getValue("DEBUG", false);
-    unsafeWindow.NCTCL_DEBUG_TOGGLE = function(){DEBUG=!DEBUG;GM.setValue("DEBUG", DEBUG);return `DEBUG = ${DEBUG}`;};
+    unsafeWindow.NCCL_DEBUG_TOGGLE = function(){DEBUG=!DEBUG;GM.setValue("DEBUG", DEBUG);return `DEBUG = ${DEBUG}`;};
+}
+
+export function isDEBUG(){
+    return DEBUG;
 }
 
 export function NOMO_DEBUG( /**/ ) {
     if (DEBUG) {
         var args = arguments, args_length = args.length, args_copy = args;
         for (var i = args_length; i > 0; i--) args[i] = args_copy[i - 1];
-        args[0] = "[NCTCL]  ";
+        args[0] = "[NCCL]  ";
         args.length = args_length + 1;
         console.log.apply(console, args);
     }
 }
+export function NOMO_WARN( /**/ ) {
+    if (DEBUG) {
+        var args = arguments, args_length = args.length, args_copy = args;
+        for (var i = args_length; i > 0; i--) args[i] = args_copy[i - 1];
+        args[0] = "[NCCL]  ";
+        args.length = args_length + 1;
+        console.warn.apply(console, args);
+    }
+}
+export function NOMO_ERROR( /**/ ) {
+    if (DEBUG) {
+        var args = arguments, args_length = args.length, args_copy = args;
+        for (var i = args_length; i > 0; i--) args[i] = args_copy[i - 1];
+        args[0] = "[NCCL]  ";
+        args.length = args_length + 1;
+        console.error.apply(console, args);
+    }
+}
 window.NOMO_DEBUG = NOMO_DEBUG;
+window.NOMO_WARN = NOMO_WARN;
+window.NOMO_ERROR = NOMO_ERROR;
 
 /* arrive.js
 * v2.4.1
@@ -1364,3 +1388,7 @@ export var GM_setting = (function ($, global, document) { //
 // escapeHTML
 const entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
 export var escapeHtml = function(string) { return String(string).replace(/[&<>"'`=/]/g, function (s) { return entityMap[s]; }); };
+
+export function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}

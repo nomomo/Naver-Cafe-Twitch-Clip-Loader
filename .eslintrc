@@ -1,11 +1,12 @@
-module.exports = {
+{
     "env": {
         "browser": true,
+        "node": true,
         "es6": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 2018,
+        "ecmaVersion": 2022,
         "sourceType": "module"
     },
     "globals": {
@@ -31,7 +32,9 @@ module.exports = {
         "URLEncoder": true,
         "YT": true,
         "GLOBAL": true,
-        "NOMO_DEBUG": true
+        "NOMO_DEBUG": true,
+        "NOMO_WARN": true,
+        "NOMO_ERROR": true
     },
     "rules": {
         "no-global-assign": ["error", {"exceptions": ["page","ignores"]}],
@@ -46,4 +49,4 @@ module.exports = {
             "always"
         ]
     }
-};
+}
