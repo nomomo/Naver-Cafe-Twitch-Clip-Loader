@@ -42,7 +42,7 @@ export async function PAGE_CAFE_MAIN(){
     });
 
     let regexs = {};
-    if(GM_SETTINGS.use){
+    if(GM_SETTINGS.useTwitch){
         regexs[GLOBAL.TWITCH_CLIP] = /^https?:\/\/(?:clips\.twitch\.tv\/|www\.twitch.tv\/[a-zA-Z0-9-_]+\/clip\/)([a-zA-Z0-9-_]+)/i;
         regexs[GLOBAL.TWITCH_VOD] = /(?:^https?:\/\/www\.twitch.tv\/videos\/(\d+)\??(t=[hms0-9]+)?|^https?:\/\/www\.twitch.tv\/.+\/v\/(\d+)\??[a-zA-Z0-9=-_]*(&t=[hms0-9]+)?)/i;
     }

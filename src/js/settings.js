@@ -12,8 +12,8 @@ const _settings = {
         depth: 1,
         type: "radio",
         value: "autoLoad",
-        title:"클립 링크 변환 시점 선택",
-        desc:" - 페이지 로딩 시: 섬네일을 비디오로 자동 변환<br /> - 섬네일 클릭 시: 섬네일을 클릭할 때 비디오로 변환", radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "섬네일 클릭 시", value:"clickRequired"}},
+        title:"Video 링크 변환 시점 선택",
+        desc:" - 페이지 로딩 시: 링크를 비디오로 자동 변환<br /> - 섬네일 클릭 시: 섬네일을 클릭할 때 비디오로 변환", radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "섬네일 클릭 시", value:"clickRequired"}},
     },
     autoPlayFirstClip: {
         category: "type",
@@ -23,8 +23,8 @@ const _settings = {
         radio_enable_value: "autoLoad",
         type: "checkbox",
         value: false,
-        title: "페이지 로딩과 동시에 첫 번째 클립을 자동 재생",
-        desc: ""
+        title: "페이지 로딩과 동시에 첫 번째 동영상을 자동 재생",
+        desc: "일부 동영상 플랫폼의 경우 지원하지 않을 수 있습니다."
     },
     autoPlayFirstClipMuted: {
         category: "type",
@@ -96,7 +96,7 @@ const _settings = {
         type: "checkbox",
         value: false,
         title:"다음 영상을 자동으로 이어서 재생",
-        desc:"본문에 여러 개의 동영상이 존재할 때 동영상이 종료되면 다음 영상을 자동으로 재생합니다(편하다!). 일부 플랫폼의 경우 지원되지 않을 수 있습니다."
+        desc:"본문에 여러 개의 동영상이 존재할 때 동영상이 종료되면 다음 영상을 자동으로 재생합니다(편하다!). 일부 동영상 플랫폼의 경우 본 기능이 지원되지 않을 수 있습니다."
     },
     removeOriginalLinks: {
         category:"videoCommon",
@@ -195,8 +195,8 @@ const _settings = {
         depth: 2,
         type: "checkbox",
         value: true,
-        title:"Youtube 클립 링크를 비디오로 변환",
-        desc:"",
+        title:"Youtube Clip 링크를 비디오로 변환",
+        desc:"<span style='color:#999'>예시) https://youtube.com/clip/xxxxx_xxxxxx-xxxxxx_xxxxx</span>",
     },
     youtubeClipStoryBoardImage : {
         category:"youtube",
@@ -204,7 +204,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         under_dev:true,
-        title:"Youtube 클립 섬네일을 스토리보드 이미지로 대체",
+        title:"Youtube Clip 섬네일을 스토리보드 이미지로 대체",
         desc:"",
     },
     youtubeSetQuality : {
@@ -227,35 +227,6 @@ const _settings = {
             "small":{title:"small (240p)"},
             "tiny":{title:"tiny (144p)"},
         }
-    },
-
-    // Twitch
-    use : {
-        category:"twitch",
-        category_name: "Twitch",
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title:"Twitch 클립 링크를 비디오로 변환",
-        desc:""
-    },
-    play_and_pause_by_click : {
-        category:"twitch",
-        debug:true,
-        depth: 2,
-        type: "checkbox",
-        value: true,
-        title:"Twitch Clip 페이지 스타일로 표시",
-        desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)<br />일시정지 시 상단 오버레이와 재생 버튼을 숨깁니다. 재생 중 화면을 더블 클릭하여 전체화면을 할 수 있습니다."
-    },
-    twitch_clip_time_update_after_end : {
-        category:"twitch",
-        debug:true,
-        depth: 2,
-        type: "checkbox",
-        value: true,
-        title:"클립 재생이 끝난 후 동영상 탐색 동작 개선",
-        desc:"클립 재생이 끝나고 동영상을 탐색한 경우, 클립 재시작 시 마지막 탐색한 시간부터 시작하도록 동작을 개선합니다."
     },
 
     // Afreecatv
@@ -295,10 +266,38 @@ const _settings = {
         desc:""
     },
 
-    // Streamable
-    useStreamable : {
+    
+    // Twitch
+    useTwitch : {
         category:"others",
         category_name:"그 외",
+        depth: 1,
+        type: "checkbox",
+        value: false,
+        title:"Twitch Clip 및 VOD 링크를 비디오로 변환",
+        desc:"한국 거주 시청자는 사용할 수 없습니다."
+    },
+    play_and_pause_by_click : {
+        category:"others",
+        debug:true,
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"Twitch Clip 페이지 스타일로 표시",
+        desc:"클립 화면을 클릭하여 재생 및 일시정지 되도록 만듭니다. (편하다!)<br />일시정지 시 상단 오버레이와 재생 버튼을 숨깁니다. 재생 중 화면을 더블 클릭하여 전체화면을 할 수 있습니다."
+    },
+    twitch_clip_time_update_after_end : {
+        category:"others",
+        debug:true,
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"클립 재생이 끝난 후 동영상 탐색 동작 개선",
+        desc:"클립 재생이 끝나고 동영상을 탐색한 경우, 클립 재시작 시 마지막 탐색한 시간부터 시작하도록 동작을 개선합니다."
+    },
+
+    useStreamable : {
+        category:"others",
         depth: 1,
         type: "checkbox",
         value: true,

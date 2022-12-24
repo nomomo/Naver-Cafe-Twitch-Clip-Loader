@@ -63,7 +63,7 @@ import { PageBase } from "js/page/page_common.js";
 
     // Embed Twitch Clip or VOD
     else if(GLOBAL.isTwitch){
-        if(GM_SETTINGS.use){
+        if(GM_SETTINGS.useTwitch){
             PAGE_TWITCH_EMBED();
         }
         return;
