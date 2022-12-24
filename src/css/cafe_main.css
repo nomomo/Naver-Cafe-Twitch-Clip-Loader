@@ -67,7 +67,7 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
     object-fit: cover;
 }
 .NCCL_container .NCCL_thumbnail_container.playbtn::before{
-    content: '▶️';
+    content: '▶';
     font-size: 15vw;
     width: 16vw;
     height: 16vw;
