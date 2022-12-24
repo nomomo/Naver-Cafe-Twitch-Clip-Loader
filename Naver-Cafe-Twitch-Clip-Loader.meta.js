@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Naver-Cafe-Twitch-Clip-Loader
-// @version     0.9.0
+// @version     1.0.0
 // @author      Nomo
-// @description Naver Cafe 에서 트위치 클립을 편하게 볼 수 있도록 해주는 유저스크립트 확장
+// @description Naver Cafe 에서 Youtube Clip 등의 외부 VOD를 편하게 볼 수 있도록 해주는 유저스크립트 확장
 // @supportURL  https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues
 // @match       https://cafe.naver.com/*
 // @match       https://clips.twitch.tv/*parent=cafe.naver.com*

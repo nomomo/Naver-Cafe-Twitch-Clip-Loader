@@ -65,13 +65,11 @@ h1,h2,h3,h4,h5,h6
 ,.skin-1080 .SaleInfo
 ,.skin-1080 .SaleInfo .CommercialDetail .list_title
 ,.skin-1080 .SaleInfo .ProductCategory
-,.skin-1080 .NCTCL-container .se-link
 ,.skin-1080 .CafeViewer .se-viewer .se-section-oglink.se-section.se-l-large_image .se-oglink-info
 ,.skin-1080 .CafeViewer .se-viewer .se-module-oglink .se-oglink-title
 ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta
 ,.skin-1080 .se-viewer .se-video .se-media-meta-info, .se-viewer .se-video .se-media-meta-info-title
 ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta-info-wrap:not(.se-is-activated) .se-media-meta-info-description
-,.NCTCL-container a.se-link .NCTCL-titleText
 ,.skin-1080 .ArticleTagList .item
 ,.skin-1080 .ArticleTagList .item a
 ,.skin-1080 .pop_container
@@ -207,6 +205,8 @@ html
 ,.skin-1080 .prev-next
 ,.skin-1080 .prev-next a
 ,.skin-1080 .list-search
+,.NCTCL_container .NCTCL_description
+,.NCTCL_container .NCTCL_description .NCTCL_title
 {
     color:var(--NCTCL-font-color);
     background-color:var(--NCTCL-background-color);
@@ -276,7 +276,6 @@ html
 ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_td
 ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .deal_list
 ,.skin-1080 .ModalLayer .layer_commerce_safety_guide .safety_deal_text
-,.skin-1080 .NCTCL-container .se-link
 ,.skin-1080 .CafeViewer .se-viewer .se-section-oglink.se-section.se-l-large_image .se-oglink-info
 ,.skin-1080 .CafeViewer .se-viewer .se-video .se-media-meta
 ,.skin-1080 .se-viewer .se-module-oglink
@@ -462,10 +461,3 @@ html
     background-color:var(--NCTCL-background-color) !important;
 }
 */
-.skin-1080 .twitchClipFound .se-oglink-url{
-    color:#a778ff !important;
-}
-.skin-1080 .twitchClipFound .se-oglink-title::before{
-    top:-1px;
-}
-

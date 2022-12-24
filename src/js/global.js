@@ -2,6 +2,22 @@ import { NOMO_DEBUG } from "./lib";
 
 window.GLOBAL = {};
 export default function GLOBAL_INIT(){
+    GLOBAL.TWITCH_CLIP = 0;
+    GLOBAL.TWITCH_VOD = 1;
+    GLOBAL.YOUTUBE_CLIP = 2;
+    GLOBAL.YOUTUBE_VOD = 3;
+    GLOBAL.NAVER_VID = 7;
+    GLOBAL.NAVER_TV = 8;
+    GLOBAL.STREAMABLE = 10;
+    GLOBAL.AFTV_VOD = 11;
+    GLOBAL.CLIPPY = 12;
+    GLOBAL.KAKAO_VID = 13;
+    GLOBAL.DAILYMOTION = 14;
+    GLOBAL.GFYCAT = 15;
+    GLOBAL.VLIVE_OEMBED = 16;
+    GLOBAL.VLIVE__1 = 17;
+    GLOBAL.VLIVE__2 = 18;
+    GLOBAL.TIKTOK = 19;
     GLOBAL.scriptName = (GM.info.script.name || GM_info.script.name);
     GLOBAL.version = (GM.info.script.version || GM_info.script.version);
     GLOBAL.isTopWindow = window.self === window.top;
@@ -21,4 +37,10 @@ export default function GLOBAL_INIT(){
     GLOBAL.isCafeWritingMode = (/^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/articles\/\d+\/modify/.test(GLOBAL.initLocationUrl) || /^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/menus\/\d+\/articles\/write\?/.test(GLOBAL.initLocationUrl));
     GLOBAL.isStreamableEmbed = /^https?:\/\/streamable\.com\/e\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isAftvEmbed = /^https?:\/\/vod\.afreecatv\.com\/player\//.test(GLOBAL.initLocationUrl);
+    GLOBAL.isClippyEmbed = /^https?:\/\/clippy.kr\/clip\/[a-zA-Z0-9-_]+\/embed/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isKakaotvEmbed = false;
+    GLOBAL.isDailymotionEmbed = false;
+    GLOBAL.isGfycat = false;
+    GLOBAL.isVlive = false;
+    GLOBAL.isTiktok = false;
 }
