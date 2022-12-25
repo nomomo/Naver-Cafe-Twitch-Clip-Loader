@@ -77,7 +77,12 @@ export default function PAGE_YOUTUBE_EMBED(){
         /*.html5-endscreen {display:none !important}*/
         .ytp-endscreen-content {display:none !important;}
         `);
-        $(document).on("mouseup", "#player .html5-video-player.ended-mode, .html5-endscreen", function(e){
+        $(document).on("mouseup", ".videowall-endscreen.html5-endscreen", function(e){
+            NOMO_DEBUG("Clicked youtube endscreen", e, e.target);
+
+            let $target = $(e.target);
+            if($target.closest(".ytp-chrome-bottom").length !== 0) return;
+
             $(".ytp-play-button").trigger("click");
             setTimeout(function(){
                 if($("video").get(0).paused){
