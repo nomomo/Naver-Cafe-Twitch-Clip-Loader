@@ -14,30 +14,37 @@
 }
 
 .u_rmcplayer .u_rmcplayer_error_layer div.naver_player_reload_error_btn {
-    border-radius: 15px;
-    border: 2px solid #fff;
-    background: #eee;
+    border-radius: 5px;
+    border: 1px solid #666;
+    background: #333;
     padding: 10px;
     text-shadow: 0 0 2px rgb(0 0 0 / 10%);
-    color: #333;
+    color: #fff;
     font-size: 14px;
     line-height: 23px;
     letter-spacing: -0.5px;
-    max-width: 370px;
-    font-weight: 300;
-    margin: 30px auto 0 auto;
+    max-width: 350px;
+    font-weight: 400;
+    margin: 20px auto 0 auto;
     cursor: pointer;
-    font-family:se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    box-shadow: 0 0 8px #666;
 }
 .u_rmcplayer .u_rmcplayer_error_layer div.naver_player_reload_error_btn:hover {
-    background: #fff;
+    background: #252525;
 }
-.u_rmcplayer .u_rmcplayer_error_layer div.naver_player_reload_error_btn.reloaded {
-    opacity: 0.12;
+.u_rmcplayer .u_rmcplayer_error_layer div.naver_player_reload_error_btn:hover {
+    background: #252525;
+}
+.u_rmcplayer .u_rmcplayer_error_layer .u_rmc_error_txt.reloaded div.naver_player_reload_error_btn:hover {
+    background: #333;
+}
+.u_rmcplayer .u_rmcplayer_error_layer .u_rmc_error_txt.reloaded{
+    filter: blur(3px);
+    opacity: 0.8;
+}
+.u_rmcplayer .u_rmcplayer_error_layer .u_rmc_error_txt.reloaded div.naver_player_reload_error_btn {
     cursor: default;
-}
-.u_rmcplayer .u_rmcplayer_error_layer div.naver_player_reload_error_btn.reloaded:hover {
-    background-color: #eee;
 }
 
 .u_rmc_share {

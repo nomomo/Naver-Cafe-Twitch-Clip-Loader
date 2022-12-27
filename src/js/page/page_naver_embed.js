@@ -217,7 +217,7 @@ export class PageNaver extends PageBase {
         NOMO_DEBUG("playerReload", this.id, this.seq);
         if(this.reloaded) return;
         this.reloaded = true;
-        $(".naver_player_reload_error_btn").addClass("reloaded");
+        $(".u_rmc_error_txt").addClass("reloaded");
         window.parent.postMessage({"type":"NCCL_NAVERVID_RELOAD", "seq":this.seq, "loop":this.loop, "beginTime":this.lastTime}, "https://cafe.naver.com");
     }
 

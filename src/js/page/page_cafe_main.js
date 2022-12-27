@@ -376,6 +376,9 @@ export async function PAGE_CAFE_MAIN(){
 
             let start = obj.data.inputUrl.match(/start=(\d+)/);
             let end = obj.data.inputUrl.match(/end=(\d+)/);
+            if(start === null){
+                start = obj.data.inputUrl.match(/t=(\d+)/);
+            }
 
             let vid = new VideoYoutube({
                 id:id,

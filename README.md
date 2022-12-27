@@ -64,7 +64,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-## 1.0.1 - Dec. 25, 2022
+### 1.0.2 - Dec. 28, 2022
+
+- Youtube 동영상의 시작 시간 옵션(t=xxxx)이 무시되는 버그 수정
+
+### 1.0.1 - Dec. 25, 2022
 
 - Youtube 동영상이 종료된 후 하단 Control 조작 시 비디오가 Replay 되는 버그 수정
 - Youtube Clip 의 스토리보드 이미지를 섬네일 대신 표시할 때 일부만 확대하여 표시합니다.
