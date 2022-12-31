@@ -226,8 +226,9 @@ export class VideoBase {
 
         // insert thumbnail container
         this.$thumbnailContainer = $(`<div class="NCCL_thumbnail_container" data-NCCL-type=${this.typeName}></div>`);
+        let imgLazy = (this.seq == 0 ? "eager" : "lazy");
         if(GM_SETTINGS.convertMethod !== "autoLoad" && this.thumbnailUrl){
-            this.$thumbnail = $(`<img loading="lazy" class="NCCL_thumbnail" src="${this.thumbnailUrl}" data-NCCL-type=${this.typeName} />`)
+            this.$thumbnail = $(`<img loading="${imgLazy}" class="NCCL_thumbnail" src="${this.thumbnailUrl}" data-NCCL-type=${this.typeName} />`)
                 .on("load", function(e){that.thumbnailLoaded(e);});
             this.$thumbnailContainer.append(this.$thumbnail);
         }
@@ -430,7 +431,7 @@ export class VideoBase {
     updateThumbnail(url){
         this.thumbnailUrl = url;
         if(this.$thumbnail){
-            NOMO_DEBUG("update thumbnail url");
+            NOMO_DEBUG("update thumbnail url", this.id, this.seq, url);
             this.$thumbnail.attr("src", this.thumbnailUrl);
         }
         else if(!this.$iframe){
@@ -438,6 +439,11 @@ export class VideoBase {
             this.$thumbnail = $(`<img class="NCCL_thumbnail" src="${this.thumbnailUrl}" data-NCCL-type=${this.typeName} />`);
             this.$thumbnailContainer.empty().append(this.$thumbnail);
         }
+    }
+    updateTitle(html){
+        if(!this.$title) return;
+        NOMO_DEBUG("update title", this.id, this.seq, html);
+        this.$title.html(html);
     }
 
     // loader

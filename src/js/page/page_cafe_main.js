@@ -9,6 +9,7 @@ import { VideoTwitch } from "js/video/video_Twitch.js";
 import { VideoKakao } from "js/video/video_kakao.js";
 import { VideoGfycat } from "js/video/video_gfycat.js";
 import { VideoTiktok } from "js/video/video_tiktok.js";
+import { VideoClippy } from "js/video/video_clippy.js";
 
 export async function PAGE_CAFE_MAIN(){
     // add dns-prefetch and preconnect header
@@ -240,7 +241,7 @@ export async function PAGE_CAFE_MAIN(){
 
             case GLOBAL.AFTV_VOD:{
                 let id = match[1];
-                let start = undefined;
+                let start = 0;
                 let vodurl = `https://vod.afreecatv.com/player/${id}`;
                 if(match[2] !== undefined){
                     start = Number(match[2].replace("change_second=",""));
@@ -265,19 +266,15 @@ export async function PAGE_CAFE_MAIN(){
             }
 
             case GLOBAL.CLIPPY:{
-                let vid = new VideoBase({
-                    logoSVG:`<svg width="18px" height="18px" viewBox="0 0 25 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 40C5.54688 40 0 34.4531 0 27.5V9.21875C0 4.14062 4.0625 0 9.21875 0C14.2969 0 18.4375 4.14062 18.4375 9.21875V25.625C18.4375 28.9062 15.7031 31.5625 12.5 31.5625C9.21875 31.5625 6.5625 28.9062 6.5625 25.625V12.5C6.5625 11.3281 7.5 10.3125 8.75 10.3125C9.92188 10.3125 10.9375 11.3281 10.9375 12.5V25.625C10.9375 26.5625 11.5625 27.1875 12.5 27.1875C13.3594 27.1875 14.0625 26.5625 14.0625 25.625V9.21875C14.0625 6.5625 11.875 4.375 9.21875 4.375C6.48438 4.375 4.375 6.5625 4.375 9.21875V27.5C4.375 32.0312 7.96875 35.625 12.5 35.625C16.9531 35.625 20.625 32.0312 20.625 27.5V12.5C20.625 11.3281 21.5625 10.3125 22.8125 10.3125C23.9844 10.3125 25 11.3281 25 12.5V27.5C25 34.4531 19.375 40 12.5 40Z" fill="black"></path></svg>`,
+                let start = src.match(/[?&]start=(\d+)/);
+                let vid = new VideoClippy({
                     id:match[1],
-                    type:GLOBAL.CLIPPY,
-                    typeName:"CLIPPY",
                     originalUrl:src,
                     url:src,
-                    // clippy 의 경우 iframe 내에 cloudflarestream 에 대한 iframe 이 다시 한 번 삽입됨
-                    //iframeUrl:`https://clippy.kr/clip/${match[1]}/embed?parent=cafe.naver.com&extension=NCCL`,
-                    iframeUrl:`https://clippy.kr/clip/${match[1]}/embed`,
                     title:title,
                     desc:desc,
                     view:null,
+                    start:(start !== null ? start[0] : 0),
                     origin:document.location.origin,
                     thumbnailUrl: obj.data.thumbnail,
                     autoPlay:autoPlay,
@@ -374,10 +371,10 @@ export async function PAGE_CAFE_MAIN(){
             if(!id) return false;
             id = id[1];
 
-            let start = obj.data.inputUrl.match(/start=(\d+)/);
-            let end = obj.data.inputUrl.match(/end=(\d+)/);
+            let start = obj.data.inputUrl.match(/[?&]start=(\d+)/);
+            let end = obj.data.inputUrl.match(/[?&]end=(\d+)/);
             if(start === null){
-                start = obj.data.inputUrl.match(/t=(\d+)/);
+                start = obj.data.inputUrl.match(/[?&]t=(\d+)/);
             }
 
             let vid = new VideoYoutube({
@@ -535,6 +532,17 @@ export async function PAGE_CAFE_MAIN(){
                     let $a = $elem.closest("a");
                     let src = $a.attr("href");
                     src += `%26userDisplay%3D50${GM_SETTINGS.naverBoardDefaultArticleCount}`;
+                    $a.attr("href", src);
+                }
+            });
+
+            $elems = $("#articleHeadListDiv ul.select_list li a");
+            $elems.each(function(i, elem){
+                let $a = $(elem);
+                let src = $a.attr("href");
+                let match = src.match(/userDisplay=(\d+)/i);
+                if(match !== null){
+                    src = src.replace(/userDisplay=(\d+)/i, `userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
                     $a.attr("href", src);
                 }
             });

@@ -61,8 +61,8 @@ export class VideoYoutube extends VideoBase {
     onYTPlayerStateChange(event){
         //let videoId = event.target.playerInfo.videoData.video_id;
         let seq = event.target.seq;
-        //let playerState = event.data == YT.PlayerState.ENDED ? '종료됨' : event.data == YT.PlayerState.PLAYING ? '재생 중' : event.data == YT.PlayerState.PAUSED ? '일시중지 됨' : event.data == YT.PlayerState.BUFFERING ? '버퍼링 중' : event.data == YT.PlayerState.CUED ? '재생준비 완료됨' : event.data == -1 ? '시작되지 않음' : '예외';
-        //NOMO_DEBUG("YOUTUBE PLAYER STATE CHANGED", videoId, event, playerState);
+        // let playerState = event.data == YT.PlayerState.ENDED ? '종료됨' : event.data == YT.PlayerState.PLAYING ? '재생 중' : event.data == YT.PlayerState.PAUSED ? '일시중지 됨' : event.data == YT.PlayerState.BUFFERING ? '버퍼링 중' : event.data == YT.PlayerState.CUED ? '재생준비 완료됨' : event.data == -1 ? '시작되지 않음' : '예외';
+        // NOMO_DEBUG("YOUTUBE PLAYER STATE CHANGED", seq, event, playerState);
         //NOMO_DEBUG("VideoBase.videos", event, VideoBase.videos, videoId, VideoBase.videos[videoId]);
         if(GM_SETTINGS.autoPauseOtherClips && event.data === YT.PlayerState.PLAYING){
             VideoBase.videos[seq].eventPlay();

@@ -5,6 +5,7 @@ var $YTPlayer = undefined;
 var YTPlayer = undefined;
 var YTPlayerReady = false;
 var useSetQuality = false;
+var isExitFullscreenAfterEnd = false;
 
 export default function PAGE_YOUTUBE_EMBED(){
     NOMO_DEBUG("== PAGE_YOUTUBE_EMBED ==");
@@ -58,6 +59,13 @@ export default function PAGE_YOUTUBE_EMBED(){
 
                 $(".ytp-gradient-top").fadeOut(250);
                 $(".ytp-chrome-top").fadeOut(250);
+            }
+        });
+
+        video.addEventListener('ended', (e) => {
+            if(!isExitFullscreenAfterEnd && GM_SETTINGS.exitFullscreenAfterEnd && document.fullscreenElement){
+                isExitFullscreenAfterEnd = true;
+                document.exitFullscreen();
             }
         });
     });

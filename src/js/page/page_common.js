@@ -26,6 +26,8 @@ export class PageBase {
         this.elemBtnPause = undefined;
         this.elemBtnReplay = undefined;
 
+        this.isExitFullscreenAfterEnd = false;  // 동영상 재생 완료 후 이미 전체화면 해제되었는지 여부
+
         // bind event;
         $(document).arrive("video", { existing: true }, function (elem) {
             that.video = elem;
@@ -122,6 +124,12 @@ export class PageBase {
     onEnded(e){
         //if(GM_SETTINGS.autoPlayNextClip) window.parent.postMessage({"type":"NCCL", "event":"ended", "seq":this.seq}, "https://cafe.naver.com");
         if(GM_SETTINGS.autoPlayNextClip) this.sendPostMessage({"type":"NCCL", "event":"ended", "seq":this.seq});
+
+        // exitFullscreenAfterEnd
+        if(!this.isExitFullscreenAfterEnd && GM_SETTINGS.exitFullscreenAfterEnd && document.fullscreenElement){
+            this.isExitFullscreenAfterEnd = true;
+            document.exitFullscreen();
+        }
     }
     onPlaying(e){
         //

@@ -142,6 +142,14 @@ const _settings = {
         title: "동영상 설명을 숨김",
         desc: "본 스크립트에 의해 추가된 동영상 하단의 설명 부분을 숨깁니다."
     },
+    exitFullscreenAfterEnd: {
+        category: "videoCommon",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title: "재생 완료 후 전체화면 자동 해제",
+        desc: "동영상 재생이 완료되면 전체화면을 자동으로 해제합니다. 자동 전체화면 해제는 동영상 별 1회에 한해 적용됩니다."
+    },
 
     // Naver Video
     useNaver: {
@@ -161,6 +169,14 @@ const _settings = {
         title:"네이버 비디오를 항상 최대 품질로 시작",
         desc:""
     },
+    NaverVideoAddLoopBtn: {
+        category:"naver",
+        depth: 2,
+        type: "checkbox",
+        value: false,
+        title:"Loop 버튼 추가",
+        desc:"재생시간이 긴 동영상을 오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다."
+    },
     NaverVideoEnhancedClick: {
         category:"naver",
         under_dev:true,
@@ -169,15 +185,6 @@ const _settings = {
         value: true,
         title:"네이버 비디오 화면 클릭 동작 개선",
         desc:"네이버 비디오 화면 위에서 클릭 후 살짝 마우스를 움직일 때 클릭이 씹히는 것을 개선합니다. 더블클릭으로 전체화면 모드를 활성화 합니다."
-    },
-    NaverVideoAddLoopBtn: {
-        category:"naver",
-        under_dev:true,
-        depth: 2,
-        type: "checkbox",
-        value: false,
-        title:"[실험실] Loop 버튼 추가",
-        desc:"오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다."
     },
 
     // Youtube

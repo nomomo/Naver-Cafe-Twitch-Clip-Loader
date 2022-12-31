@@ -52,7 +52,9 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
     padding:5px 0 3px 0;
 }
 
-.NCCL_container[data-NCCL-type='NAVER_VID']  {
+.NCCL_container[data-NCCL-type='NAVER_VID'],
+.NCCL_container[data-NCCL-type='YOUTUBE_VOD']
+{
     margin-top:30px;
 }
 
