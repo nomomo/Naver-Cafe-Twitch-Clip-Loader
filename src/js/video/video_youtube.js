@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "js/lib.js";
+import { NOMO_DEBUG, NOMO_ERROR, NOMO_WARN } from "js/lib.js";
 import {VideoBase} from "js/video/video_common.js";
 
 const YTlogo = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 461.001 461.001" style="enable-background:new 0 0 461.001 461.001;" xml:space="preserve">
@@ -16,14 +16,28 @@ export class VideoYoutube extends VideoBase {
             this.type = GLOBAL.YOUTUBE_VOD;
             this.ytid = options.id;
             this.ytClipId = undefined;
+            this.ytPlaylistId = undefined;
             this.typeName = "YOUTUBE_VOD";
         }
         else if(options.type === GLOBAL.YOUTUBE_CLIP){
             this.type = GLOBAL.YOUTUBE_CLIP;
             this.ytid = undefined;
             this.ytClipId = options.id;
+            this.ytPlaylistId = undefined;
             this.typeName = "YOUTUBE_CLIP";
             this.parseDataRequired = true;
+
+            if(this.title && this.title.indexOf("✂️") === "-1"){
+                this.title = "✂️ " + this.title;
+            }
+        }
+        else if (options.type === GLOBAL.YOUTUBE_PLAYLIST){
+            this.type = GLOBAL.YOUTUBE_CLIP;
+            this.ytid = undefined;
+            this.ytClipId = undefined;
+            this.ytPlaylistId = options.id;
+            this.typeName = "YOUTUBE_PLAYLIST";
+            this.title = "[Playlist] " + this.title;
         }
         this.start = options.start;
         this.end = options.end;
@@ -36,6 +50,10 @@ export class VideoYoutube extends VideoBase {
         this.isDataLoading = false;
         this.isDataLoaded = false;
         this.isDataSucceed = false;
+        
+        // thumbnail reloaded?
+        this.originalThumbnailUrl = options.thumbnailUrl;
+        this.isThumbnailReloaded = false;
     }
 
     static init(){try{
@@ -94,7 +112,6 @@ export class VideoYoutube extends VideoBase {
         let YTOptions = {
             "height": "100%",
             "width": "100%",
-            "videoId": this.ytid,
             "videoTitle": "",
             "playerVars": {
                 'autoplay': (this.autoPlay ? 1 : 0),
@@ -109,10 +126,15 @@ export class VideoYoutube extends VideoBase {
                 'onStateChange': this.onYTPlayerStateChange
             }
         };
+        if(this.ytid) YTOptions["videoId"] = this.ytid;
         if(this.start) YTOptions["playerVars"]["start"] = this.start;
         if(this.end) YTOptions["playerVars"]["end"] = this.end;
         if(this.clipt) YTOptions["playerVars"]["clipt"] = this.clipt;
         if(this.ytClipId) YTOptions["playerVars"]["clip"] = this.ytClipId;
+        if(this.ytPlaylistId){
+            YTOptions["playerVars"]["listType"] = "playlist";
+            YTOptions["playerVars"]["list"] = this.ytPlaylistId;
+        }
 
         this.YTPlayer = new YT.Player(YTElemID, YTOptions);
         this.YTPlayer.seq = this.seq;
@@ -159,13 +181,19 @@ export class VideoYoutube extends VideoBase {
         let width = e.target.naturalWidth;
         let height = e.target.naturalHeight;
 
-        if(width < 150 && height < 150){
+        if(!this.isThumbnailReloaded && width < 150 && height < 150){
             NOMO_DEBUG("thumbnail image is small, replace thumbnail!");
-            e.target.src = e.target.src.replace("maxresdefault", "hqdefault");
+            this.isThumbnailReloaded = true;
+            if(this.originalThumbnailUrl){
+                e.target.src = this.originalThumbnailUrl;
+            }
+            else{
+                e.target.src = e.target.src.replace("maxresdefault", "hqdefault");
+            }
         }
     }
 
-    parseData(){
+    parseData(){try{
         if(this.isDataLoading || this.isDataLoaded) return;
         this.isDataLoading = true;
 
@@ -182,44 +210,71 @@ export class VideoYoutube extends VideoBase {
                     that.isDataLoading = false;
                     that.isDataLoaded = true;
                     that.isDataSucceed = false;
-                    this.showParsingError();
+                    that.showParsingError();
                     return;
                 }
 
                 const rpt = response.responseText;
                 NOMO_DEBUG("parseYoutubeClipInfo, status = 200");
-                //https://i.ytimg.com/sb/fMVhKbdsXmU/storyboard3_L$L/$N.jpg?sqp=-oaymwENSDfyq4qpAwVwAcABBqLzl_8DBgjOqr2bBg==|48#27#100#10#10#0#default#rs$AOn4CLDs9EcBxA6-8F51CG6Yeo362ueKDA|80#45#686#10#10#10000#M$M#rs$AOn4CLB6VRt7MmIx6qhJYRpS-km_LCLgxQ|160#90#686#5#5#10000#M$M#rs$AOn4CLB5rxf3hc0c1nW6CY78X1CXPkkyzg
+                
+                // parse videoId
+                const rpt_match_videoId = rpt.match(/,"videoDetails":{"videoId":"([a-zA-Z0-9-_]+)"/i);
+                if(rpt_match_videoId === null){
+                    NOMO_ERROR("getYTClipPageInfoXHR FAIL - rpt_match_videoId", that.id);
+                    NOMO_ERROR("rpt", rpt);
+                    that.isDataLoading = false;
+                    that.isDataLoaded = true;
+                    that.isDataSucceed = false;
+                    that.showParsingError();
+                    return;
+                }
+                that.ytid = rpt_match_videoId[1];
+
+                // parse clipt
+                const rpt_match_clipt = rpt.match(/clipt=([a-zA-Z0-9-_]+)/i);
+                if(rpt_match_clipt !== null){
+                    that.clipt = rpt_match_clipt[1];
+                }
+                else{
+                    // clipt parsing 실패한 경우에도 return 하지는 않는다.
+                    NOMO_WARN("getYTClipPageInfoXHR partial FAIL - clipt", that.id);
+                    that.clipt = undefined;
+                }
+
+                // parse embedUrl
+                // embedUrl 이 존재하지 않는 경우는 "동영상 소유자가 다른 웹사이트에서 재생할 수 없도록 설정했습니다." 오류가 뜨는 경우이다.
+                // 게시자가 직접 설정 or 저작권 음원이 삽입된 경우인 듯하다.
                 const rpt_match = rpt.match(/<link itemprop="embedUrl" href="([a-zA-Z0-9-_./:=&;?]+)">/);
-                const rpt_match2 = rpt.match(/"playerStoryboardSpecRenderer":{"spec":"([a-zA-Z0-9-_,./?=|!@#$%^&*():]+)"}/);
-                const rpt_match3 = rpt.match(/"lengthSeconds":"(\d+)"/);
-                const rpt_match4 = rpt.match(/"startTimeMs":"(\d+)"/);
-                const rpt_match5 = rpt.match(/"endTimeMs":"(\d+)"/);
-
-                if(!rpt_match !== null && !rpt_match2 !== null && !rpt_match3 !== null && !rpt_match4 !== null && !rpt_match5 !== null){
+                if(rpt_match !== null){
+                    // https://www.youtube.com/embed/7n-S2raI420?clip=UgkxlTwoAuIUgUwJbCPDuRNZNEaox2ImiRII&clipt=ENuPdhjdlnc
                     that.iframeUrl = rpt_match[1];
-                    const rpt_match6 = that.iframeUrl.match(/clipt=([a-zA-Z0-9-_]+)/);
-                    const rpt_match7 = that.iframeUrl.match(/\/embed\/([a-zA-Z0-9-_]+)/);
+                }
+                else{
+                    NOMO_ERROR("getYTClipPageInfoXHR FAIL - embedUrl", that.id);
+                    that.showError(`[${GLOBAL.scriptName} v${GLOBAL.version}]<br />동영상 소유자가 다른 웹사이트에서 재생할 수 없도록 설정한 것 같습니다. 링크에 직접 접속해주세요.<br /><a href="${that.originalUrl}" target="_blank">${that.originalUrl}</a>`);
+                    that.updateThumbnail(that.originalThumbnailUrl);
+                    that.$thumbnailContainer.css("cursor","default");
+                    that.isDataLoading = false;
+                    that.isDataLoaded = true;
+                    that.isDataSucceed = false;
+                    return;
+                    //that.iframeUrl = `https://www.youtube.com/embed/${that.ytid}?clip=${that.ytClipId}${that.clipt ? "&clipt="+that.clipt : ""}`;
+                }
 
-                    if(!rpt_match6 === null || !rpt_match7 === null){
-                        NOMO_DEBUG("getYTClipPageInfoXHR FAIL", that.id, rpt_match6, rpt_match7);
-                        that.isDataLoading = false;
-                        that.isDataLoaded = true;
-                        that.isDataSucceed = false;
-                        this.showParsingError();
-                        return;
-                    }
 
+                // parse story board
+                const rpt_match2 = rpt.match(/"playerStoryboardSpecRenderer":{"spec":"([a-zA-Z0-9-_,./?=|!@#$%^&*():]+)"}/i);
+                const rpt_match3 = rpt.match(/"lengthSeconds":"(\d+)"/i);
+                const rpt_match4 = rpt.match(/"startTimeMs":"(\d+)"/i);
+                const rpt_match5 = rpt.match(/"endTimeMs":"(\d+)"/i);
+                if(rpt_match2 !== null && rpt_match3 !== null && rpt_match4 !== null && rpt_match5 !== null){
                     that.storyBoardSpec = rpt_match2[1];
                     that.seconds = rpt_match3[1];
                     that.storyBoard = YTStoryBoard("url", that.storyBoardSpec, true, that.seconds);
                     that.start = Number(rpt_match4[1]) / 1000.0;
                     that.end = Number(rpt_match5[1]) / 1000.0;
-                    that.clipt = rpt_match6[1];
-                    that.ytid = rpt_match7[1];
                     that.foundStoryBoardUrl = undefined;
                     that.foundStoryBoardSeq = undefined;
-
-                    NOMO_DEBUG("getYTClipPageInfoXHR Succeed", that.ytid, that.clipt);
 
                     // find image in storyboard
                     const midTime = (that.end - that.start) / 2.0 + that.start;
@@ -259,23 +314,31 @@ export class VideoYoutube extends VideoBase {
                             that.$thumbnail.css("border","1px solid #eee").css("transform", `scale(calc(5/3)) translate(${translateX}, ${translateY})`);
                         }
                     }
-
-                    that.isDataLoading = false;
-                    that.isDataLoaded = true;
-                    that.isDataSucceed = true;
-                    that.postParseData();
                 }
                 else{
-                    NOMO_DEBUG("getYTClipPageInfoXHR FAIL", that.id, rpt_match, rpt_match2, rpt_match3, rpt_match4, rpt_match5);
-                    that.isDataLoading = false;
-                    that.isDataLoaded = true;
-                    that.isDataSucceed = false;
-                    this.showParsingError();
-                    return;
+                    // story board 관련 data parsing 실패한 경우에도 return 하지는 않는다.
+                    NOMO_WARN("getYTClipPageInfoXHR partial FAIL - story board", that.id);
+                    NOMO_WARN("rpt", rpt);
+                    NOMO_WARN("rpt_match2", rpt_match2);
+                    NOMO_WARN("rpt_match3", rpt_match3);
+                    NOMO_WARN("rpt_match4", rpt_match4);
+                    NOMO_WARN("rpt_match5", rpt_match5);
                 }
+
+                NOMO_DEBUG("getYTClipPageInfoXHR Succeed");
+                that.isDataLoading = false;
+                that.isDataLoaded = true;
+                that.isDataSucceed = true;
+                that.postParseData();
             }
         });
-    }
+    }catch(e){
+        NOMO_ERROR("getYTClipPageInfoXHR FAIL - catch", this.id, e);
+        this.isDataLoading = false;
+        this.isDataLoaded = true;
+        this.isDataSucceed = false;
+        this.showParsingError();
+    }}
 }
 
 

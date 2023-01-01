@@ -113,7 +113,7 @@ const _settings = {
         type: "checkbox",
         value: false,
         title:"동영상 상단 메뉴를 숨김",
-        desc:"동영상 위에 마우스를 올렸을 때 나타나는 상단 메뉴를 숨깁니다."
+        desc:"동영상 위에 마우스를 올렸을 때 나타나는 상단 메뉴를 숨깁니다.<br />Youtube Playlist 의 경우 본 옵션은 무시됩니다."
     },
     hidePauseOverlay: {
         category:"videoCommon",
@@ -204,6 +204,14 @@ const _settings = {
         value: true,
         title:"Youtube Clip 링크를 비디오로 변환",
         desc:"<span style='color:#999'>예시) https://youtube.com/clip/xxxxx_xxxxxx-xxxxxx_xxxxx</span>",
+    },
+    useYoutubePlaylist : {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"Youtube Playlist 링크를 비디오로 변환",
+        desc:"<span style='color:#999'>예시) https://youtube.com/playlist?list=PLxxxxxxxxxxxxxxxxxxx</span>",
     },
     youtubeClipStoryBoardImage : {
         category:"youtube",

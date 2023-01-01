@@ -50,6 +50,16 @@ export async function PAGE_CAFE_MAIN(){
     if(GM_SETTINGS.useYoutube && GM_SETTINGS.youtubeClipConvert){
         regexs[GLOBAL.YOUTUBE_CLIP] = /^https?:\/\/(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9-_]+)/i;
     }
+    // youtube 가 oembed 가 아닌 olink 인 경우는 동영상 게시자가 외부 사이트에서 볼 수 없도록 한 경우이다.
+    // if(GM_SETTINGS.useYoutube){
+    //     // https://www.youtube.com/watch?v=EUpekySjoSk
+    //     // https://youtu.be/EUpekySjoSk
+    //     regexs[GLOBAL.YOUTUBE_VOD] = /^https?:\/\/(?:(?:www\.)?youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9-_]+)/i;
+    // }
+    if(GM_SETTINGS.useYoutube && GM_SETTINGS.useYoutubePlaylist){
+        // https://youtube.com/playlist?list=PLv3lno1xgvmw611ucVMGS4c09chnSgAlq
+        regexs[GLOBAL.YOUTUBE_PLAYLIST] = /^https?:\/\/(?:www\.)?youtube\.com\/playlist\?list=([a-zA-Z0-9-_]+)/i;
+    }
     if(GM_SETTINGS.useStreamable){
         regexs[GLOBAL.STREAMABLE] = /^https?:\/\/streamable\.com\/(?:e\/)?([a-zA-Z0-9-_]+)/i;
     }
@@ -203,10 +213,48 @@ export async function PAGE_CAFE_MAIN(){
                 break;
             }
 
+            case GLOBAL.YOUTUBE_VOD: {
+                let vid = new VideoYoutube({
+                    id:match[1],
+                    type:GLOBAL.YOUTUBE_VOD,
+                    originalUrl:src,
+                    url:src,
+                    title:title,
+                    desc:desc,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: obj.data.thumbnail,
+                    autoPlay:autoPlay,
+                    muted:muted
+                });
+                vid.createIframeContainer($seComponent);
+                break;
+            }
+
             case GLOBAL.YOUTUBE_CLIP: {
                 let vid = new VideoYoutube({
                     id:match[1],
                     type:GLOBAL.YOUTUBE_CLIP,
+                    originalUrl:src,
+                    url:src,
+                    title:title,
+                    desc:desc,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: obj.data.thumbnail,
+                    autoPlay:autoPlay,
+                    muted:muted
+                });
+                vid.createIframeContainer($seComponent);
+                break;
+            }
+
+            case GLOBAL.YOUTUBE_PLAYLIST: {
+                let id = match[1];
+                if(!/^PL/i.test(id)) return;
+                let vid = new VideoYoutube({
+                    id:id,
+                    type:GLOBAL.YOUTUBE_PLAYLIST,
                     originalUrl:src,
                     url:src,
                     title:title,

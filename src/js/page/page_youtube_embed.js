@@ -6,6 +6,7 @@ var YTPlayer = undefined;
 var YTPlayerReady = false;
 var useSetQuality = false;
 var isExitFullscreenAfterEnd = false;
+var isPlaylist = /listType=playlist/i.test(document.location.href);
 
 export default function PAGE_YOUTUBE_EMBED(){
     NOMO_DEBUG("== PAGE_YOUTUBE_EMBED ==");
@@ -50,7 +51,7 @@ export default function PAGE_YOUTUBE_EMBED(){
             firstPlayed = true;
 
             // hideTopOverlay
-            if(GM_SETTINGS.hideTopOverlay){
+            if(!isPlaylist && GM_SETTINGS.hideTopOverlay){
                 // GM_addStyle(`
                 //     .ytp-gradient-top,
                 //     .ytp-chrome-top,

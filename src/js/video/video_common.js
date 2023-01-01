@@ -1,4 +1,4 @@
-import {DEBUG, NOMO_DEBUG, escapeHtml} from "js/lib";
+import {DEBUG, NOMO_DEBUG, escapeHtml, NOMO_ERROR} from "js/lib";
 
 export class VideoBase {
     static nvideos = 0;
@@ -370,7 +370,7 @@ export class VideoBase {
         //NOMO_DEBUG("VideoBase - createIframe");
         let that = this;
         this.iframeLoaded = false;
-        this.$iframe = $(`<iframe class="NCCL_iframe" data-NCCL-type="${this.typeName}" data-NCCL-id="${this.id}" src="${this.iframeUrl}" frameborder="0" allowfullscreen="true" allow="autoplay" scrolling="no"></iframe>`);
+        this.$iframe = $(`<iframe class="NCCL_iframe" data-NCCL-type="${this.typeName}" data-NCCL-id="${this.id}" src="${this.iframeUrl}" frameborder="0" allowfullscreen="true" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" scrolling="no"></iframe>`);
         this.$iframe.on("load", function(){
             that.iframeLoaded = true;
         });
@@ -429,6 +429,10 @@ export class VideoBase {
     }
 
     updateThumbnail(url){
+        if(!url){
+            NOMO_ERROR("updateThumbnail - no thumbnail url", url);
+            return;
+        }
         this.thumbnailUrl = url;
         if(this.$thumbnail){
             NOMO_DEBUG("update thumbnail url", this.id, this.seq, url);
