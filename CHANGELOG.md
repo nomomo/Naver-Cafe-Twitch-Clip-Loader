@@ -4,7 +4,7 @@
 
 ## 1.0.4 - Jan. 01, 2023
 
-- Youtube Playist 링크를 비디오로 변환하는 기능 추가. 예시) https://youtube.com/playlist?list=PLxxxxxxxx
+- Youtube Playlist 링크를 비디오로 변환하는 기능 추가. 예시) https://youtube.com/playlist?list=PLxxxxxxxx
 - Youtube Clip 동영상이 "동영상 소유자가 다른 웹사이트에서 재생할 수 없도록 설정"된 경우 로딩이 끝나지 않는 버그 수정
 - Youtube Thumbnail 이미지가 존재하지 않을 때 특정 조건에서 이미지를 무한 호출하는 버그 수정
 - 예외 및 에러처리 추가

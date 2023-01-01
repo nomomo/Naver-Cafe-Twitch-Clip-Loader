@@ -66,7 +66,7 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 ### 1.0.4 - Jan. 01, 2023
 
-- Youtube Playist 링크를 비디오로 변환하는 기능 추가. 예시) https://youtube.com/playlist?list=PLxxxxxxxx
+- Youtube Playlist 링크를 비디오로 변환하는 기능 추가. 예시) https://youtube.com/playlist?list=PLxxxxxxxx
 - 버그 수정 및 안정성 개선
 
 ### 1.0.3 - Dec. 31, 2022
