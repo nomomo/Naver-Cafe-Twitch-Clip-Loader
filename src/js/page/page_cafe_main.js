@@ -138,8 +138,8 @@ export async function PAGE_CAFE_MAIN(){
                 NOMO_ERROR("sanitizeUrl fail", originalSrc);
                 return false;
             }
-            let title = escapeHtml($seComponent.find(".se-oglink-title").text());
-            let desc = escapeHtml($seComponent.find(".se-oglink-summary").text());
+            let title = $seComponent.find(".se-oglink-title").text();
+            let desc = $seComponent.find(".se-oglink-summary").text();
             let thumbnailUrl = sanitizeUrl(obj.data.thumbnail);
 
             var matchRes = {"found":false, "type": null, "res": null };
@@ -471,9 +471,8 @@ export async function PAGE_CAFE_MAIN(){
                 originalUrl:obj.data.inputUrl,
                 url:obj.data.inputUrl,
                 iframeUrl:src,
-                // Naver 가 이미 escape 한 상태인 듯하지만 믿을 수 없으므로 글자가 깨지더라도 다시 escape 한다.
-                title:escapeHtml(obj.data.title),
-                desc:escapeHtml(obj.data.description),
+                title:obj.data.title,
+                desc:obj.data.description,
                 view:null,
                 origin:document.location.origin,
                 thumbnailUrl: (obj.data.thumbnailUrl ? obj.data.thumbnailUrl.replace(/\/(default|mqdefault|sddefault|hqdefault)\./,"/maxresdefault.") : undefined),
@@ -501,8 +500,8 @@ export async function PAGE_CAFE_MAIN(){
                 inkey:inkey,
                 originalUrl:obj.data.inputUrl,
                 url:"",
-                title:escapeHtml(obj.data.mediaMeta.title),
-                desc:escapeHtml(obj.data.mediaMeta.description),
+                title:obj.data.mediaMeta.title,
+                desc:obj.data.mediaMeta.description,
                 tags:obj.data.mediaMeta.tags,
                 view:null,
                 origin:document.location.origin,
