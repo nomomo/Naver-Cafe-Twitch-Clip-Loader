@@ -1,5 +1,5 @@
 import css_navervid from "css/navervid.css";
-import { isDEBUG, NOMO_DEBUG, NOMO_WARN } from "js/lib.js";
+import { isDEBUG, NOMO_DEBUG, NOMO_WARN } from "js/lib/lib.js";
 import { PageBase } from "js/page/page_common.js";
 
 export default function PAGE_NAVER_EMBED(){

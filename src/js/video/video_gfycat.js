@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "js/lib.js";
+import { NOMO_DEBUG } from "js/lib/lib.js";
 import { VideoBase } from "js/video/video_common.js";
 
 const gfycatLogo = `<img class="NCCL_video_logo" src="https://gfycat.com/assets/favicons/favicon-32x32.png" width="18px" height"18px" />`;

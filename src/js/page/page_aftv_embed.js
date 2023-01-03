@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "../lib";
+import { NOMO_DEBUG } from "../lib/lib";
 import { PageBase } from "js/page/page_common.js";
 
 export default function PAGE_AFTV_EMBED(){

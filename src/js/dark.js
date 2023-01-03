@@ -1,4 +1,4 @@
-import {NOMO_DEBUG} from "js/lib";
+import {NOMO_DEBUG} from "js/lib/lib";
 import theme_dark from "css/theme_dark.css";
 
 var isDarkMode = false;

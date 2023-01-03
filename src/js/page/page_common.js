@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "js/lib.js";
+import { NOMO_DEBUG } from "js/lib/lib.js";
 
 export class PageBase {
     constructor(options) {

@@ -64,6 +64,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.0.5 - Jan. 04, 2023
+
+- 이제 Youtube Playlist 의 경우 자동 재생하지 않으며 상단 메뉴를 숨기지 않습니다. 가능한 경우 플레이어 로드 후 동영상 목록을 자동으로 펼칩니다.
+- 특정 조건에서 스크롤을 위아래로 반복하면 비디오 화면이 작아지던 버그 수정
+
 ### 1.0.4 - Jan. 01, 2023
 
 - Youtube Playlist 링크를 비디오로 변환하는 기능 추가. 예시) https://youtube.com/playlist?list=PLxxxxxxxx

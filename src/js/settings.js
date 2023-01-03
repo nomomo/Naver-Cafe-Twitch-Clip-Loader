@@ -1,4 +1,4 @@
-import {DEBUG, NOMO_DEBUG, GM_setting} from "js/lib";
+import {DEBUG, NOMO_DEBUG, GM_setting} from "js/lib/lib";
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Settings

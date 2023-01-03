@@ -1,4 +1,4 @@
-import {DEBUG, NOMO_DEBUG, escapeHtml, NOMO_ERROR} from "js/lib";
+import {DEBUG, NOMO_DEBUG, escapeHtml, NOMO_ERROR} from "js/lib/lib";
 
 export class VideoBase {
     static nvideos = 0;
@@ -221,14 +221,17 @@ export class VideoBase {
         let that = this;
 
         // insert main container
-        this.$container = $(`<div class="NCCL_container" data-NCCL-type=${this.typeName}></div>`);
-        this.$iframeContainer = $(`<div class="NCCL_iframe_container" data-NCCL-type=${this.typeName}></div>`);
+        this.$container = $(`<div class="NCCL_container"></div>`).data("NCCL-type", this.typeName);
+        this.$iframeContainer = $(`<div class="NCCL_iframe_container"></div>`).data("NCCL-type", this.typeName);
 
         // insert thumbnail container
-        this.$thumbnailContainer = $(`<div class="NCCL_thumbnail_container" data-NCCL-type=${this.typeName}></div>`);
+        this.$thumbnailContainer = $(`<div class="NCCL_thumbnail_container"></div>`).data("NCCL-type", this.typeName);
         let imgLazy = (this.seq == 0 ? "eager" : "lazy");
         if(GM_SETTINGS.convertMethod !== "autoLoad" && this.thumbnailUrl){
-            this.$thumbnail = $(`<img loading="${imgLazy}" class="NCCL_thumbnail" src="${this.thumbnailUrl}" data-NCCL-type=${this.typeName} />`)
+            this.$thumbnail = $(`<img class="NCCL_thumbnail" />`)
+                .attr("loading", imgLazy)
+                .attr("src", this.thumbnailUrl)
+                .data("NCCL-type", this.typeName)
                 .on("load", function(e){that.thumbnailLoaded(e);});
             this.$thumbnailContainer.append(this.$thumbnail);
         }
@@ -248,23 +251,22 @@ export class VideoBase {
         }
 
         // title and description
-        this.$title = $(`<div class="NCCL_title" data-NCCL-type=${this.typeName}>${this.title ? this.title : (this.desc ? this.desc : "제목없음")}</div>`);
+        this.$title = $(`<div class="NCCL_title"></div>`)
+            .data("NCCL-type", this.typeName)
+            .text((this.title ? this.title : (this.desc ? this.desc : "제목없음")));
         let url = (this.url || this.originalUrl);
         if(url){
-            this.$desc = $(`
-            <a href="${this.url}" class="NCCL_description" target="_blank" data-NCCL-type=${this.typeName}>
-                ${this.logoSVG ? this.logoSVG : ""}
-            </a>
-            `);
-            this.$link = $(`<div class="NCCL_link" data-NCCL-type=${this.typeName}>${this.url ? "("+this.url+")" : ""}</div>`);
+            this.$desc = $(`<a class="NCCL_description" target="_blank">${this.logoSVG ? this.logoSVG : ""}</a>`)
+                .data("NCCL-type", this.typeName)
+                .attr("href", this.url);
+            this.$link = $(`<div class="NCCL_link"></div>`)
+                .data("NCCL-type", this.typeName)
+                .text((this.url ? "("+this.url+")" : ""));
             this.$desc.append(this.$title).append(this.$link);
         }
         else{
-            this.$desc = $(`
-            <div class="NCCL_description">
-                ${this.logoSVG ? this.logoSVG : ""}
-            </div>
-            `);
+            this.$desc = $(`<div class="NCCL_description">${this.logoSVG ? this.logoSVG : ""}</div>`)
+                .data("NCCL-type", this.typeName);
             this.$desc.append(this.$title);
         }
 
@@ -288,16 +290,16 @@ export class VideoBase {
             const io = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.intersectionRatio > 0.0) {
+                        observer.unobserve(entry.target);
                         that.lazyLoad = false;
                         that.checkParseData(that.insertIframe);
-                        observer.unobserve(entry.target);
                     }
                 });
             }, options);
-            io.observe(that.$container[0]);
+            io.observe(this.$container[0]);
         }
         else{
-            that.insertIframe();
+            this.insertIframe();
         }
 
         // removeOriginalLinks
@@ -354,23 +356,26 @@ export class VideoBase {
         const io = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.intersectionRatio > 0.0) {
-                    NOMO_DEBUG("LAZYLOAD", that, entry);
+                    observer.unobserve(entry.target);
+                    NOMO_DEBUG("createIframeLazy LAZYLOAD", that, entry);
                     //that.autoPlay = false;
                     that.preCreateIframe();
                     that.createIframe();
                     that.postCreateIframe();
-                    observer.unobserve(entry.target);
                 }
             });
         }, options);
-        io.observe(that.$container[0]);
+        io.observe(this.$container[0]);
     }
 
     createIframe(){
         //NOMO_DEBUG("VideoBase - createIframe");
         let that = this;
         this.iframeLoaded = false;
-        this.$iframe = $(`<iframe class="NCCL_iframe" data-NCCL-type="${this.typeName}" data-NCCL-id="${this.id}" src="${this.iframeUrl}" frameborder="0" allowfullscreen="true" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" scrolling="no"></iframe>`);
+        this.$iframe = $(`<iframe class="NCCL_iframe" frameborder="0" allowfullscreen="true" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" scrolling="no"></iframe>`)
+            .data("NCCL-id", this.id)
+            .data("NCCL-type", this.typeName)
+            .attr("src", this.iframeUrl);
         this.$iframe.on("load", function(){
             that.iframeLoaded = true;
         });
@@ -440,14 +445,16 @@ export class VideoBase {
         }
         else if(!this.$iframe){
             NOMO_DEBUG("create $thumbnail");
-            this.$thumbnail = $(`<img class="NCCL_thumbnail" src="${this.thumbnailUrl}" data-NCCL-type=${this.typeName} />`);
+            this.$thumbnail = $(`<img class="NCCL_thumbnail" />`)
+                .data("NCCL-type", this.typeName)
+                .attr("src", this.thumbnailUrl);
             this.$thumbnailContainer.empty().append(this.$thumbnail);
         }
     }
-    updateTitle(html){
+    updateTitle(text){
         if(!this.$title) return;
-        NOMO_DEBUG("update title", this.id, this.seq, html);
-        this.$title.html(html);
+        NOMO_DEBUG("update title", this.id, this.seq, text);
+        this.$title.text(text);
     }
 
     // loader
@@ -476,8 +483,22 @@ export class VideoBase {
             this.$error.fadeOut(100);
         }
     }
-    showParsingError(){
-        this.showError(`[${GLOBAL.scriptName} v${GLOBAL.version}]<br />데이터 가져오기에 실패했습니다. 링크에 직접 접속해주세요.<br /><a href="${this.originalUrl}" target="_blank">${this.originalUrl}</a>`);
+    showParsingError(type){
+        let errormsg = "";
+        if(type === undefined) type = 0;
+        switch(type){
+        default:
+            break;
+        case 0:
+            errormsg = "데이터 가져오기에 실패했습니다. 링크에 직접 접속해주세요.";
+            break;
+        case 1:
+            errormsg = "동영상 소유자가 다른 웹사이트에서 재생할 수 없도록 설정한 것 같습니다. 링크에 직접 접속해주세요.";
+            break;
+        }
+
+        this.showError(`[${GLOBAL.scriptName} v${GLOBAL.version}]<br />${errormsg}<br /><a class="errorURL"></a>`);
+        this.$container.find(".errorURL").attr("href", this.originalUrl).text(this.originalUrl);
         this.$thumbnailContainer.css("cursor","default");
     }
 

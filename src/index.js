@@ -1,4 +1,4 @@
-import {DEBUG_INIT} from "./js/lib";
+import {DEBUG_INIT} from "./js/lib/lib";
 import GLOBAL_INIT from "./js/global";
 import GM_SETTINGS_INIT from "./js/settings";
 import PAGE_SETTING from "./js/page/page_setting";

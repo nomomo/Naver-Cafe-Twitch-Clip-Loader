@@ -1,4 +1,5 @@
-import { NOMO_DEBUG, NOMO_ERROR, NOMO_WARN } from "js/lib.js";
+import { NOMO_DEBUG, NOMO_ERROR, NOMO_WARN } from "js/lib/lib.js";
+import { sanitizeUrl } from "js/lib/sanitizeurl.ts";
 import {VideoBase} from "js/video/video_common.js";
 
 const YTlogo = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 461.001 461.001" style="enable-background:new 0 0 461.001 461.001;" xml:space="preserve">
@@ -32,7 +33,7 @@ export class VideoYoutube extends VideoBase {
             }
         }
         else if (options.type === GLOBAL.YOUTUBE_PLAYLIST){
-            this.type = GLOBAL.YOUTUBE_CLIP;
+            this.type = GLOBAL.YOUTUBE_PLAYLIST;
             this.ytid = undefined;
             this.ytClipId = undefined;
             this.ytPlaylistId = options.id;
@@ -41,6 +42,9 @@ export class VideoYoutube extends VideoBase {
         }
         this.start = options.start;
         this.end = options.end;
+        this.list = options.list;
+        this.index = options.index;
+        this.ab_channel = options.ab_channel;
 
         NOMO_DEBUG("new VideoYoutube", options);
         
@@ -106,7 +110,8 @@ export class VideoYoutube extends VideoBase {
         }
 
         const YTElemID = "NCCL-"+this.id;
-        this.$iframe = (`<div class="NCCL_iframe" id="${YTElemID}"></div>`);
+        this.$iframe = $(`<div class="NCCL_iframe"></div>`);
+        this.$iframe.attr("id", YTElemID);
         this.$iframeContainer.append(this.$iframe);
 
         let YTOptions = {
@@ -115,6 +120,7 @@ export class VideoYoutube extends VideoBase {
             "videoTitle": "",
             "playerVars": {
                 'autoplay': (this.autoPlay ? 1 : 0),
+                'mute': (this.muted ? 1 : 0),
                 'autohide': 1,
                 'showinfo': 0,
                 'controls':1,
@@ -131,9 +137,19 @@ export class VideoYoutube extends VideoBase {
         if(this.end) YTOptions["playerVars"]["end"] = this.end;
         if(this.clipt) YTOptions["playerVars"]["clipt"] = this.clipt;
         if(this.ytClipId) YTOptions["playerVars"]["clip"] = this.ytClipId;
-        if(this.ytPlaylistId){
+        
+        // YOUTUBE_PLAYLIST
+        if(this.type === GLOBAL.YOUTUBE_PLAYLIST && this.ytPlaylistId){
             YTOptions["playerVars"]["listType"] = "playlist";
             YTOptions["playerVars"]["list"] = this.ytPlaylistId;
+        }
+
+        // YOUTUBE_VOD
+        if(this.type === GLOBAL.YOUTUBE_VOD && this.list){
+            //YTOptions["playerVars"]["listType"] = "playlist";
+            YTOptions["playerVars"]["list"] = this.list;
+            if(this.index) YTOptions["playerVars"]["index"] = this.index;
+            if(this.ab_channel) YTOptions["playerVars"]["ab_channel"] = this.ab_channel;
         }
 
         this.YTPlayer = new YT.Player(YTElemID, YTOptions);
@@ -210,7 +226,7 @@ export class VideoYoutube extends VideoBase {
                     that.isDataLoading = false;
                     that.isDataLoaded = true;
                     that.isDataSucceed = false;
-                    that.showParsingError();
+                    that.showParsingError(0);
                     return;
                 }
 
@@ -225,7 +241,7 @@ export class VideoYoutube extends VideoBase {
                     that.isDataLoading = false;
                     that.isDataLoaded = true;
                     that.isDataSucceed = false;
-                    that.showParsingError();
+                    that.showParsingError(0);
                     return;
                 }
                 that.ytid = rpt_match_videoId[1];
@@ -245,13 +261,16 @@ export class VideoYoutube extends VideoBase {
                 // embedUrl 이 존재하지 않는 경우는 "동영상 소유자가 다른 웹사이트에서 재생할 수 없도록 설정했습니다." 오류가 뜨는 경우이다.
                 // 게시자가 직접 설정 or 저작권 음원이 삽입된 경우인 듯하다.
                 const rpt_match = rpt.match(/<link itemprop="embedUrl" href="([a-zA-Z0-9-_./:=&;?]+)">/);
+                let foundIframeUrl = false;
                 if(rpt_match !== null){
                     // https://www.youtube.com/embed/7n-S2raI420?clip=UgkxlTwoAuIUgUwJbCPDuRNZNEaox2ImiRII&clipt=ENuPdhjdlnc
                     that.iframeUrl = rpt_match[1];
+                    foundIframeUrl = true;
                 }
-                else{
+                
+                if(!foundIframeUrl){
                     NOMO_ERROR("getYTClipPageInfoXHR FAIL - embedUrl", that.id);
-                    that.showError(`[${GLOBAL.scriptName} v${GLOBAL.version}]<br />동영상 소유자가 다른 웹사이트에서 재생할 수 없도록 설정한 것 같습니다. 링크에 직접 접속해주세요.<br /><a href="${that.originalUrl}" target="_blank">${that.originalUrl}</a>`);
+                    that.showParsingError(1);
                     that.updateThumbnail(that.originalThumbnailUrl);
                     that.$thumbnailContainer.css("cursor","default");
                     that.isDataLoading = false;
@@ -294,7 +313,10 @@ export class VideoYoutube extends VideoBase {
                             that.foundStoryBoardUrl = sb.url;
                             that.foundStoryBoardSeq = seq;
 
-                            that.updateThumbnail(that.foundStoryBoardUrl);
+                            let thumbnailUrl = sanitizeUrl(that.foundStoryBoardUrl);
+                            if(thumbnailUrl !== "about:blank"){
+                                that.updateThumbnail(thumbnailUrl);
+                            }
 
                             // shift image
                             let translateX = "0";
@@ -337,7 +359,7 @@ export class VideoYoutube extends VideoBase {
         this.isDataLoading = false;
         this.isDataLoaded = true;
         this.isDataSucceed = false;
-        this.showParsingError();
+        this.showParsingError(0);
     }}
 }
 

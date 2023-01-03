@@ -1,4 +1,4 @@
-import { NOMO_DEBUG, NOMO_ERROR } from "js/lib.js";
+import { NOMO_DEBUG, NOMO_ERROR } from "js/lib/lib.js";
 import { PageBase } from "js/page/page_common.js";
 
 export default function PAGE_TWITCH_EMBED(){

@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "../lib";
+import { NOMO_DEBUG } from "../lib/lib";
 
 export default function PAGE_SETTING(){
     NOMO_DEBUG("== PAGE_SETTING ==");

@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "../lib";
+import { NOMO_DEBUG } from "../lib/lib";
 
 const YTQ_LIST = ['highres', 'hd2880', 'hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small', 'tiny'];
 var $YTPlayer = undefined;
@@ -7,6 +7,12 @@ var YTPlayerReady = false;
 var useSetQuality = false;
 var isExitFullscreenAfterEnd = false;
 var isPlaylist = /listType=playlist/i.test(document.location.href);
+
+var url = new URL(document.location.href);
+var urlParam = new URLSearchParams(url.search);
+var muted = (urlParam.get("mute") === "true" ? true : false);
+var autoplay = (urlParam.get("autoplay") === "true" ? true : false);
+var isList = (urlParam.get("list") ? true : false);
 
 export default function PAGE_YOUTUBE_EMBED(){
     NOMO_DEBUG("== PAGE_YOUTUBE_EMBED ==");
@@ -51,7 +57,7 @@ export default function PAGE_YOUTUBE_EMBED(){
             firstPlayed = true;
 
             // hideTopOverlay
-            if(!isPlaylist && GM_SETTINGS.hideTopOverlay){
+            if(!isPlaylist && !isList && GM_SETTINGS.hideTopOverlay){
                 // GM_addStyle(`
                 //     .ytp-gradient-top,
                 //     .ytp-chrome-top,
@@ -101,29 +107,34 @@ export default function PAGE_YOUTUBE_EMBED(){
         });
     }
 
-    //// moved to onYTPlayerReady in video_youtube.js
-    // // set_volume_when_stream_starts
-    // if(GM_SETTINGS.set_volume_when_stream_starts){
-    //     try{
-    //         // let ytPlayerVolume = localStorage.getItem('yt-player-volume');
-    //         // if(ytPlayerVolume !== null){
-    //         //     let data = JSON.parse(ytPlayerVolume);
-    //         //     let data_data = JSON.parse(data.data);
-    //         //     data_data.volume = 100.0*GM_SETTINGS.target_start_volume;
-    //         //     data.data = JSON.stringify(data_data);
-    //         //     data.creation = Number(new Date());
-    //         //     data.expiration = Number(new Date())+10000000;
-    //         //     localStorage.setItem('yt-player-volume', JSON.stringify(data));
-    //         // }
+    // set_volume_when_stream_starts
+    try{
+        if(GM_SETTINGS.set_volume_when_stream_starts){
+            let currentDate = Number(new Date());
+            let data_data = {"volume":100.0*GM_SETTINGS.target_start_volume,"muted":((muted || GM_SETTINGS.target_start_volume === 0.0) ? true : false)};
+            let data = {data: JSON.stringify(data_data), expiration: currentDate+2592000000, creation: currentDate};
+            localStorage.setItem('yt-player-volume', JSON.stringify(data));
 
-    //         let data_data = {"volume":100.0*GM_SETTINGS.target_start_volume,"muted":(GM_SETTINGS.target_start_volume === 0 ? true : false)};
-    //         let data = {data: JSON.stringify(data_data), expiration: Number(new Date())+10000000, creation: Number(new Date())};
-    //         localStorage.setItem('yt-player-volume', JSON.stringify(data));
-    //     }
-    //     catch(e){
-    //         NOMO_DEBUG("Error from set_volume_when_stream_starts");
-    //     }
-    // }
+            data = {data: JSON.stringify(data_data), creation: currentDate};
+            sessionStorage.setItem('yt-player-volume', JSON.stringify(data));
+        }
+        //// 아래 주석을 풀면 sessionStorage 를 무시한다.
+        // else {
+        //     let data = sessionStorage.getItem('yt-player-volume');
+        //     if(data){
+        //         data = JSON.parse(data);
+        //         let data_data = JSON.parse(data.data);
+        //         if(data_data.muted != muted){
+        //             data_data.muted = muted;
+        //             data.data = JSON.stringify(data_data);
+        //             sessionStorage.setItem('yt-player-volume', JSON.stringify(data));
+        //         }
+        //     }
+        // }
+    }
+    catch(e){
+        NOMO_DEBUG("Error from set_volume_when_stream_starts");
+    }
 }
 
 
@@ -131,7 +142,7 @@ export default function PAGE_YOUTUBE_EMBED(){
 function onPlayerReady(){
     
     // set_volume_when_stream_starts
-    if(GM_SETTINGS.set_volume_when_stream_starts && typeof YTPlayer.setVolume === "function"){
+    if(GM_SETTINGS.set_volume_when_stream_starts && YTPlayer && typeof YTPlayer.setVolume === "function"){
         YTPlayer.setVolume(100.0*GM_SETTINGS.target_start_volume);
     }
 
@@ -175,6 +186,13 @@ function onPlayerReady(){
         YTPlayer.setPlaybackQuality(TYTQ);
 
         NOMO_DEBUG(`YTQ CHANGED. ${CYTQ} -> ${TYTQ}`);
+    }
+
+    // autoplay === false 인 경우에만 playlist 를 자동으로 펼침
+    if(!autoplay && isPlaylist && $(".ytp-playlist-menu").length > 0 && $(".ytp-playlist-menu-button-icon").length > 0){
+        if(!$(".ytp-playlist-menu").is(":visible")){
+            $(".ytp-playlist-menu-button-icon").trigger("click");
+        }
     }
 
 

@@ -29,7 +29,13 @@ module.exports = {
                     esModule: false
                 }
             }],
-        }, ],
+        }, 
+        // TypeScript 로더 설정
+        {
+            test: /\.tsx?$/i,
+            exclude: /node_modules/,
+            use: ['ts-loader']
+        },],
     },
     optimization: {
         minimize: process.env.NODE_ENV === "production" ? true : false,

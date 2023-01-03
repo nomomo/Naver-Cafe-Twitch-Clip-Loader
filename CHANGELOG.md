@@ -2,6 +2,15 @@
 
 이 프로젝트에 대한 모든 주목할만한 변경 사항은 이 파일에 기록됩니다.
 
+## 1.0.5 - Jan. 02, 2023
+
+- Minor Changes
+  - 이제 Youtube Playlist 의 경우 자동 재생하지 않으며 상단 메뉴를 숨기지 않습니다. 가능한 경우 플레이어 로드 후 동영상 목록을 자동으로 펼칩니다.
+- 버그 수정
+  - 특정 조건에서 음소거 관련 옵션이 Youtube 동영상에 적용되지 않던 버그 수정
+  - 특정 조건에서 스크롤을 위아래로 반복하면 비디오 화면이 작아지던 버그 수정
+  - Clip, Playlist 가 아닌 일반 Youtube 동영상의 list, index, ab_channel 옵션을 인식하지 못하던 버그 수정
+
 ## 1.0.4 - Jan. 01, 2023
 
 - Youtube Playlist 링크를 비디오로 변환하는 기능 추가. 예시) https://youtube.com/playlist?list=PLxxxxxxxx

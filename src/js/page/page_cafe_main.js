@@ -1,5 +1,6 @@
 import css_cafe_main from "css/cafe_main.css";
-import { DEBUG, NOMO_DEBUG, escapeHtml } from "js/lib";
+import { DEBUG, NOMO_DEBUG, escapeHtml, NOMO_ERROR } from "js/lib/lib.js";
+import { sanitizeUrl } from "js/lib/sanitizeurl.ts";
 import { VideoBase } from "js/video/video_common";
 import { VideoYoutube } from "js/video/video_youtube.js";
 import { VideoNaver } from "js/video/video_naver.js";
@@ -59,6 +60,8 @@ export async function PAGE_CAFE_MAIN(){
     if(GM_SETTINGS.useYoutube && GM_SETTINGS.useYoutubePlaylist){
         // https://youtube.com/playlist?list=PLv3lno1xgvmw611ucVMGS4c09chnSgAlq
         regexs[GLOBAL.YOUTUBE_PLAYLIST] = /^https?:\/\/(?:www\.)?youtube\.com\/playlist\?list=([a-zA-Z0-9-_]+)/i;
+
+        // https://www.youtube.com/watch?list=PLWOeh7QPUQeaRW7NoKSsZKpzjbyQLnDwZ&v=tdpB5WedgDc // <- oembed 로 인식되므로 olink 에서 처리하지 않음
     }
     if(GM_SETTINGS.useStreamable){
         regexs[GLOBAL.STREAMABLE] = /^https?:\/\/streamable\.com\/(?:e\/)?([a-zA-Z0-9-_]+)/i;
@@ -129,9 +132,15 @@ export async function PAGE_CAFE_MAIN(){
 
             if(!obj.data.link) return;
             
-            let src = obj.data.link;
+            let originalSrc = obj.data.link;
+            let src = sanitizeUrl(originalSrc);
+            if(src === "about:blank"){
+                NOMO_ERROR("sanitizeUrl fail", originalSrc);
+                return false;
+            }
             let title = escapeHtml($seComponent.find(".se-oglink-title").text());
             let desc = escapeHtml($seComponent.find(".se-oglink-summary").text());
+            let thumbnailUrl = sanitizeUrl(obj.data.thumbnail);
 
             var matchRes = {"found":false, "type": null, "res": null };
             for(var key in regexs){
@@ -143,9 +152,6 @@ export async function PAGE_CAFE_MAIN(){
             }
             if(!matchRes.found) return;
             NOMO_DEBUG("matchRes", matchRes);
-
-            // let url = new URL(src);
-            // let urlParam = new URLSearchParams(url.search);
 
             switch(matchRes.type){    
             default:
@@ -163,10 +169,9 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
-                    //thumbnailUrl: `https://thumbs-east.streamable.com/image/${match[1]}.jpg`
                 });
                 vid.createIframeContainer($seComponent);
                 break;
@@ -205,7 +210,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -223,7 +228,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -241,7 +246,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -261,8 +266,8 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
-                    autoPlay:autoPlay,
+                    thumbnailUrl: thumbnailUrl,
+                    autoPlay:false,
                     muted:muted
                 });
                 vid.createIframeContainer($seComponent);
@@ -278,7 +283,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                     //thumbnailUrl: `https://thumbs-east.streamable.com/image/${match[1]}.jpg`
@@ -295,7 +300,6 @@ export async function PAGE_CAFE_MAIN(){
                     start = Number(match[2].replace("change_second=",""));
                     vodurl += "?" + match[2];
                 }
-                //let change_second = urlParam.get("change_second");
                 let vid = new VideoAFTV({
                     id:match[1],
                     originalUrl:src,
@@ -304,7 +308,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted,
                     start:start
@@ -324,7 +328,7 @@ export async function PAGE_CAFE_MAIN(){
                     view:null,
                     start:(start !== null ? start[0] : 0),
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -341,7 +345,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -363,7 +367,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -380,7 +384,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -397,7 +401,7 @@ export async function PAGE_CAFE_MAIN(){
                     desc:desc,
                     view:null,
                     origin:document.location.origin,
-                    thumbnailUrl: obj.data.thumbnail,
+                    thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
                     muted:muted
                 });
@@ -411,36 +415,75 @@ export async function PAGE_CAFE_MAIN(){
         else if(GM_SETTINGS.useYoutube && obj.type.indexOf("oembed") !== -1){
             if(!obj.data.html) return false;
 
+            // iframe embed src
             let src = obj.data.html.match(/src="([a-zA-Z0-9-_:/?=&.]+)"/);
-            if(!src) return false;
-            src = src[1];
+            if(src === null) return false;
+            let originalSrc = src[1];
+            src = sanitizeUrl(originalSrc);
+            if(src === "about:blank"){
+                NOMO_ERROR("sanitizeUrl fail", originalSrc);
+                return false;
+            }
 
+            // id
             let id = src.match(/^https:\/\/www\.youtube\.com\/embed\/([a-zA-Z0-9-_]+)/);
-            if(!id) return false;
+            if(id === null) return false;
             id = id[1];
 
+            // start, end
             let start = obj.data.inputUrl.match(/[?&]start=(\d+)/);
             let end = obj.data.inputUrl.match(/[?&]end=(\d+)/);
             if(start === null){
                 start = obj.data.inputUrl.match(/[?&]t=(\d+)/);
+            }
+            start = (start !== null ? start[1] : undefined);
+            end = (end !== null ? end[1] : undefined);
+            
+            // playlist
+            let list = obj.data.inputUrl.match(/[?&]list=([a-zA-Z0-9-_]+)/);
+            let index = undefined;
+            let ab_channel = undefined;
+            if(list !== null){
+                list = list[1];
+                index = obj.data.inputUrl.match(/[?&]index=(\d+)/);
+                ab_channel = obj.data.inputUrl.match(/[?&]ab_channel=([-A-Z0-9+&@#/%=~_|^ㄱ-ㅎㅏ-ㅣ가-힣]+)/);
+                if(index !== null){
+                    index = index[1];
+                }
+                else{
+                    index = undefined;
+                }
+
+                if(ab_channel !== null){
+                    ab_channel = ab_channel[1];
+                }
+                else{
+                    ab_channel = undefined;
+                }
+            }
+            else{
+                list = undefined;
             }
 
             let vid = new VideoYoutube({
                 id:id,
                 type:GLOBAL.YOUTUBE_VOD,
                 originalUrl:obj.data.inputUrl,
-                url:obj.data.inputUrl,//"https://youtu.be/"+id,
+                url:obj.data.inputUrl,
                 iframeUrl:src,
+                // Naver 가 이미 escape 한 상태인 듯하지만 믿을 수 없으므로 글자가 깨지더라도 다시 escape 한다.
                 title:escapeHtml(obj.data.title),
                 desc:escapeHtml(obj.data.description),
                 view:null,
                 origin:document.location.origin,
-                //thumbnailUrl: (obj.data.thumbnailUrl ? obj.data.thumbnailUrl.replace(/\/(default|mqdefault|sddefault|hqdefault)\./,"/maxresdefault.") : undefined),
                 thumbnailUrl: (obj.data.thumbnailUrl ? obj.data.thumbnailUrl.replace(/\/(default|mqdefault|sddefault|hqdefault)\./,"/maxresdefault.") : undefined),
                 autoPlay:autoPlay,
                 muted:muted,
-                start:(start ? start[1] : undefined),
-                end:(end ? end[1] : undefined),
+                start:start,
+                end:end,
+                list:list,
+                index:index,
+                ab_channel:ab_channel,
                 originalWidth:obj.data.originalWidth,
                 originalHeight:obj.data.originalHeight,
             });

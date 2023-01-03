@@ -52,10 +52,24 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
     padding:5px 0 3px 0;
 }
 
-.NCCL_container[data-NCCL-type='NAVER_VID'],
-.NCCL_container[data-NCCL-type='YOUTUBE_VOD']
-{
+/* container 가 연달아 인접한 경우 */
+.NCCL_container + .NCCL_container {
     margin-top:30px;
+} 
+/*
+.NCCL_container {
+    margin-top:30px;
+}
+*/
+/*
+.se-viewer .NCCL_container:first-child {
+    margin-top:0px;
+}
+*/
+/*.se-viewer .se-sectionTitle + .NCCL_container[data-NCCL-type='NAVER_VID'], .se-viewer .se-text + .NCCL_container[data-NCCL-type='NAVER_VID'],*/
+.se-viewer .se-sectionTitle + .NCCL_container
+{
+    margin-top:20px;
 }
 
 .NCCL_container .NCCL_thumbnail_container{

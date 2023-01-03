@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "./lib";
+import { escapeHtml, NOMO_DEBUG } from "./lib/lib";
 
 window.GLOBAL = {};
 export default function GLOBAL_INIT(){
@@ -19,8 +19,8 @@ export default function GLOBAL_INIT(){
     GLOBAL.VLIVE__1 = 17;
     GLOBAL.VLIVE__2 = 18;
     GLOBAL.TIKTOK = 19;
-    GLOBAL.scriptName = (GM.info.script.name || GM_info.script.name);
-    GLOBAL.version = (GM.info.script.version || GM_info.script.version);
+    GLOBAL.scriptName = escapeHtml(GM.info.script.name || GM_info.script.name);
+    GLOBAL.version = escapeHtml(GM.info.script.version || GM_info.script.version);
     GLOBAL.isTopWindow = window.self === window.top;
     GLOBAL.initLocationUrl = document.location.href;
     GLOBAL.isNaverCafe = /(^https:\/\/cafe\.naver\.com\/)/.test(GLOBAL.initLocationUrl);
