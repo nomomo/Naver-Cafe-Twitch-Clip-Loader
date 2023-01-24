@@ -110,9 +110,16 @@ export class VideoYoutube extends VideoBase {
         }
 
         const YTElemID = "NCCL-"+this.id;
+        if(this.$iframe) this.$iframe.remove();
         this.$iframe = $(`<div class="NCCL_iframe"></div>`);
         this.$iframe.attr("id", YTElemID);
         this.$iframeContainer.append(this.$iframe);
+
+        //// youtubeAlzartakSize
+        // if(GM_SETTINGS.youtubeAlzartakSize && this.originalWidth && this.originalWidth > 100 && this.originalHeight && this.originalHeight > 100){
+        //     NOMO_DEBUG("this.originalWidth, this.originalHeight", this.originalWidth, this.originalHeight);
+        //     this.resizeByRatio(this.originalWidth / this.originalHeight, 0.8, 0);
+        // }
 
         let YTOptions = {
             "height": "100%",
@@ -137,6 +144,10 @@ export class VideoYoutube extends VideoBase {
         if(this.end) YTOptions["playerVars"]["end"] = this.end;
         if(this.clipt) YTOptions["playerVars"]["clipt"] = this.clipt;
         if(this.ytClipId) YTOptions["playerVars"]["clip"] = this.ytClipId;
+        if(this.ytClipId && this.clipt && this.foundStoryBoardUrl && this.foundStoryBoardSeq){
+            YTOptions["playerVars"]["storyBoardUrl"] = this.foundStoryBoardUrl;
+            YTOptions["playerVars"]["storyBoardSeq"] = this.foundStoryBoardSeq;
+        }
         
         // YOUTUBE_PLAYLIST
         if(this.type === GLOBAL.YOUTUBE_PLAYLIST && this.ytPlaylistId){

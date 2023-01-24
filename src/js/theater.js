@@ -36,6 +36,7 @@ function CREATE_THEATER_MODE_BTN(){
                 background-image:url(${src});
                 filter:blur(10px);
                 z-index:1;
+                transform:scale(1.1);
             }
 
             html.theaterMode #front-cafe img{
@@ -95,14 +96,14 @@ export async function applyTheaterMode(){
             // 본문 정렬
             if(!GM_SETTINGS.theaterModeAlignCenter){
                 theaterModeCSSText += `
-                #cafe-body, #content-area, #front-cafe, #front-img, .footer {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
-                #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                #cafe-body, #content-area, #front-cafe, #front-img, .footer, html.theaterMode #special-menu {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
+                #cafe_main, .Article, .Article .article_wrap, #content-area #main-area ,html.theaterMode div.MemberProfile.layout_content {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
                 `;
             }
             else{
                 theaterModeCSSText += `
-                #cafe-body, #content-area, #front-cafe, #front-img, .footer {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
-                #cafe_main, .Article, .Article .article_wrap, #content-area #main-area {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                #cafe-body, #content-area, #front-cafe, #front-img, .footer, html.theaterMode #special-menu {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                #cafe_main, .Article, .Article .article_wrap, #content-area #main-area ,html.theaterMode div.MemberProfile.layout_content {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
 
                 #group-area {position:absolute;top:0;left:-230px}
                 /*#main-area {position:absolute;top:0;left:0;}*/
@@ -113,7 +114,10 @@ export async function applyTheaterMode(){
             theaterModeCSSElem = GM_addStyle(theaterModeCSSText+`
                 #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
 
-                .CafeViewer .se-viewer .se-caption, .CafeViewer .se-viewer .se-component-content, .CafeViewer .se-viewer .se-component-content.se-component-content-fit{
+                html.theaterMode .CafeViewer .se-viewer .se-caption
+                ,html.theaterMode .CafeViewer .se-viewer .se-component-content
+                ,html.theaterMode .CafeViewer .se-viewer .se-component-content.se-component-content-fit
+                {
                     max-width:${cwPure}px !important;
                     width:${cwPure}px !important;
                 }

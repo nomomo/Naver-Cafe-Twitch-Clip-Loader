@@ -44,11 +44,19 @@ function openSettingsMenu(){
             head.appendChild(link);
         }
         if ($("#GM_Setting_css_temp").length == 0){
-            $("head").append(`<style id='GM_Setting_css_temp' rel='stylesheet' type='text/css'>ul, ol{margin:0; padding:0 !important;}
+            $("head").append(`
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+            <style id='GM_Setting_css_temp' rel='stylesheet' type='text/css'>ul, ol{margin:0; padding:0 !important;}
             #nomo_settings::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
             #nomo_settings::-webkit-scrollbar-thumb { background: #ccc; }
             body{overflow-y:hidden;}
-            body #GM_setting .GM_setting_list_head {vertical-align:bottom;}</style>`);
+            body #GM_setting .GM_setting_list_head {vertical-align:bottom;}
+
+            #GM_setting, #GM_setting .GM_setting_title, #GM_setting .GM_setting_desc, #GM_setting .GM_setting_logo, #GM_setting .GM_homepage_link
+            {font-family: 'Inter',"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;}
+            </style>`);
         }
 
         $("#nomo_settings_container").fadeIn(500);

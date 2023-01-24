@@ -26,6 +26,13 @@ export default function PAGE_SETTING(){
         link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css';
         link.media = 'all';
         head.appendChild(link);
+
+        
+        GM.addStyle(`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        #GM_setting, #GM_setting .GM_setting_title, #GM_setting .GM_setting_desc, #GM_setting .GM_setting_logo, #GM_setting .GM_homepage_link
+        {font-family: 'Inter',"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;}
+        `);
     }
 
     document.title = "Naver-Cafe-Clip-Loader 상세 설정 페이지";

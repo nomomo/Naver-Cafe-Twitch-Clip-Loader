@@ -38,19 +38,7 @@ export class VideoTiktok extends VideoBase {
             
             // resize
             if(json.thumbnail_width && json.thumbnail_height){
-                let ratio = json.thumbnail_width / json.thumbnail_height;
-                let width = this.$iframeContainer.width();
-                let new_height = width / ratio + 44;
-                let viewportHeight = Math.max((window.parent.innerHeight * 0.8), 800);
-                new_height = parseInt(Math.min(viewportHeight, new_height));
-                NOMO_DEBUG("new_height", new_height);
-                
-                let new_ratio = width / new_height;
-                if(Math.abs(new_ratio - 16.0/9.0) > 0.2){
-                    if(new_ratio < 1.0) new_ratio = 1.0;
-                    if(new_ratio > 4.0) new_ratio = 4.0;
-                    this.$iframeContainer.attr("style",`aspect-ratio:${new_ratio}`);
-                }
+                this.resizeByRatio(json.thumbnail_width / json.thumbnail_height, 0.8, 0);
             }
             this.postParseData();
         }

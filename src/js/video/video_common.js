@@ -41,6 +41,10 @@ export class VideoBase {
         this.blockThumbnailClickEvent = false;  // Thumbnail 처음 클릭되면 true
         this.firstPlayed = false;               // 첫 재생 되면 true
 
+        // LazyLoad observe
+        this.createIframeLazyObserve = false;
+        this.parseDataObserve = false;
+
         // player element (cafe main)
         this.$iframeContainer = undefined;
         this.$iframe = undefined;
@@ -240,7 +244,7 @@ export class VideoBase {
         // loader
         this.$loader = $(`<div class="NCCL_loader_container" style="display:none;">
         <div class="NCCL_loader"></div>
-        <div class="NCCL_loader_desc_container"><div class="NCCL_loader_desc">Loading...</div></div>
+        <div class="NCCL_loader_desc_container"><div class="NCCL_loader_desc">Loading…<div class="NCCL_loader_version">NCCL v${GLOBAL.version}</div></div></div>
         </div>`);
         this.$thumbnailContainer.append(this.$loader);
         if(this.parseDataRequired){
@@ -285,12 +289,15 @@ export class VideoBase {
 
         // parse data if required
         if(this.parseDataRequired){
-            const rootMarginHeight = Math.max(1080, window.screen.height) * 0.5;
-            const options = { root: null, threshold:[0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
+            this.parseDataObserve = true;
+            const rootMarginHeight = Math.max(1080, window.screen.height) * 1.5;
+            const options = { root: null, threshold:[0, 0.2, 0.4, 0.6, 0.8, 1.0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
             const io = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.intersectionRatio > 0.0) {
                         observer.unobserve(entry.target);
+                        if(!that.parseDataObserve) return;
+                        that.parseDataObserve = false;
                         that.lazyLoad = false;
                         that.checkParseData(that.insertIframe);
                     }
@@ -351,13 +358,16 @@ export class VideoBase {
 
     createIframeLazy(){
         let that = this;
-        const rootMarginHeight = Math.max(1080, window.screen.height) * 0.5;
-        const options = { root: null, threshold:[0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
+        this.createIframeLazyObserve = true;
+        const rootMarginHeight = Math.max(1080, window.screen.height) * 1.5;
+        const options = { root: null, threshold:[0, 0.2, 0.4, 0.6, 0.8, 1.0], rootMargin: `${rootMarginHeight}px 10px ${rootMarginHeight}px 10px`};
         const io = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.intersectionRatio > 0.0) {
                     observer.unobserve(entry.target);
                     NOMO_DEBUG("createIframeLazy LAZYLOAD", that, entry);
+                    if(!that.createIframeLazyObserve) return;
+                    that.createIframeLazyObserve = false;
                     //that.autoPlay = false;
                     that.preCreateIframe();
                     that.createIframe();
@@ -500,6 +510,20 @@ export class VideoBase {
         this.showError(`[${GLOBAL.scriptName} v${GLOBAL.version}]<br />${errormsg}<br /><a class="errorURL"></a>`);
         this.$container.find(".errorURL").attr("href", this.originalUrl).text(this.originalUrl);
         this.$thumbnailContainer.css("cursor","default");
+    }
+    resizeByRatio(ratio, viewportRatio, heightMargin){
+        let width = this.$iframeContainer.width();
+        let new_height = width / ratio + heightMargin;
+        let viewportHeight = Math.max((parent.window.innerHeight * viewportRatio), 300);
+        new_height = parseInt(Math.min(viewportHeight, new_height));
+        NOMO_DEBUG("new_height", new_height);
+        
+        let new_ratio = width / new_height;
+        if(Math.abs(new_ratio - 16.0/9.0) > 0.2){
+            if(new_ratio < 1.0) new_ratio = 1.0;
+            if(new_ratio > 4.0) new_ratio = 4.0;
+            this.$iframeContainer.attr("style",`aspect-ratio:${new_ratio}`);
+        }
     }
 
 }

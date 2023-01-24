@@ -62,7 +62,12 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 ## Change log
 
-- Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
+- 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
+
+## 1.0.6 - Jan. 24, 2023
+
+- "Youtube Clip 의 Loop 기능 강제 비활성화" 기능이 추가되었습니다. 이제 Youtuce Clip 이 재생 완료된 후 자동으로 Replay 하지 않습니다.
+- "Youtube Clip 섬네일을 스토리보드 이미지로 대체" 옵션이 켜진 경우 Embed 된 Youtube 페이지 내에서도 섬네일을 스토리보드 이미지로 대체합니다.
 
 ### 1.0.5 - Jan. 04, 2023
 

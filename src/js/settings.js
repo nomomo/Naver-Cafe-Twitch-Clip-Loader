@@ -104,8 +104,8 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: true,
-        title:"클립 원본 링크 삭제",
-        desc:"클립 섬네일을 감지했을 때, 본문에 동일한 링크가 존재하는 경우 삭제하여 보기 좋게 만듭니다."
+        title:"글 본문에서 비디오의 원본 링크 삭제",
+        desc:"삽입된 비디오와 동일한 링크가 글 본문에 존재하는 경우 삭제하여 보기 좋게 만듭니다."
     },
     hideTopOverlay: {
         category:"videoCommon",
@@ -113,7 +113,7 @@ const _settings = {
         type: "checkbox",
         value: false,
         title:"동영상 상단 메뉴를 숨김",
-        desc:"동영상 위에 마우스를 올렸을 때 나타나는 상단 메뉴를 숨깁니다.<br />Youtube Playlist 의 경우 본 옵션은 무시됩니다."
+        desc:"동영상 위에 마우스를 올렸을 때 나타나는 상단 메뉴를 숨깁니다. 화면을 더욱 깔끔하게 표시할 수 있습니다.<br />Youtube Playlist 의 경우 본 옵션은 무시됩니다."
     },
     hidePauseOverlay: {
         category:"videoCommon",
@@ -195,7 +195,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"Youtube 관련 기능 사용",
-        desc:"",
+        desc:"Youtube video 를 스크립트가 제어하도록 하여 관련 기능을 적용합니다.",
     },
     youtubeClipConvert : {
         category:"youtube",
@@ -205,6 +205,22 @@ const _settings = {
         title:"Youtube Clip 링크를 비디오로 변환",
         desc:"<span style='color:#999'>예시) https://youtube.com/clip/xxxxx_xxxxxx-xxxxxx_xxxxx</span>",
     },
+    youtubeClipDisableLoop: {
+        category:"youtube",
+        depth: 3,
+        type: "checkbox",
+        value: true,
+        title:"Youtube Clip 의 Loop 기능 강제 비활성화",
+        desc:"클립 재생이 완료되면 비디오를 정지합니다.",
+    },
+    youtubeClipStoryBoardImage : {
+        category:"youtube",
+        depth: 3,
+        type: "checkbox",
+        value: true,
+        title:"Youtube Clip 섬네일을 스토리보드 이미지로 대체",
+        desc:"원본 비디오의 섬네일 대신 Clip 이 생성된 시간의 스토리보드 이미지를 섬네일로 표시합니다.",
+    },
     useYoutubePlaylist : {
         category:"youtube",
         depth: 2,
@@ -212,15 +228,6 @@ const _settings = {
         value: true,
         title:"Youtube Playlist 링크를 비디오로 변환",
         desc:"<span style='color:#999'>예시) https://youtube.com/playlist?list=PLxxxxxxxxxxxxxxxxxxx</span>",
-    },
-    youtubeClipStoryBoardImage : {
-        category:"youtube",
-        depth: 3,
-        type: "checkbox",
-        value: true,
-        under_dev:true,
-        title:"Youtube Clip 섬네일을 스토리보드 이미지로 대체",
-        desc:"",
     },
     youtubeSetQuality : {
         category:"youtube",
@@ -243,6 +250,14 @@ const _settings = {
             "tiny":{title:"tiny (144p)"},
         }
     },
+    // youtubeAlzartakSize : {
+    //     category:"youtube",
+    //     depth: 2,
+    //     type: "checkbox",
+    //     value: true,
+    //     title:"알잘딱 사이즈 적용",
+    //     desc:"(가능한 경우) 16:9 비율이 아닌 Youtube 영상을 너무 크지도 작지도 않고 화면에 적당히 꽉차게 사이즈를 조정합니다.",
+    // },
 
     // Afreecatv
     useAftv : {
@@ -485,6 +500,9 @@ body #GM_setting .GM_setting_depth3 .GM_setting_list_head{width:310px;}
     border-top: 1px solid #ccc !important;
     margin-top: 10px !important;
     padding-top: 10px !important;
+}
+#GM_setting .GM_setting_desc {
+    letter-spacing: -0.3px;
 }
 
 #theaterModeBtn, #darkModeBtn {

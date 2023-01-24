@@ -40,19 +40,7 @@ export class VideoGfycat extends VideoBase {
 
             // resize
             if(json.width && json.height){
-                let ratio = json.width / json.height;       // 500 / 192 = 2.60
-                let width = this.$iframeContainer.width();  // 1100
-                let new_height = width / ratio + 44;        // 423 + 44 = 467
-                let viewportHeight = Math.max((window.parent.innerHeight * 0.8), 800);   // 467
-                new_height = parseInt(Math.min(viewportHeight, new_height));  // 467
-                NOMO_DEBUG("new_height", new_height);
-                
-                let new_ratio = width / new_height;
-                if(Math.abs(new_ratio - 16.0/9.0) > 0.2){
-                    if(new_ratio < 1.0) new_ratio = 1.0;
-                    if(new_ratio > 4.0) new_ratio = 4.0;
-                    this.$iframeContainer.attr("style",`aspect-ratio:${new_ratio}`);
-                }
+                this.resizeByRatio(json.width / json.height, 0.8, 44);
             }
 
             let iframeUrl = src[1];

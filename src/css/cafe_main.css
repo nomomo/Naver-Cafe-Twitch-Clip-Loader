@@ -132,10 +132,10 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
     left: calc(50% - 7.5vw) !important;
     font-size: 10px !important;
     text-indent: -9999em !important;
-    border-top: 2em solid rgba(255, 255, 255, 0.3) !important;
-    border-right: 2em solid rgba(255, 255, 255, 0.3) !important;
-    border-bottom: 2em solid rgba(255, 255, 255, 0.3) !important;
-    border-left: 2em solid #ffffff !important;
+    border-top: 1.8vw solid rgba(255, 255, 255, 0.3) !important;
+    border-right: 1.8vw solid rgba(255, 255, 255, 0.3) !important;
+    border-bottom: 1.8vw solid rgba(255, 255, 255, 0.3) !important;
+    border-left: 1.8vw solid #ffffff !important;
     animation: NCCLload8 1.1s infinite linear !important;
 }
 @keyframes NCCLload8 {
@@ -162,9 +162,20 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
 }
 .NCCL_container .NCCL_loader_desc {
     width: 100%;
-    font-size: 16px !important;
+    font-size: 1.8vw !important;
     font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif !important;
 }
+.NCCL_container .NCCL_loader_desc .NCCL_loader_version {
+    display: block;
+    font-size: 10px !important;
+    position: absolute;
+    bottom: -5vw;
+    left: 0px;
+    color: #fff;
+    width: 100%;
+    opacity: 0.2;
+}
+
 
 
 
@@ -207,4 +218,28 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 4%);
+}
+
+
+/* Dark Mode Compatible*/
+html[data-dark="true"] .NCCL_container .NCCL_description,
+html[data-darkreader-scheme="dark"] .NCCL_container .NCCL_description
+{
+    background-color: #333;
+    border-color:#222;
+}
+html[data-dark="true"] .NCCL_container .NCCL_description .NCCL_title,
+html[data-darkreader-scheme="dark"] .NCCL_container .NCCL_description .NCCL_title
+{
+    color:#fff;
+}
+html[data-dark="true"] .NCCL_container .NCCL_description .NCCL_link,
+html[data-darkreader-scheme="dark"] .NCCL_container .NCCL_description .NCCL_link
+{
+    color:#aaa;
+}
+html[data-dark="true"] svg.logoClippy,
+html[data-darkreader-scheme="dark"] svg.logoClippy
+{
+    filter:invert(1.0);
 }

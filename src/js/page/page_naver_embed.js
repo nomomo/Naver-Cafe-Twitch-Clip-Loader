@@ -163,7 +163,7 @@ export class PageNaver extends PageBase {
         $(document).arrive(".u_rmcplayer_error_container", { existing: true }, function (elem) {
             try{
                 let $elem = $(elem);
-                let $btnReload = $(`<div class="naver_player_reload naver_player_reload_error_btn">[${GLOBAL.scriptName} ${GLOBAL.version}]<br />네이버 플레이어를 다시 로드하려면 여기를 클릭하세요.</div>`)
+                let $btnReload = $(`<div class="naver_player_reload naver_player_reload_error_btn">[${GLOBAL.scriptName} v${GLOBAL.version}]<br />네이버 플레이어를 다시 로드하려면 여기를 클릭하세요.</div>`)
                     .on("click", function(){that.playerReload();});
                 $elem.find(".u_rmc_error_txt").append($btnReload);
             }

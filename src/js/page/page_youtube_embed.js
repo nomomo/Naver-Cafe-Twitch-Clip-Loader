@@ -1,4 +1,5 @@
-import { NOMO_DEBUG } from "../lib/lib";
+import { isDEBUG, NOMO_DEBUG } from "../lib/lib";
+import { sanitizeUrl } from "js/lib/sanitizeurl.ts";
 
 const YTQ_LIST = ['highres', 'hd2880', 'hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small', 'tiny'];
 var $YTPlayer = undefined;
@@ -7,12 +8,19 @@ var YTPlayerReady = false;
 var useSetQuality = false;
 var isExitFullscreenAfterEnd = false;
 var isPlaylist = /listType=playlist/i.test(document.location.href);
+var video, firstPlayed = false;
 
 var url = new URL(document.location.href);
 var urlParam = new URLSearchParams(url.search);
 var muted = (urlParam.get("mute") === "true" ? true : false);
 var autoplay = (urlParam.get("autoplay") === "true" ? true : false);
 var isList = (urlParam.get("list") ? true : false);
+var clipt = urlParam.get("clipt");
+var clipId = urlParam.get("clip");
+var isYoutubeClip = (clipt && clipId);
+var storyBoardUrl = urlParam.get("storyBoardUrl");
+var storyBoardSeq = urlParam.get("storyBoardSeq");
+
 
 export default function PAGE_YOUTUBE_EMBED(){
     NOMO_DEBUG("== PAGE_YOUTUBE_EMBED ==");
@@ -21,7 +29,35 @@ export default function PAGE_YOUTUBE_EMBED(){
     GM_addStyle(`
     .unstarted-mode {cursor:pointer}
     .ytp-ad-overlay-container {display:none !important}
+
+    #NCCL_popup {
+        position: fixed;
+        z-index: 99999;
+        user-select: none;
+        left: 50%;
+        background: rgba(0,0,0,0.8);
+        transform: translate(-50%, 3px);
+        padding: 3px 8px;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+        vertical-align: middle;
+        animation-duration: 1.3s;
+        animation-name:fadeInOut;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: 1;
+        opacity:0.0;
+    }
+
+    @keyframes fadeInOut {
+        0%      { opacity: 0.0; transform: translate(-50%, 3px); }
+        25% { opacity: 0.85; transform: translate(-50%, 0%); }
+        80% { opacity: 0.85; transform: translate(-50%, 0%); }
+        100% { opacity: 0.0; transform: translate(-50%, 6px) }
+    };
     `);
+    
 
     // youtubeSetQuality
     useSetQuality = GM_SETTINGS.youtubeSetQuality !== "default" && YOUTUBE_EMBED_SET_QUALITY_CHECK_QUALITY();
@@ -49,7 +85,6 @@ export default function PAGE_YOUTUBE_EMBED(){
     CheckYTPlayerReady();
 
     // bind firstPlay event
-    let video, firstPlayed = false;
     $(document).arrive("video", { existing: true, onlyOnce: true }, function (elem) {
         video = elem;
         video.addEventListener('playing', (e) => {
@@ -70,10 +105,7 @@ export default function PAGE_YOUTUBE_EMBED(){
         });
 
         video.addEventListener('ended', (e) => {
-            if(!isExitFullscreenAfterEnd && GM_SETTINGS.exitFullscreenAfterEnd && document.fullscreenElement){
-                isExitFullscreenAfterEnd = true;
-                document.exitFullscreen();
-            }
+            exitFullscreenAfterEnd();
         });
     });
 
@@ -135,6 +167,46 @@ export default function PAGE_YOUTUBE_EMBED(){
     catch(e){
         NOMO_DEBUG("Error from set_volume_when_stream_starts");
     }
+
+
+    if(!autoplay && isYoutubeClip && GM_SETTINGS.youtubeClipStoryBoardImage && storyBoardUrl && storyBoardSeq){
+        storyBoardUrl = sanitizeUrl(storyBoardUrl);
+        NOMO_DEBUG("storyBoardUrl", storyBoardUrl);
+        NOMO_DEBUG("storyBoardSeq", storyBoardSeq);
+        
+        $(document).arrive(".ytp-cued-thumbnail-overlay-image", { existing: true, onlyOnce: true }, function (elem) {
+            if(storyBoardUrl == "about:blank") return;
+
+            // check image exists
+            let img = new Image();
+            img.onerror = function(e){NOMO_DEBUG("story image fail", e);};
+            img.onload = function(){
+                NOMO_DEBUG("story image loaded");
+                let $thumbnailImage = $(elem);
+                $thumbnailImage.css({
+                    "background-image": `url(${storyBoardUrl})`
+                });
+
+                // shift image
+                let translateX = "0";
+                let translateY = "0";
+                if(storyBoardSeq >= 0 && storyBoardSeq < 10){
+                    translateY = "calc(100% / 5)";
+                }
+                else if(storyBoardSeq >= 15 && storyBoardSeq < 25){
+                    translateY = "calc(-100% / 5)";
+                }
+                if(storyBoardSeq % 5 === 0 || storyBoardSeq % 5 === 1){
+                    translateX = "calc(100% / 5)";
+                }
+                else if(storyBoardSeq % 5 === 3 || storyBoardSeq % 5 === 4){
+                    translateX = "calc(-100% / 5)";
+                }
+                $thumbnailImage.css("transform", `scale(calc(5/3)) translate(${translateX}, ${translateY})`);
+            };
+            img.src = storyBoardUrl;
+        });
+    }
 }
 
 
@@ -184,8 +256,48 @@ function onPlayerReady(){
             YTPlayer.setPlaybackQualityRange(TYTQ);
         }
         YTPlayer.setPlaybackQuality(TYTQ);
-
         NOMO_DEBUG(`YTQ CHANGED. ${CYTQ} -> ${TYTQ}`);
+
+
+
+        if(isDEBUG()){
+            unsafeWindow.YTPlayer = YTPlayer;
+            unsafeWindow.video = video;
+        }
+
+
+        if(isYoutubeClip && GM_SETTINGS.youtubeClipDisableLoop && typeof YTPlayer.getLoopRange === "function" && video){
+            let lastTime = -100.0;
+            let youtubeClipDisableLoopHandler = function(e){
+                //NOMO_DEBUG("clips timeupdate", e);
+                let loopRange = YTPlayer.getLoopRange();
+                if(loopRange && loopRange.type === "clips"){
+                    let currentTime = video.currentTime;
+                    let startTime = loopRange.startTimeMs * 0.001;
+                    let endTime = loopRange.endTimeMs * 0.001;
+                    
+                    let cond1 = Math.abs(lastTime - endTime);
+                    let cond2 = Math.abs(currentTime - startTime);
+
+                    if(currentTime >= endTime || (endTime - startTime > 4.9 && cond1 < 1.0 && cond2 < 1.0)){
+                        NOMO_DEBUG("youtubeClipDisableLoop, Pause video. cond", cond1, cond2);
+                        YTPlayer.pauseVideo();
+                        //showPopup("Clip 재생이 완료되었습니다.", "60px");
+                        YTPlayer.seekTo(startTime);
+                        exitFullscreenAfterEnd();
+                    }
+                    lastTime = currentTime;
+                }
+                else{
+                    removeYoutubeClipDisableLoopHandler(e);
+                }
+            };
+            let removeYoutubeClipDisableLoopHandler = function(e){
+                NOMO_DEBUG("removeYoutubeClipDisableLoopHandler");
+                video.removeEventListener("timeupdate", youtubeClipDisableLoopHandler);
+            };
+            video.addEventListener("timeupdate", youtubeClipDisableLoopHandler);
+        }
     }
 
     // autoplay === false 인 경우에만 playlist 를 자동으로 펼침
@@ -259,4 +371,19 @@ function CheckYTPlayerReady(){
             return;
         }
     }
+}
+
+function exitFullscreenAfterEnd(){
+    if(!isExitFullscreenAfterEnd && GM_SETTINGS.exitFullscreenAfterEnd && document.fullscreenElement){
+        isExitFullscreenAfterEnd = true;
+        document.exitFullscreen();
+    }
+}
+
+function showPopup(html, bottom){
+    if($("#NCCL_popup").length !== 0) $("#NCCL_popup").remove();
+
+    let $popup = $(`<div id="NCCL_popup" style="bottom:${bottom}">${html}</div>`);
+    $("html").append($popup);
+    setTimeout(function(){ $popup.remove(); }, 1500.0);
 }
