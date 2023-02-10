@@ -238,8 +238,3 @@ html[data-darkreader-scheme="dark"] .NCCL_container .NCCL_description .NCCL_link
 {
     color:#aaa;
 }
-html[data-dark="true"] svg.logoClippy,
-html[data-darkreader-scheme="dark"] svg.logoClippy
-{
-    filter:invert(1.0);
-}

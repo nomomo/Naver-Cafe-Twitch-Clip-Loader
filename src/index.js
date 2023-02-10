@@ -97,11 +97,4 @@ import { PageBase } from "js/page/page_common.js";
         }
     }
 
-    else if (GLOBAL.isClippyEmbed){
-        let pageBase = new PageBase({
-            id:document.location.href.match(/^https?:\/\/clippy\.kr\/clip\/([a-zA-Z0-9-_]+)/)[1],
-            url:document.location.href
-        });
-    }
-
 })();

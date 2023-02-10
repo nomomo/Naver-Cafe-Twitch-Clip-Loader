@@ -10,7 +10,6 @@ import { VideoTwitch } from "js/video/video_Twitch.js";
 import { VideoKakao } from "js/video/video_kakao.js";
 import { VideoGfycat } from "js/video/video_gfycat.js";
 import { VideoTiktok } from "js/video/video_tiktok.js";
-import { VideoClippy } from "js/video/video_clippy.js";
 
 export async function PAGE_CAFE_MAIN(){
     // add dns-prefetch and preconnect header
@@ -68,9 +67,6 @@ export async function PAGE_CAFE_MAIN(){
     }
     if(GM_SETTINGS.useAftv){
         regexs[GLOBAL.AFTV_VOD] = /^https?:\/\/vod\.afreecatv.com\/player\/(\d+)\??(change_second=\d+)?/i;
-    }
-    if(GM_SETTINGS.useClippy){
-        regexs[GLOBAL.CLIPPY] = /^https?:\/\/clippy\.kr\/clip\/([a-zA-Z0-9-_]+)/i;
     }
     if(GM_SETTINGS.useKakao){
         regexs[GLOBAL.KAKAO_VID] = /^https?:\/\/tv\.kakao\.com\/v\/(\d+)/i;
@@ -312,25 +308,6 @@ export async function PAGE_CAFE_MAIN(){
                     autoPlay:autoPlay,
                     muted:muted,
                     start:start
-                });
-                vid.createIframeContainer($seComponent);
-                break;
-            }
-
-            case GLOBAL.CLIPPY:{
-                let start = src.match(/[?&]start=(\d+)/);
-                let vid = new VideoClippy({
-                    id:match[1],
-                    originalUrl:src,
-                    url:src,
-                    title:title,
-                    desc:desc,
-                    view:null,
-                    start:(start !== null ? start[0] : 0),
-                    origin:document.location.origin,
-                    thumbnailUrl: thumbnailUrl,
-                    autoPlay:autoPlay,
-                    muted:muted
                 });
                 vid.createIframeContainer($seComponent);
                 break;

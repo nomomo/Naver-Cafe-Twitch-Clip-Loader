@@ -11,7 +11,7 @@ export default function GLOBAL_INIT(){
     GLOBAL.NAVER_TV = 8;
     GLOBAL.STREAMABLE = 10;
     GLOBAL.AFTV_VOD = 11;
-    GLOBAL.CLIPPY = 12;
+    //GLOBAL.CLIPPY = 12;  //deprecated
     GLOBAL.KAKAO_VID = 13;
     GLOBAL.DAILYMOTION = 14;
     GLOBAL.GFYCAT = 15;
@@ -38,7 +38,6 @@ export default function GLOBAL_INIT(){
     GLOBAL.isCafeWritingMode = (/^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/articles\/\d+\/modify/.test(GLOBAL.initLocationUrl) || /^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/menus\/\d+\/articles\/write\?/.test(GLOBAL.initLocationUrl));
     GLOBAL.isStreamableEmbed = /^https?:\/\/streamable\.com\/e\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isAftvEmbed = /^https?:\/\/vod\.afreecatv\.com\/player\//.test(GLOBAL.initLocationUrl);
-    GLOBAL.isClippyEmbed = /^https?:\/\/clippy.kr\/clip\/[a-zA-Z0-9-_]+\/embed/.test(GLOBAL.initLocationUrl);
     GLOBAL.isKakaotvEmbed = false;
     GLOBAL.isDailymotionEmbed = false;
     GLOBAL.isGfycat = false;

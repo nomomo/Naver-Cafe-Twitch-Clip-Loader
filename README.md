@@ -1,7 +1,7 @@
 # Naver-Cafe-Clip-Loader
 
 - 본 UserScript 는 네이버 카페 글에서 자체 지원되지 않는 외부 동영상 링크를 재생 가능한 비디오로 변환해줍니다. (엄청 편하다!)
-- Twitch 클립 & VOD(해외 사용자의 경우), Youtube Clip, Streamable, Afreecatv VOD, Clippy, Kakao TV, Dailymotion, gfycat, Tiktok 링크를 Cafe 에서 바로 볼 수 있도록 비디오로 변환합니다.
+- Twitch 클립 & VOD(해외 사용자의 경우), Youtube Clip, Streamable, Afreecatv VOD, Kakao TV, Dailymotion, gfycat, Tiktok 링크를 Cafe 에서 바로 볼 수 있도록 비디오로 변환합니다.
 - 네이버 카페에서 전체화면 후 해제 시 스크롤이 이상한 위치로 이동하는 문제를 해결해줍니다.
 - 영화관 모드 (클립 등 비디오 감상에 적합하도록 본문을 더 넓게 표시)
 - 카페에서 새로고침 시 메인 페이지 대신 마지막 탐색한 페이지로 이동 (상세 설정에서 활성화 필요)
@@ -64,10 +64,14 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-## 1.0.6 - Jan. 24, 2023
+### 1.0.7 - Feb. 10, 2023
+
+- Clippy 서비스 종료로 인한 기능 삭제
+
+### 1.0.6 - Jan. 24, 2023
 
 - "Youtube Clip 의 Loop 기능 강제 비활성화" 기능이 추가되었습니다. 이제 Youtuce Clip 이 재생 완료된 후 자동으로 Replay 하지 않습니다.
-- "Youtube Clip 섬네일을 스토리보드 이미지로 대체" 옵션이 켜진 경우 Embed 된 Youtube 페이지 내에서도 섬네일을 스토리보드 이미지로 대체합니다.
+- "Youtube Clip 섬네일을 스토리보드 이미지로 대체" 옵션이 켜진 경우 Embed 된 Youtube 페이지 내에서도 섬네일을 스토리보드 이미지로 대체합니다. (동일한 Youtube 동영상으로부터 파생된 Clip 들에 대해 항상 같은 섬네일을 보여주는 대신 타임라인에 마우스를 올렸을 때 뜨는 스토리보드 이미지를 보여줍니다.)
 
 ### 1.0.5 - Jan. 04, 2023
 

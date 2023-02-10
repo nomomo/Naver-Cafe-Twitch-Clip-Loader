@@ -335,15 +335,6 @@ const _settings = {
         desc:"<span style='color:#999'>예시) https://streamable.com/xxxxxxxx</span>",
     },
 
-    useClippy :{
-        category:"others",
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title:"Clippy 링크를 비디오로 변환 ",
-        desc:"<span style='color:#999'>예시) https://clippy.kr/clip/xxxxxxxx</span>",
-    },
-
     useKakao :{
         category:"others",
         depth: 1,
