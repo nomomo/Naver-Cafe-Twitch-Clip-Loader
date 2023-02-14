@@ -10,6 +10,7 @@ import { VideoTwitch } from "js/video/video_Twitch.js";
 import { VideoKakao } from "js/video/video_kakao.js";
 import { VideoGfycat } from "js/video/video_gfycat.js";
 import { VideoTiktok } from "js/video/video_tiktok.js";
+import { VideoTwip } from "js/video/video_twip.js";
 
 export async function PAGE_CAFE_MAIN(){
     // add dns-prefetch and preconnect header
@@ -67,6 +68,9 @@ export async function PAGE_CAFE_MAIN(){
     }
     if(GM_SETTINGS.useAftv){
         regexs[GLOBAL.AFTV_VOD] = /^https?:\/\/vod\.afreecatv.com\/player\/(\d+)\??(change_second=\d+)?/i;
+    }
+    if(GM_SETTINGS.useTwip){
+        regexs[GLOBAL.TWIP] = /^https?:\/\/vod\.twip\.kr\/(clip|vod)\/([a-zA-Z0-9-_]+)/i;
     }
     if(GM_SETTINGS.useKakao){
         regexs[GLOBAL.KAKAO_VID] = /^https?:\/\/tv\.kakao\.com\/v\/(\d+)/i;
@@ -308,6 +312,29 @@ export async function PAGE_CAFE_MAIN(){
                     autoPlay:autoPlay,
                     muted:muted,
                     start:start
+                });
+                vid.createIframeContainer($seComponent);
+                break;
+            }
+
+            case GLOBAL.TWIP:{
+                let vodType = match[1];
+                let id = match[2];
+                if(vodType !== "clip" && vodType !== "vod") return;
+                let start = src.match(/[?&]start=(\d+)/);
+                let vid = new VideoTwip({
+                    vodType:vodType,
+                    id:id,
+                    originalUrl:src,
+                    url:src,
+                    title:title,
+                    desc:desc,
+                    view:null,
+                    start:(start !== null ? start[0] : 0),
+                    origin:document.location.origin,
+                    thumbnailUrl: thumbnailUrl,
+                    autoPlay:autoPlay,
+                    muted:muted
                 });
                 vid.createIframeContainer($seComponent);
                 break;

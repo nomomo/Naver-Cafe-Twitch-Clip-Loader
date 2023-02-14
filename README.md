@@ -64,6 +64,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.0.8 - Feb. 15, 2023
+
+- Twip VOD & Clip 변환 기능 추가
+
 ### 1.0.7 - Feb. 10, 2023
 
 - Clippy 서비스 종료로 인한 기능 삭제

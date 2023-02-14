@@ -97,4 +97,11 @@ import { PageBase } from "js/page/page_common.js";
         }
     }
 
+    else if (GLOBAL.isTwipEmbed){
+        let pageBase = new PageBase({
+            id:document.location.href.match(/^https?:\/\/vod\.twip\.kr\/(?:clip|vod)\/([a-zA-Z0-9-_]+)/)[1],
+            url:document.location.href
+        });
+    }
+
 })();

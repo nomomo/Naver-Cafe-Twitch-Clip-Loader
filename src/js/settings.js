@@ -335,6 +335,15 @@ const _settings = {
         desc:"<span style='color:#999'>예시) https://streamable.com/xxxxxxxx</span>",
     },
 
+    useTwip :{
+        category:"others",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"Twip Clip & VOD 링크를 비디오로 변환 ",
+        desc:"<span style='color:#999'>예시) https://vod.twip.kr/vod/xxxxxxxxx<br />https://vod.twip.kr/clip/xxxxxxxxx</span>",
+    },
+
     useKakao :{
         category:"others",
         depth: 1,
