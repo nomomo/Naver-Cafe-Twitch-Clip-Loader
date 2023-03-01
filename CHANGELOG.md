@@ -4,7 +4,7 @@
 
 ## 1.1.0 - Mar. 01, 2023
 
-- Naver Cafe 에 사용되는 기본 Video Player 가 Prism Player 로 변경되어, 스크립트로 삽입되는 Naver Video 도 Prism Player 로 삽입되도록 변경했습니다. 이전 플레이어에 적용되던 자동 최대 화질 설정, 클릭 씹힘 개선, 시작 볼륨 설정, 볼륨 플레이어를 항상 표시, 배경화면을 클릭하여 재생, 에러 발생 시 Reload 등 대부분의 기능을 지원합니다. 혹시 심각한 문제가 발생하는 경우 설정에서 Naver Video Player 타입을 "Legacy" 로 설정하여 이전 플레이어를 사용하거나, "Naver 관련 기능 사용" 옵션을 꺼주세요.
+- 2023년 2월, Naver Cafe 에 사용되는 기본 Video Player 가 Prism Player 로 변경되어 스크립트로 삽입되는 Naver Video 도 Prism Player 로 삽입되도록 변경했습니다. 이전 플레이어에 적용되던 자동 최대 화질 설정, 클릭 씹힘 개선, 시작 볼륨 설정, 볼륨 플레이어를 항상 표시, 배경화면을 클릭하여 재생, 에러 발생 시 Reload 등 대부분의 기능을 지원합니다. 혹시 심각한 문제가 발생하는 경우 설정에서 Naver Video Player 타입을 "Legacy" 로 설정하여 이전 플레이어를 사용하거나, "Naver 관련 기능 사용" 옵션을 꺼주세요.
 - Naver Video Player 타입을 설정할 수 있는 기능을 추가했어요.
   - Prism Player: Naver TV 에 사용되는 플레이어와 동일한 최신 플레이어 입니다. 체감 상 조금 더 빠릅니다. 기본 플레이어 입니다.
   - Legacy: 2023년 2월 이전에 적용되던 Naver Media Player 입니다. Lazyload가 적용되어 동영상이 아주 많은 글에서 좋은 퍼포먼스를 보일 수 있습니다. 이전 플레이어가 익숙하신 분들은 이 플레이어를 쓰세요.
