@@ -1,0 +1,9 @@
+@keyframes glow {
+    to {
+        color: #0aeb7f;
+        text-shadow: 0 0 9px white, 0 0 10px #0aeb7f;
+    }
+}
+.BANJJAK{
+    animation: glow 0.3s 2 alternate;
+}

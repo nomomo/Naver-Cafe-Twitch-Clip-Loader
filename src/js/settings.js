@@ -139,8 +139,17 @@ const _settings = {
         under_dev:true,
         type: "checkbox",
         value: false,
-        title: "동영상 설명을 숨김",
-        desc: "본 스크립트에 의해 추가된 동영상 하단의 설명 부분을 숨깁니다."
+        title: "동영상 타이틀 및 설명을 표시하지 않음",
+        desc: "동영상 하단의 설명 부분 전체를 표시하지 않습니다."
+    },
+    hideDescriptionLogo: {
+        category: "videoCommon",
+        depth: 1,
+        under_dev:true,
+        type: "checkbox",
+        value: false,
+        title: "동영상 설명의 플랫폼 로고를 표시하지 않음",
+        desc: "동영상 하단 설명의 플랫폼 로고만을 숨깁니다."
     },
     exitFullscreenAfterEnd: {
         category: "videoCommon",
@@ -161,6 +170,18 @@ const _settings = {
         title:"Naver 관련 기능 사용",
         desc:""
     },
+    naverVideoPlayerType: {
+        category:"naver",
+        depth: 2,
+        type: "combobox",
+        value: "0",
+        title:"Naver Video Player 타입",
+        desc: "- Prism Player: 최신 플레이어 입니다. 체감 상 조금 더 빠릅니다.<br />- Legacy: 2023년 2월 이전에 적용되던 Naver Media Player 입니다. Lazyload가 적용되어 동영상이 아주 많은 글에서 좋은 퍼포먼스를 보일 수 있습니다. 이전 플레이어가 익숙하신 분들은 이 플레이어를 선택하세요.",
+        options:{
+            "0":{title:"Prism Player"},
+            "1":{title:"Legacy"}
+        }
+    },
     naverVideoAutoMaxQuality: {
         category:"naver",
         depth: 2,
@@ -174,8 +195,8 @@ const _settings = {
         depth: 2,
         type: "checkbox",
         value: false,
-        title:"Loop 버튼 추가",
-        desc:"재생시간이 긴 동영상을 오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다."
+        title:"(Legacy) Loop 버튼 추가",
+        desc:"재생시간이 긴 동영상을 오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다. Player type 이 Legacy 인 경우에만 적용됩니다."
     },
     NaverVideoEnhancedClick: {
         category:"naver",

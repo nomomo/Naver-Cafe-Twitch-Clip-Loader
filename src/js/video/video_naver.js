@@ -12,7 +12,8 @@ export class VideoNaver extends VideoBase {
 
         this.inkey = options.inkey;
         this.tags = options.tags;
-        this.iframeUrl = `https://serviceapi.nmv.naver.com/view/ugcPlayer.nhn?vid=${this.id}&inKey=${this.inkey}&wmode=opaque&hasLink=0&autoPlay=${this.autoPlay}&muted=${this.muted}&beginTime=0&seq=${this.seq}`;
+        this.start = (options.start ? options.start : 0);
+        this.iframeUrl = `https://serviceapi.nmv.naver.com/view/ugcPlayer.nhn?vid=${this.id}&inKey=${this.inkey}&wmode=opaque&hasLink=0&autoPlay=${this.autoPlay}&muted=${this.muted}&beginTime=${this.start}&seq=${this.seq}`;
         NOMO_DEBUG("new VideoNaver", options);
 
         // 동영상 제목이 길어서 잘리는 경우에 대한 처리

@@ -416,6 +416,8 @@ export class VideoBase {
         NOMO_DEBUG("autoPlayPauseOthers", eventType, "id=", this.id, "seq=", this.seq);
         let endedNextFound = false;
         for(let i=0; i<VideoBase.videos.length; i++){
+            if(!VideoBase.videos[i]) continue;
+
             let seq = VideoBase.videos[i].seq;
             if(eventType === "play"){
                 if(!GM_SETTINGS.autoPauseOtherClips) return false;
@@ -486,18 +488,24 @@ export class VideoBase {
             this.$error.remove();
         }
         this.$error = $(`<div class="NCCL_error_container"><div class="NCCL_error">${html}</div></div>`);
-        this.$iframeContainer.append(this.$error);
+        if(this.$iframeContainer){
+            this.$iframeContainer.append(this.$error);
+        }
+        else if(this.$seComponent){
+            this.$seComponent.append(this.$error);
+        }
     }
     hideError(){
         if(this.$error){
             this.$error.fadeOut(100);
         }
     }
-    showParsingError(type){
+    showParsingError(type, msg){
         let errormsg = "";
         if(type === undefined) type = 0;
         switch(type){
         default:
+            errormsg = msg;
             break;
         case 0:
             errormsg = "데이터 가져오기에 실패했습니다. 링크에 직접 접속해주세요.";

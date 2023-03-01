@@ -138,6 +138,9 @@ export class PageAFTV extends PageBase {
         if(ss){
             try{
                 $(document).ready(function(){
+                    if(unsafeWindow.$ === undefined){
+                        return;
+                    }
                     unsafeWindow.oriAjax = unsafeWindow.$.ajax;
                     unsafeWindow.$.ajax = function(){
                         //NOMO_DEBUG("arguments", arguments);

@@ -210,6 +210,25 @@ body #app .NCCL_container .NCCL_description img.NCCL_video_logo {
 }
 
 
+.NCCL_prism_container .NCCL_error_container {
+    position: absolute;
+    top: calc(50% - 20px);
+    max-width: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 20px;
+    z-index: 999999;
+    font-size: 14px !important;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    border: none;
+    box-shadow: 0 0 4px rgb(0 0 0 / 70%), 0 0 4px rgb(255 255 255 / 70%);
+    box-sizing: border-box;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif !important;
+    line-height: 130%;
+}
+
 
 
 .NCCL_container .NCCL_iframe_container[data-NCCL-type="TIKTOK"]{
@@ -237,4 +256,52 @@ html[data-dark="true"] .NCCL_container .NCCL_description .NCCL_link,
 html[data-darkreader-scheme="dark"] .NCCL_container .NCCL_description .NCCL_link
 {
     color:#aaa;
+}
+
+
+
+
+
+.pzp-pc-ui-error-dialog__message div.naver_player_reload_btn {
+    color: #fff;
+    float: left;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    height: 16px;
+    line-height: normal;
+    cursor:pointer;
+    margin-left:10px;
+    margin-top:1px;
+}
+
+.pzp-pc-ui-error-dialog__message div.naver_player_reload_btn:hover {
+    color: #00e686;
+}
+
+.pzp-pc-ui-error-dialog__message div.naver_player_reload_error_btn {
+    border-radius: 5px;
+    border: 1px solid #666;
+    background: #333;
+    padding: 10px 20px;
+    text-shadow: 0 0 2px rgb(0 0 0 / 10%);
+    color: #fff;
+    line-height: 23px;
+    max-width: 600px;
+    font-weight: 400;
+    margin: 20px auto 0 auto;
+    cursor: pointer;
+    font-family: se-nanumsquare,"나눔고딕",nanumgothic,Apple SD Gothic Neo,"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;
+    box-shadow: 0 0 8px #666;
+}
+.pzp-pc-ui-error-dialog__message div.naver_player_reload_error_btn:hover {
+    background: #252525;
+}
+.pzp-pc__error-dialog.reloaded div.naver_player_reload_error_btn:hover {
+    background: #333;
+}
+.pzp-pc-ui-error-dialog__message.reloaded, .pzp-pc__error-dialog.reloaded{
+    filter: blur(3px);
+    opacity: 0.8;
+}
+.pzp-pc-ui-error-dialog__message.reloaded div.naver_player_reload_error_btn, .pzp-pc__error-dialog.reloaded div.naver_player_reload_error_btn {
+    cursor: default;
 }

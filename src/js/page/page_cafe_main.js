@@ -4,6 +4,7 @@ import { sanitizeUrl } from "js/lib/sanitizeurl.ts";
 import { VideoBase } from "js/video/video_common";
 import { VideoYoutube } from "js/video/video_youtube.js";
 import { VideoNaver } from "js/video/video_naver.js";
+import { VideoNaverPrism } from "js/video/video_naver_prism.js";
 import { VideoStreamable } from "js/video/video_streamable.js";
 import { VideoAFTV } from "js/video/video_aftv.js";
 import { VideoTwitch } from "js/video/video_Twitch.js";
@@ -27,6 +28,13 @@ export async function PAGE_CAFE_MAIN(){
 
     // add style
     GM_addStyle(css_cafe_main.toString());
+    
+    // hideDescriptionLogo
+    if(GM_SETTINGS.hideDescriptionLogo){
+        GM_addStyle(`
+            .NCCL_description svg, .NCCL_description .NCCL_video_logo { display:none; }
+        `);
+    }
 
     VideoBase.init();
     
@@ -36,6 +44,7 @@ export async function PAGE_CAFE_MAIN(){
 
     if(GM_SETTINGS.useNaver){
         VideoNaver.init();      // bind Naver player reload event
+        VideoNaverPrism.init();      // add css
     }
 
     // 설명란 링크 좌클릭 시 현재 재생 중인 비디오 모두 정지
@@ -499,23 +508,54 @@ export async function PAGE_CAFE_MAIN(){
             let id = obj.data.vid;
             let inkey = obj.data.inkey;
 
-            let vid = new VideoNaver({
-                id:id,
-                inkey:inkey,
-                originalUrl:obj.data.inputUrl,
-                url:"",
-                title:obj.data.mediaMeta.title,
-                desc:obj.data.mediaMeta.description,
-                tags:obj.data.mediaMeta.tags,
-                view:null,
-                origin:document.location.origin,
-                thumbnailUrl: obj.data.thumbnail,
-                autoPlay:autoPlay,
-                muted:muted,
-                originalWidth:obj.data.width,
-                originalHeight:obj.data.height,
-            });
-            vid.createIframeContainer($seComponent);
+
+            if(GM_SETTINGS.naverVideoPlayerType == "0"){
+
+                // obj.data.originalWidth = 1920;
+                // obj.data.originalHeight = 1080;
+                // obj.data.width = 1920;
+                // obj.data.height = 1080;
+                // obj.data.contentMode = "fit";
+                // $moduleData.get(0).dataset.module = JSON.stringify(obj);
+
+                let vid = new VideoNaverPrism({
+                    id:id,
+                    inkey:inkey,
+                    originalUrl:obj.data.inputUrl,
+                    url:"",
+                    title:obj.data.mediaMeta.title,
+                    desc:obj.data.mediaMeta.description,
+                    tags:obj.data.mediaMeta.tags,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: obj.data.thumbnail,
+                    autoPlay:autoPlay,
+                    muted:muted,
+                    originalWidth:obj.data.width,
+                    originalHeight:obj.data.height
+                });
+                vid.createIframeContainer($seComponent);
+
+            }
+            else {
+                let vid = new VideoNaver({
+                    id:id,
+                    inkey:inkey,
+                    originalUrl:obj.data.inputUrl,
+                    url:"",
+                    title:obj.data.mediaMeta.title,
+                    desc:obj.data.mediaMeta.description,
+                    tags:obj.data.mediaMeta.tags,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: obj.data.thumbnail,
+                    autoPlay:autoPlay,
+                    muted:muted,
+                    originalWidth:obj.data.width,
+                    originalHeight:obj.data.height,
+                });
+                vid.createIframeContainer($seComponent);
+            }
         }
         else{
             return false;

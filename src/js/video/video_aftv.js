@@ -25,6 +25,14 @@ export class VideoAFTV extends VideoBase {
             let json = await urlFetch.json();
             NOMO_DEBUG("AFTV response", json);
 
+            if(json.html === undefined){
+                this.isDataLoading = false;
+                this.isDataLoaded = true;
+                this.isDataSucceed = false;
+                this.showParsingError(-1, "아프리카 비디오 파싱 중 에러가 발생했습니다."+(json.msg ? "<br />"+json.msg : ""));
+                return;
+            }
+
             let src = json.html.match(/src=['"]([a-zA-Z0-9-_%&?=./:]+)['"]/);
             if(src === null) {
                 this.isDataLoading = false;

@@ -12,6 +12,7 @@ import PAGE_AFTV_EMBED from "./js/page/page_aftv_embed";
 import PAGE_STREAMABLE_EMBED from "./js/page/page_streamable_embed";
 import {applyTheaterMode} from "./js/theater";
 import { PageBase } from "js/page/page_common.js";
+import css_common from "css/common.css";
 
 (async () => {
     'use strict';
@@ -27,6 +28,7 @@ import { PageBase } from "js/page/page_common.js";
     
     await DEBUG_INIT();
     await GM_SETTINGS_INIT();
+    GM_addStyle(css_common.toString());
     
     // setting window
     if(GLOBAL.isSettingWindow){
