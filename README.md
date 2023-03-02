@@ -64,6 +64,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.1.1 - Mar. 02, 2023
+
+- 제목이 긴 Naver 비디오에서 비디오 하단 설명란의 특수문자가 깨지는 문제 수정
+
 ### 1.1.0 - Mar. 01, 2023
 
 - 2023년 2월, Naver Cafe 에 사용되는 기본 Video Player 가 Naver TV에 사용되는 플레이어와 동일한 Prism Player 로 변경되었어요. 스크립트는 Naver Cafe 의 변경과 상관 없이 이전 플레이어를 사용하고 있었는데요, 이제 이러한 변화에 맞게 스크립트도 Naver Video 에 대한 기본 Player 로 Prism Player 를 사용합니다. 이전 플레이어에 적용되던 자동 최대 화질 설정, 클릭 씹힘 개선, 시작 볼륨 설정, 볼륨 플레이어를 항상 표시, 배경화면을 클릭하여 재생, 에러 발생 시 Reload 등 대부분의 기능을 새 Player 에 대해서도 지원합니다. 혹시 심각한 문제가 발생하는 경우 설정에서 Naver Video Player 타입을 "Legacy" 로 설정하여 기존 플레이어를 사용하거나, "Naver 관련 기능 사용" 옵션을 꺼주세요.

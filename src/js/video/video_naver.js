@@ -20,7 +20,7 @@ export class VideoNaver extends VideoBase {
         if(this.title && this.title.length > 37){
             let $articleTitle = $("#app div.ArticleContentBox div.article_header div.ArticleTitle h3");
             if($articleTitle.length === 1){
-                let articleTitle = escapeHtml($articleTitle.text().trim());
+                let articleTitle = $articleTitle.text().trim();
                 if(articleTitle.indexOf(this.title) !== -1){
                     this.title = articleTitle;
                 }
