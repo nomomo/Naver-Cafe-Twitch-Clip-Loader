@@ -362,11 +362,16 @@ export class VideoNaverPrism extends VideoBase {
         if(GM_SETTINGS.hideDescription){
             this.$desc.hide();
         }
-
         this.$container.append(this.$desc);
-        
+
         // insert
-        this.$seSectionVideo.append(this.$container);
+        let $seModuleVideo = this.$seComponent.find(".se-module-video");
+        if($seModuleVideo.length !== 0){
+            $seModuleVideo.after(this.$container);
+        }
+        else{
+            this.$seSectionVideo.append(this.$container);
+        }
     }
     
     async parseNewInkeyAndReloadPlayerPrism(beginTime){

@@ -64,6 +64,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.1.2 - Mar. 10, 2023
+
+- 특정 조건에서 Naver 하단 설명란이 잘못 삽입되는 문제 수정
+
 ### 1.1.1 - Mar. 02, 2023
 
 - 제목이 긴 Naver 비디오에서 비디오 하단 설명란의 특수문자가 깨지는 문제 수정
