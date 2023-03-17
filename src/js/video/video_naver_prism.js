@@ -122,6 +122,33 @@ export class VideoNaverPrism extends VideoBase {
                 },30);
             });
         }
+
+        // // 세로로 길게 표시되는 비디오를 가로로 넓게 표시
+        // if(GM_SETTINGS.naverPrismVideoDisableVertical){
+        //     GM_addStyle(`
+        //         .se-video-vertical.NCCL_prism_container .se-viewer .se-video.se-video-vertical {
+        //             object-fit: contain !important;
+        //         }
+        //         .se-viewer .se-video.se-video-vertical.NCCL_prism_container .se-module-video {
+        //             padding-top: 56.25% !important;
+        //         }
+        //         .se-viewer .se-video.se-video-vertical.NCCL_prism_container .se-section-video {
+        //             max-width: none !important;
+        //         }
+        //         .se-viewer .se-video.se-video-vertical.NCCL_prism_container .pzp-poster {
+        //             background-size: contain !important;
+        //         }
+        //         .se-viewer .se-video.se-video-vertical.NCCL_prism_container .webplayer-internal-video {
+        //             object-fit: contain !important;
+        //         }
+        //     `);
+        // }
+
+        // 세로로 표시되는 경우 화질 변경 메시지 숨기기
+        GM_addStyle(`
+            .NCCL_prism_container.se-video-vertical .NCCL_pzp_qset_tooltip,
+            .NCCL_prism_container.se-video-vertical .NCCL_pzp_qset { display:none !important }
+        `);
     }
 
     // overwrite video related function

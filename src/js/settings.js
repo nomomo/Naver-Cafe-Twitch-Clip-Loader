@@ -182,6 +182,15 @@ const _settings = {
             "1":{title:"Legacy"}
         }
     },
+    // naverPrismVideoDisableVertical: {
+    //     under_dev:true,
+    //     category:"naver",
+    //     depth: 3,
+    //     type: "checkbox",
+    //     value: false,
+    //     title:"[Prism Player] #shorts를 일반 비디오처럼 표시",
+    //     desc:"Prism Player 사용 시 #shorts 와 같이 세로로 길게 표시되는 비디오를 가로로 넓게 보여줍니다."
+    // },
     naverVideoAutoMaxQuality: {
         category:"naver",
         depth: 2,
