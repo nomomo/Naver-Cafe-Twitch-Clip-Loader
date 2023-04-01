@@ -1,8 +1,9 @@
 # Naver-Cafe-Clip-Loader
 
-- 본 UserScript 는 네이버 카페 글에서 자체 지원되지 않는 외부 동영상 링크를 재생 가능한 비디오로 변환해줍니다. (엄청 편하다!)
-- Twitch 클립 & VOD(해외 사용자의 경우), Youtube Clip, Streamable, Afreecatv VOD, Twip VOD & Clip, Kakao TV, Dailymotion, gfycat, Tiktok 링크를 Cafe 에서 바로 볼 수 있도록 비디오로 변환합니다.
+- 본 UserScript 는 네이버 카페 글에서 자체 지원되지 않는 외부 동영상 링크를 재생 가능한 비디오로 변환해줍니다.
+- Twitch Clip & VOD, Youtube Clip, Streamable, Afreecatv VOD, Twip VOD & Clip, Kakao TV, Dailymotion, gfycat, Tiktok 링크를 Cafe 에서 바로 볼 수 있도록 비디오로 변환합니다.
 - 네이버 카페에서 전체화면 후 해제 시 스크롤이 이상한 위치로 이동하는 문제를 해결해줍니다.
+- Naver 비디오를 최대 품질로 자동 재생합니다.
 - 영화관 모드 (클립 등 비디오 감상에 적합하도록 본문을 더 넓게 표시)
 - 카페에서 새로고침 시 메인 페이지 대신 마지막 탐색한 페이지로 이동 (상세 설정에서 활성화 필요)
 - Cafe 에 삽입된 Video 에 Lazyload 를 적용하여 빠른 게시글 로딩
@@ -20,7 +21,7 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 ### STEP 1. ScriptManager
 
-아래 링크에서 사용 중인 브라우저에 맞는 유저스크립트 관리 확장기능을 설치하세요.
+아래 리스트에서 본인이 사용 중인 브라우저에 맞는 링크에 접속한 후, 유저스크립트 관리 확장기능인 Tampermonkey 를 설치하세요.
 
 - Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 - Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
@@ -30,15 +31,13 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 ### STEP 2. UserScript
 
-- 유저스크립트 관리 확장기능 설치 후, 아래의 링크를 클릭하여 스크립트를 설치합니다.
+- 유저스크립트 관리 확장기능 설치 후 아래의 링크를 클릭하세요. 이후 뜨는 창에서 "설치" 버튼을 눌러 스크립트를 설치합니다.
   - Install from [https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js)
 
 이것으로 설치는 끝입니다. 즐겁게 사용하세요~
 
 > 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음으로 인한 데이터 손실이나 기타 발생하는 다른 문제에 대하여 개발자는 책임지지 않음(보고된 문제는 없음)  
-> Naver Cafe 접속에 문제가 생기거나 클립 재생이 안 되는 문제 등이 발생하는 경우, Tampermonkey 의 관리 메뉴에서 이 스크립트를 끄거나 삭제해주세요.  
-> 본 스크립트는 Tampermonkey 외의 스크립트 매니저에서는 정상 동작하지 않을 수 있습니다.  
-> 동작 테스트는 Chrome, Firefox 에서만 했습니다.  
+> 본 스크립트는 Tampermonkey 외의 스크립트 매니저에서는 정상 동작하지 않을 수 있습니다.
 
 ## Settings
 
@@ -53,7 +52,9 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 ## FAQ
 
 - Q: 스크립트를 새 버전으로 업데이트 하려면 어떻게 하나요?<br />A: 주기적으로 자동 업데이트 되지만, Tampermonkey 대시보드에서 "최근 업데이트 일시"를 클릭하여 수동 업데이트가 가능합니다.<br />설치 링크를 다시 클릭하여 업데이트 할 수도 있습니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js)<br /><br />
-- Q: 스크립트를 업데이트 하기 싫은데 매일 업데이트 창이 떠요.<br />A: 다음과 같이 자동 업데이트를 해제하세요.<br />[Tampermonkey 대시보드] - [설치된 유저 스크립트] - [Naver-Cafe-Twitch-Clip_Loader] - [설정] - [업데이트 확인 체크 해제] - [저장 버튼 클릭]<br />![DisableAutoUpdate](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_disable_autoupdate.png)
+- Q: 스크립트를 업데이트 하기 싫은데 매일 업데이트 창이 떠요.<br />A: 다음과 같이 자동 업데이트를 해제하세요.<br />[Tampermonkey 대시보드] - [설치된 유저 스크립트] - [Naver-Cafe-Twitch-Clip_Loader] - [설정] - [업데이트 확인 체크 해제] - [저장 버튼 클릭]<br />![DisableAutoUpdate](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/NCTCL_disable_autoupdate.png)<br /><br />
+- Q: 갑자기 Youtube 또는 Naver video 재생이 안 됩니다.<br />A: 설정에서 "Youtube 관련 기능 사용" 또는 "Naver 관련 기능 사용" 을 끄시고, 증상을 개발자에게 제보해주세요!<br /><br />
+- Q: Twitch Clip 을 카페에서 바로 보려면 어떻게 하나요?<br />A: 해외 사용자의 경우, 설정에서 "Twitch Clip 및 VOD 링크를 비디오로 변환" 기능을 활성화 하세요.
 
 ## Bug report
 

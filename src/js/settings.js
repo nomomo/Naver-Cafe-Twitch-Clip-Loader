@@ -105,7 +105,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"글 본문에서 비디오의 원본 링크 삭제",
-        desc:"삽입된 비디오와 동일한 링크가 글 본문에 존재하는 경우 삭제하여 보기 좋게 만듭니다."
+        desc:"삽입된 비디오와 동일한 링크가 글 본문에 존재하는 경우 삭제하여 보기 좋게 만듭니다. 원본 동영상 링크를 삭제하지 않으려면 본 기능을 끄세요."
     },
     hideTopOverlay: {
         category:"videoCommon",
@@ -149,7 +149,7 @@ const _settings = {
         type: "checkbox",
         value: false,
         title: "동영상 설명의 플랫폼 로고를 표시하지 않음",
-        desc: "동영상 하단 설명의 플랫폼 로고만을 숨깁니다."
+        desc: "동영상 하단 설명에서 플랫폼 로고만을 숨깁니다."
     },
     exitFullscreenAfterEnd: {
         category: "videoCommon",
@@ -168,7 +168,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"Naver 관련 기능 사용",
-        desc:""
+        desc:"Naver video 와 관련한 스크립트 기능을 적용합니다. Naver 동영상 재생에 문제가 발생하는 경우 본 기능을 꺼주세요."
     },
     naverVideoPlayerType: {
         category:"naver",
@@ -201,11 +201,12 @@ const _settings = {
     },
     NaverVideoAddLoopBtn: {
         category:"naver",
+        under_dev: true,
         depth: 2,
         type: "checkbox",
         value: false,
         title:"(Legacy) Loop 버튼 추가",
-        desc:"재생시간이 긴 동영상을 오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다. Player type 이 Legacy 인 경우에만 적용됩니다."
+        desc:"플레이어에 Loop 버튼을 추가합니다. 재생시간이 긴 동영상을 오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다. Player type 이 Legacy 인 경우에만 적용됩니다."
     },
     NaverVideoEnhancedClick: {
         category:"naver",
@@ -225,39 +226,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"Youtube 관련 기능 사용",
-        desc:"Youtube video 를 스크립트가 제어하도록 하여 관련 기능을 적용합니다.",
-    },
-    youtubeClipConvert : {
-        category:"youtube",
-        depth: 2,
-        type: "checkbox",
-        value: true,
-        title:"Youtube Clip 링크를 비디오로 변환",
-        desc:"<span style='color:#999'>예시) https://youtube.com/clip/xxxxx_xxxxxx-xxxxxx_xxxxx</span>",
-    },
-    youtubeClipDisableLoop: {
-        category:"youtube",
-        depth: 3,
-        type: "checkbox",
-        value: true,
-        title:"Youtube Clip 의 Loop 기능 강제 비활성화",
-        desc:"클립 재생이 완료되면 비디오를 정지합니다.",
-    },
-    youtubeClipStoryBoardImage : {
-        category:"youtube",
-        depth: 3,
-        type: "checkbox",
-        value: true,
-        title:"Youtube Clip 섬네일을 스토리보드 이미지로 대체",
-        desc:"원본 비디오의 섬네일 대신 Clip 이 생성된 시간의 스토리보드 이미지를 섬네일로 표시합니다.",
-    },
-    useYoutubePlaylist : {
-        category:"youtube",
-        depth: 2,
-        type: "checkbox",
-        value: true,
-        title:"Youtube Playlist 링크를 비디오로 변환",
-        desc:"<span style='color:#999'>예시) https://youtube.com/playlist?list=PLxxxxxxxxxxxxxxxxxxx</span>",
+        desc:"Youtube video 와 관련한 스크립트 기능을 적용합니다. Youtube 동영상 재생에 문제가 발생하는 경우 본 기능을 꺼주세요.",
     },
     youtubeSetQuality : {
         category:"youtube",
@@ -279,6 +248,38 @@ const _settings = {
             "small":{title:"small (240p)"},
             "tiny":{title:"tiny (144p)"},
         }
+    },
+    youtubeClipConvert : {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"Youtube Clip 링크를 비디오로 변환",
+        desc:"<span style='color:#999'>예시) https://youtube.com/clip/xxxxx_xxxxxx-xxxxxx_xxxxx</span>",
+    },
+    youtubeClipDisableLoop: {
+        category:"youtube",
+        depth: 3,
+        type: "checkbox",
+        value: true,
+        title:"Youtube Clip 을 반복 재생하지 않음",
+        desc:"Youtube Clip의 Loop 기능을 강제로 비활성화 하여 클립 재생이 완료되면 비디오를 정지하도록 만듭니다.",
+    },
+    youtubeClipStoryBoardImage : {
+        category:"youtube",
+        depth: 3,
+        type: "checkbox",
+        value: true,
+        title:"Youtube Clip 섬네일을 스토리보드로 대체",
+        desc:"원본 비디오의 섬네일 대신 Clip 이 생성된 시간의 스토리보드를 섬네일로 표시합니다. (스토리보드: 재생바 타임라인에 마우스 올리면 뜨는 미리보기 이미지)",
+    },
+    useYoutubePlaylist : {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"Youtube Playlist 링크를 비디오로 변환",
+        desc:"<span style='color:#999'>예시) https://youtube.com/playlist?list=PLxxxxxxxxxxxxxxxxxxx</span>",
     },
     // youtubeAlzartakSize : {
     //     category:"youtube",
@@ -429,7 +430,7 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: true,
-        title:"네이버 카페 전체화면 스크롤 동작 개선",
+        title:"⭐ 네이버 카페 전체화면 스크롤 동작 개선",
         desc:"비디오를 전체화면 후 해제 시 스크롤 위치가 변경되는 문제를 개선합니다."
     },
     improvedRefresh:{
@@ -437,7 +438,7 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: false,
-        title:"네이버 카페 새로고침 개선",
+        title:"⭐ 네이버 카페 새로고침 개선",
         desc:"새로고침 시 첫 화면 대신 마지막으로 탐색한 페이지를 불러옵니다."
     },
     naverBoardDefaultArticleCount: {
@@ -445,7 +446,7 @@ const _settings = {
         depth: 1,
         type: "combobox",
         value: "0",
-        title:"게시판 글 기본 표시 개수 설정",
+        title:"⭐ 게시판 글 기본 표시 개수 설정",
         desc:"",
         options:{
             "0":{title:"기본값 사용"},
@@ -464,7 +465,7 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: false,
-        title:"즐겨찾는 게시판을 항상 펼침",
+        title:"⭐ 즐겨찾는 게시판을 항상 펼침",
         desc:""
     },
     showDarkModeBtn : {
