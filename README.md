@@ -65,6 +65,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.1.4 - May 09, 2023
+
+- 특정 조건에서 상단 메뉴의 영화관 모드, 어두운 모드 버튼이 여러번 표시되는 버그를 고쳤어요.
+
 ### 1.1.3 - Mar. 18, 2023
 
 - Naver Prism Player 사용 시 #shorts 와 같이 세로로 길게 표시되는 비디오의 경우 화질 변경 메시지를 숨깁니다.

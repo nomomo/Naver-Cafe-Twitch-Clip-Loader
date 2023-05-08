@@ -34,7 +34,7 @@ export async function DARKMODE_INIT(){
     $(document).ready(function(){
         if(GM_SETTINGS.showDarkModeBtn){
             var $gnbmenu = $("#gnb-menu");
-            if($gnbmenu.length !== 0){
+            if($gnbmenu.length !== 0 && $("#darkModeBtn").length === 0){
                 $gnbmenu.prepend($darkModeBtn);
             }
         }

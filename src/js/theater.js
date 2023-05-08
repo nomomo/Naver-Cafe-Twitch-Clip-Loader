@@ -17,7 +17,7 @@ var $theaterModeBtn = $(`<span title="[NCCL] 클릭 시 영화관 모드를 ${is
 function CREATE_THEATER_MODE_BTN(){
     if(GM_SETTINGS.useTheaterMode){
         var $gnbmenu = $("#gnb-menu");
-        if($gnbmenu.length !== 0){
+        if($gnbmenu.length !== 0 && $("#theaterModeBtn").length === 0){
             $gnbmenu.prepend($theaterModeBtn);
         }
 
