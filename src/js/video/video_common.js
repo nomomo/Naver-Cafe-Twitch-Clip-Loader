@@ -20,8 +20,8 @@ export class VideoBase {
         this.isEmbed = options.isEmbed;
         this.thumbnailUrl = options.thumbnailUrl;
         this.video = options.video;
-        this.originalWidth = options.originalWidth;
-        this.originalHeight = options.originalHeight;
+        this.originalWidth = (options.originalWidth ? Number(options.originalWidth) : undefined);
+        this.originalHeight = (options.originalHeight ? Number(options.originalHeight) : undefined);
         this.isSetMaxQuality = false;
         this.lazyLoad = true;
         this.postMessageUrl = (options.iframeUrl ? "https://"+this.iframeUrl.split("/")[2] : undefined);
@@ -52,6 +52,7 @@ export class VideoBase {
 
         this.$thumbnailContainer = undefined;
         this.$thumbnail = undefined;
+        this.$logoSVG = undefined;
 
         this.$loop = undefined;
         this.$error = undefined;
@@ -259,19 +260,20 @@ export class VideoBase {
             .data("NCCL-type", this.typeName)
             .text((this.title ? this.title : (this.desc ? this.desc : "제목없음")));
         let url = (this.url || this.originalUrl);
+        this.$logoSVG = (this.logoSVG ? $(`${this.logoSVG})`) : $("<span style='display:none;'></span>"));
         if(url){
-            this.$desc = $(`<a class="NCCL_description" target="_blank">${this.logoSVG ? this.logoSVG : ""}</a>`)
+            this.$desc = $(`<a class="NCCL_description" target="_blank"></a>`)
                 .data("NCCL-type", this.typeName)
                 .attr("href", this.url);
             this.$link = $(`<div class="NCCL_link"></div>`)
                 .data("NCCL-type", this.typeName)
                 .text((this.url ? "("+this.url+")" : ""));
-            this.$desc.append(this.$title).append(this.$link);
+            this.$desc.append(this.$logoSVG).append(this.$title).append(this.$link);
         }
         else{
-            this.$desc = $(`<div class="NCCL_description">${this.logoSVG ? this.logoSVG : ""}</div>`)
+            this.$desc = $(`<div class="NCCL_description"></div>`)
                 .data("NCCL-type", this.typeName);
-            this.$desc.append(this.$title);
+            this.$desc.append(this.$logoSVG).append(this.$title);
         }
 
         // hideDescription
@@ -533,5 +535,54 @@ export class VideoBase {
             this.$iframeContainer.attr("style",`aspect-ratio:${new_ratio}`);
         }
     }
+    getNewWidth(){
+        // set default values
+        let parentWidth = 800.0;
+        let parentHeight = parent.window.innerHeight - 230.0; // 150:
+        NOMO_DEBUG("parentHeight", parentHeight);
 
+        // set description height according to hideDescription option
+        let descriptionHeight = (GM_SETTINGS.hideDescription ? 0.0 : 40.0);
+
+        // set max width
+        let shortsMaxWidth = 300.0;
+        let shortsMaxHeight = shortsMaxWidth / 9.0 * 16.0 - descriptionHeight;
+
+        // set shortsMaxHeight from parent window height
+        let goodVideoHeight = parentHeight - descriptionHeight;
+        if(goodVideoHeight > 0){
+            // 하단에 설정될 여백은 30px or 10% 중 작은 것이다
+            shortsMaxHeight = Math.max(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
+        }
+
+        // set shortsMaxWidth from article_container element width
+        let $article_container =  $(".article_container");
+        if($article_container.length !== 0 && (parentWidth = $article_container.width())){
+            shortsMaxWidth = parentWidth;
+        }
+        NOMO_DEBUG("originalWidth originalHeight:", this.originalWidth, this.originalHeight);
+        NOMO_DEBUG("shortsMaxWidth shortsMaxHeight:", shortsMaxWidth, shortsMaxHeight);
+
+        // get new width
+        let originalRatio = this.originalWidth / this.originalHeight;
+        let newWidth = shortsMaxHeight * originalRatio;
+
+        // check new width with min condition
+        NOMO_DEBUG("original ratio:", originalRatio);
+        NOMO_DEBUG("newWidth by original ratio:", newWidth, "new height will be", newWidth / originalRatio);
+        if(newWidth <= 300.0){
+            NOMO_DEBUG("newWidth: set to 300");
+            newWidth = 300.0;
+        }
+        // check new width with max condition
+        else if(newWidth > shortsMaxWidth){
+            NOMO_DEBUG("newWidth: set to shortsMaxWidth", shortsMaxWidth);
+            newWidth = parseInt(shortsMaxWidth);
+        }
+
+        //let newPaddingTop = parseInt(100.0 / originalRatio);
+        let newPaddingTop = 100.0 / originalRatio;
+
+        return {"newWidth":newWidth, "newPaddingTop":newPaddingTop};
+    }
 }

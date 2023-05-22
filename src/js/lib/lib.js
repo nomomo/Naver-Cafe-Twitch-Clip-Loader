@@ -52,7 +52,7 @@ window.NOMO_ERROR = NOMO_ERROR;
 export const Arrive = function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbindEvent),l.addMethod(t,n,e.unbindEventWithSelectorOrCallback),l.addMethod(t,n,e.unbindEventWithSelectorAndCallback);}function i(e){e.arrive=f.bindEvent,r(f,e,"unbindArrive"),e.leave=d.bindEvent,r(d,e,"unbindLeave");}if(e.MutationObserver&&"undefined"!=typeof HTMLElement){var o=0,l=function(){var t=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;return{matchesSelector:function(e,n){return e instanceof HTMLElement&&t.call(e,n);},addMethod:function(e,t,r){var i=e[t];e[t]=function(){return r.length==arguments.length?r.apply(this,arguments):"function"==typeof i?i.apply(this,arguments):n;};},callCallbacks:function(e,t){t&&t.options.onceOnly&&1==t.firedElems.length&&(e=[e[0]]);for(var n,r=0;n=e[r];r++)n&&n.callback&&n.callback.call(n.elem,n.elem);t&&t.options.onceOnly&&1==t.firedElems.length&&t.me.unbindEventWithSelectorAndCallback.call(t.target,t.selector,t.callback);},checkChildNodesRecursively:function(e,t,n,r){for(var i,o=0;i=e[o];o++)n(i,t,r)&&r.push({callback:t.callback,elem:i}),i.childNodes.length>0&&l.checkChildNodesRecursively(i.childNodes,t,n,r);},mergeArrays:function(e,t){var n,r={};for(n in e)e.hasOwnProperty(n)&&(r[n]=e[n]);for(n in t)t.hasOwnProperty(n)&&(r[n]=t[n]);return r;},toElementsArray:function(t){return n===t||"number"==typeof t.length&&t!==e||(t=[t]),t;}};}(),c=function(){var e=function(){this._eventsBucket=[],this._beforeAdding=null,this._beforeRemoving=null;};return e.prototype.addEvent=function(e,t,n,r){var i={target:e,selector:t,options:n,callback:r,firedElems:[]};return this._beforeAdding&&this._beforeAdding(i),this._eventsBucket.push(i),i;},e.prototype.removeEvent=function(e){for(var t,n=this._eventsBucket.length-1;t=this._eventsBucket[n];n--)if(e(t)){this._beforeRemoving&&this._beforeRemoving(t);var r=this._eventsBucket.splice(n,1);r&&r.length&&(r[0].callback=null);}},e.prototype.beforeAdding=function(e){this._beforeAdding=e;},e.prototype.beforeRemoving=function(e){this._beforeRemoving=e;},e;}(),a=function(t,r){var i=new c,o=this,a={fireOnAttributesModification:!1};return i.beforeAdding(function(n){var i,l=n.target;(l===e.document||l===e)&&(l=document.getElementsByTagName("html")[0]),i=new MutationObserver(function(e){r.call(this,e,n);});var c=t(n.options);i.observe(l,c),n.observer=i,n.me=o;}),i.beforeRemoving(function(e){e.observer.disconnect();}),this.bindEvent=function(e,t,n){t=l.mergeArrays(a,t);for(var r=l.toElementsArray(this),o=0;o<r.length;o++)i.addEvent(r[o],e,t,n);},this.unbindEvent=function(){var e=l.toElementsArray(this);i.removeEvent(function(t){for(var r=0;r<e.length;r++)if(this===n||t.target===e[r])return!0;return!1;});},this.unbindEventWithSelectorOrCallback=function(e){var t,r=l.toElementsArray(this),o=e;t="function"==typeof e?function(e){for(var t=0;t<r.length;t++)if((this===n||e.target===r[t])&&e.callback===o)return!0;return!1;}:function(t){for(var i=0;i<r.length;i++)if((this===n||t.target===r[i])&&t.selector===e)return!0;return!1;},i.removeEvent(t);},this.unbindEventWithSelectorAndCallback=function(e,t){var r=l.toElementsArray(this);i.removeEvent(function(i){for(var o=0;o<r.length;o++)if((this===n||i.target===r[o])&&i.selector===e&&i.callback===t)return!0;return!1;});},this;},s=function(){function e(e){var t={attributes:!1,childList:!0,subtree:!0};return e.fireOnAttributesModification&&(t.attributes=!0),t;}function t(e,t){e.forEach(function(e){var n=e.addedNodes,i=e.target,o=[];null!==n&&n.length>0?l.checkChildNodesRecursively(n,t,r,o):"attributes"===e.type&&r(i,t,o)&&o.push({callback:t.callback,elem:i}),l.callCallbacks(o,t);});}function r(e,t){return l.matchesSelector(e,t.selector)&&(e._id===n&&(e._id=o++),-1==t.firedElems.indexOf(e._id))?(t.firedElems.push(e._id),!0):!1;}var i={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};f=new a(e,t);var c=f.bindEvent;return f.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t);var o=l.toElementsArray(this);if(t.existing){for(var a=[],s=0;s<o.length;s++)for(var u=o[s].querySelectorAll(e),f=0;f<u.length;f++)a.push({callback:r,elem:u[f]});if(t.onceOnly&&a.length)return r.call(a[0].elem,a[0].elem);setTimeout(l.callCallbacks,1,a);}c.call(this,e,t,r);},f;},u=function(){function e(){var e={childList:!0,subtree:!0};return e;}function t(e,t){e.forEach(function(e){var n=e.removedNodes,i=[];null!==n&&n.length>0&&l.checkChildNodesRecursively(n,t,r,i),l.callCallbacks(i,t);});}function r(e,t){return l.matchesSelector(e,t.selector);}var i={};d=new a(e,t);var o=d.bindEvent;return d.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t),o.call(this,e,t,r);},d;},f=new s,d=new u;t&&i(t.fn),i(HTMLElement.prototype),i(NodeList.prototype),i(HTMLCollection.prototype),i(HTMLDocument.prototype),i(Window.prototype);var h={};return r(f,h,"unbindAllArrive"),r(d,h,"unbindAllLeave"),h;}}(window,"undefined"==typeof jQuery?null:jQuery,void 0);
 
 /* GM_setting.js
-* Version: Jan. 7, 2023
+* Version: May. 21, 2023
 * MIT licensed
 * https://github.com/nomomo/
 * nomotg@gmail.com
@@ -60,7 +60,7 @@ export const Arrive = function(e,t,n){"use strict";function r(e,t,n){l.addMethod
 */
 // eslint-disable-next-line
 export var GM_setting = (function ($, global, document) { //
-    var version = "23.1.7";
+    var version = "23.5.21";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // local vars
@@ -72,6 +72,10 @@ export var GM_setting = (function ($, global, document) { //
     var userSettingsInitCopy = {};
     var userSettings = {};
     var userSettingsValues = {};
+
+    var prevConfig = {};        // 버전 업데이트 시 이전 config backup 용
+    var config = {};            // 지난 버전 등 script 유지 보수에 필요한 정보
+    var isUpdated = false;
     
     var $g_elem;
     var GUI = {
@@ -231,7 +235,28 @@ export var GM_setting = (function ($, global, document) { //
         }
         userSettingsInitCopy["Lang"] = "";
 
+        await checkIsUpdated_();
         await load_();
+
+        // migration
+        if(isUpdated){
+            if(usInput.MIGRATION){
+                CONSOLE_MSG("Migration required");
+                let oriSettings = deepCopy_(userSettingsValues);
+                userSettingsValues = usInput.MIGRATION(prevConfig, config, oriSettings);
+                if(!userSettingsValues){
+                    CONSOLE_MSG("Unknown error during migration. load original settings");
+                    userSettingsValues = oriSettings;
+                }
+
+                // 저장
+                await save_();
+            }
+            else{
+                CONSOLE_MSG("Migration required, but there is no user MIGRATION function");
+            }
+        }
+
         if (!hasSameKey_(userSettingsInitCopy, userSettingsValues)) {
             // 추가
             for (key in userSettingsInitCopy) {
@@ -245,11 +270,21 @@ export var GM_setting = (function ($, global, document) { //
                     delete userSettingsValues[key];
                 }
             }
+
+            // 저장
             await save_();
         }
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
+    var load_ = async function () {
+        CONSOLE_MSG("load_");
+        if (name_ !== "") {
+            userSettingsValues = await GM.getValue(name_, userSettingsValues);
+        }
+        userSettingsValues["Lang"] = await loadLang_();
+        global[name_] = userSettingsValues;
+    };
     var save_ = async function () {
         CONSOLE_MSG("save_");
         if (name_ !== "") {
@@ -267,34 +302,89 @@ export var GM_setting = (function ($, global, document) { //
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    var load_ = async function () {
-        CONSOLE_MSG("load_");
-        if (name_ !== "") {
-            userSettingsValues = await GM.getValue(name_, userSettingsValues);
-        }
-        userSettingsValues["Lang"] = await loadLang_();
-        global[name_] = userSettingsValues;
-    };
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
     var loadLang_ = async function() {
-        userSelectedLang = await GM.getValue("GM_SETTING_LANG", userLang);
+        userSelectedLang = await GM.getValue(name_+"_LANG", userLang);
         CONSOLE_MSG("loadLang_", userSelectedLang);
         return userSelectedLang;
     };
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
     var saveLang_ = async function(lang) {
         if(lang == undefined){
-            await GM.setValue("GM_SETTING_LANG", userSelectedLang);
+            await GM.setValue(name_+"_LANG", userSelectedLang);
             CONSOLE_MSG("saveLang_", userSelectedLang);
         }
         else{
-            await GM.setValue("GM_SETTING_LANG", lang);
+            await GM.setValue(name_+"_LANG", lang);
             CONSOLE_MSG("saveLang_", lang);
         }
     };
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    var loadConfig_ = async function() {
+        config = await GM.getValue(name_+"_CONFIG");
+        CONSOLE_MSG("loadConfig_", config);
+        return config;
+    };
+    var saveConfig_ = async function() {
+        await GM.setValue(name_+"_CONFIG", config);
+        CONSOLE_MSG("saveConfig_", config);
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    var checkIsUpdated_ = async function () {
+        await loadConfig_();
+        let currentVersion = GM.info.script.version;
+        
+        // config 존재하지 않는 경우
+        if(!config){
+            CONSOLE_MSG("NO CONFIG, CREATE NEW DARA");
+            let cvary = currentVersion.split(".");
+            for(let i=0;i<cvary.length;i++){
+                cvary[i] = Number(cvary[i]);
+            }
+            config = {
+                latestVersionAry:cvary,
+                latestVersion:currentVersion
+            };
+            await saveConfig_();
+
+            // set dummy prevConfig version
+            prevConfig.latestVersionAry = cvary;
+            prevConfig.latestVersion = currentVersion;
+        }
+        else{
+            prevConfig = deepCopy_(config);  // 불러온 config 백업
+        }
+
+        // check updated version
+        if(config.latestVersion !== currentVersion){
+            let lvary = config.latestVersion.split(".");
+            let cvary = currentVersion.split(".");
+            if(lvary.length === cvary.length){
+                for(let i=0;i<cvary.length;i++){
+                    cvary[i] = Number(cvary[i]);
+                    lvary[i] = Number(lvary[i]);
+                    if(cvary[i] > lvary[i]){        // upgrade
+                        isUpdated = true;
+                        break;
+                    }
+                    else if(cvary[i] < lvary[i]){   // downgrade
+                        break;
+                    }
+                }
+            }
+
+            config.latestVersionAry = cvary;
+            config.latestVersion = currentVersion;
+            await saveConfig_();
+        }
+
+        // 업데이트 할 때 필요한 동작은 여기에 추가
+        if(isUpdated){
+            CONSOLE_MSG(`SCRIPT UPDATED - ${prevConfig.latestVersion} -> ${config.latestVersion}`);
+        }
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     var reCreateTable_ = function($tbody, key, val) {
         $tbody.empty();
         $tbody.empty();
@@ -1325,6 +1415,9 @@ export var GM_setting = (function ($, global, document) { //
         return JSON.stringify(aKeys) === JSON.stringify(bKeys);
     };
 
+    var deepCopy_ = function (input) {
+        return JSON.parse(JSON.stringify(input));
+    };
 
     //
     //

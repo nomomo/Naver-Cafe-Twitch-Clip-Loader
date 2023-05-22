@@ -7,6 +7,8 @@ const YTlogo = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/20
     <path style="fill:#F61C0D;" d="M365.257,67.393H95.744C42.866,67.393,0,110.259,0,163.137v134.728c0,52.878,42.866,95.744,95.744,95.744h269.513c52.878,0,95.744-42.866,95.744-95.744V163.137C461.001,110.259,418.135,67.393,365.257,67.393z M300.506,237.056l-126.06,60.123c-3.359,1.602-7.239-0.847-7.239-4.568V168.607c0-3.774,3.982-6.22,7.348-4.514l126.06,63.881C304.363,229.873,304.298,235.248,300.506,237.056z"/>
 </g>
 </svg>`;
+const YTShortsLogo = `<svg style="vertical-align: middle;" fill="none" height="18" viewBox="0 0 87 115" width="18"><path clip-rule="evenodd" d="M83.99 10.81C90.08 21.24 86.62 34.66 76.26 40.79L69.05 45.06L74.17 47.38C81.58 50.74 86.52 57.99 86.96 66.17C87.40 74.34 83.27 82.09 76.26 86.24L32.76 111.97C22.41 118.10 9.08 114.61 3.00 104.18C-3.08 93.75 .37 80.33 10.73 74.20L17.94 69.93L12.82 67.61C5.41 64.25 .47 57.00 .03 48.82C-0.40 40.65 3.72 32.90 10.73 28.75L54.23 3.02C64.58 -3.10 77.91 .38 83.99 10.81Z" fill="#f00" fill-rule="evenodd"></path><path clip-rule="evenodd" d="M33 74L33 41L61 57.5L33 74Z" fill="white" fill-rule="evenodd"></path></svg>`;
+
 
 export class VideoYoutube extends VideoBase {
     constructor(options) {
@@ -58,6 +60,9 @@ export class VideoYoutube extends VideoBase {
         // thumbnail reloaded?
         this.originalThumbnailUrl = options.thumbnailUrl;
         this.isThumbnailReloaded = false;
+        
+        // cafe 가 dark 모드인지 여부
+        this.darkMode = (options.darkMode ? options.darkMode : false);
     }
 
     static init(){try{
@@ -115,6 +120,27 @@ export class VideoYoutube extends VideoBase {
         this.$iframe.attr("id", YTElemID);
         this.$iframeContainer.append(this.$iframe);
 
+        
+        // shortsAutoResize
+        let isVertical = (this.originalHeight > this.originalWidth && (/#shorts/i.test(this.title) || /shorts/i.test(this.originalUrl)));
+        NOMO_DEBUG("isVertical", this.id, isVertical);
+        if(isVertical && GM_SETTINGS.shortsAutoResize){
+            this.$logoSVG.replaceWith(YTShortsLogo);
+            this.$container.attr("NCCL_vertical",this.id);      // add special attr to set style
+            this.$iframeContainer.attr("NCCL_vertical",this.id); // add special attr to set style
+            if(GM_SETTINGS.shortsAutoResize){
+                const {newWidth, newPaddingTop} = this.getNewWidth();
+    
+                let originalRatio = this.originalWidth / this.originalHeight;
+                // add style
+                GM_addStyle(`
+                    .NCCL_container[NCCL_vertical='${this.id}'] {max-width:${newWidth}px !important; margin:0 auto !important;}
+                    .NCCL_iframe_container[NCCL_vertical='${this.id}'] {max-width:${newWidth}px !important; aspect-ratio:${originalRatio} !important;}
+                    `
+                );
+            }
+        }
+
         //// youtubeAlzartakSize
         // if(GM_SETTINGS.youtubeAlzartakSize && this.originalWidth && this.originalWidth > 100 && this.originalHeight && this.originalHeight > 100){
         //     NOMO_DEBUG("this.originalWidth, this.originalHeight", this.originalWidth, this.originalHeight);
@@ -148,6 +174,7 @@ export class VideoYoutube extends VideoBase {
             YTOptions["playerVars"]["storyBoardUrl"] = this.foundStoryBoardUrl;
             YTOptions["playerVars"]["storyBoardSeq"] = this.foundStoryBoardSeq;
         }
+        if(this.darkMode) YTOptions["playerVars"]["darkMode"] = this.darkMode;
         
         // YOUTUBE_PLAYLIST
         if(this.type === GLOBAL.YOUTUBE_PLAYLIST && this.ytPlaylistId){

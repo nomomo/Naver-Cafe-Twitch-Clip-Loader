@@ -46,6 +46,7 @@ var themeCSSElem = undefined;
 async function applyDarkMode(){
     try{
         isDarkMode = await GM.getValue("darkMode", false);
+        GLOBAL.isDarkMode = isDarkMode;
         NOMO_DEBUG("어두운 모드", isDarkMode);
         $darkModeBtn.attr("title", `[NCCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다.`);
         if(themeCSSElem !== undefined) $(themeCSSElem).remove();
@@ -53,7 +54,6 @@ async function applyDarkMode(){
             themeCSSElem = GM_addStyle(theme_dark.toString().replace(/(\.skin-1080)/g, "html[data-theme='dark'] body"));
         
             $("html").attr("data-theme","dark");
-
         }
         else
         {

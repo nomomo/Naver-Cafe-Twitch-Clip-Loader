@@ -24,6 +24,7 @@ export default function GLOBAL_INIT(){
     GLOBAL.version = escapeHtml(GM.info.script.version || GM_info.script.version);
     GLOBAL.isTopWindow = window.self === window.top;
     GLOBAL.initLocationUrl = document.location.href;
+    GLOBAL.isDarkMode = false;
     GLOBAL.isNaverCafe = /(^https:\/\/cafe\.naver\.com\/)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isNaverCafeMain = (GLOBAL.isNaverCafe && !GLOBAL.isTopWindow);
     GLOBAL.isNaverCafeTop = (GLOBAL.isNaverCafe && GLOBAL.isTopWindow);

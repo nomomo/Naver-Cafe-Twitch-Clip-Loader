@@ -65,6 +65,21 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.2.0 - May 22 2023
+
+- 새로운 기능
+  - "🧪 Shorts 비디오 크기 자동 조절" 기능 추가
+    - 세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춰주는 기능을 추가했어요.<br />![shortsResize](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/230521_shortsResize.png)
+    - 세로 비디오의 크기를 현재 브라우저의 화면 높이에 맞게 키워줍니다.
+    - 네이버 비디오 및 Youtube 에 적용됩니다.
+    - 현재 실험실 기능이며 상세 설정에서 직접 활성화 해야합니다.
+  - "업데이트 알림 표시" 기능 추가
+    - 스크립트가 업데이트 되면 작은 팝업으로 업데이트가 되었음을 10초간 표시합니다.
+    - 업데이트 알림은 다음 버전 업데이트 때 부터 표시됩니다.
+    - 상세 설정에서 업데이트 알림을 비활성화 할 수 있습니다.
+- 디스플레이 해상도 및 배율에 따라 Youtube 비디오 좌측에 까만 줄이 표시될 수 있는 문제를 일부 개선했어요.
+- "동영상 시청 종료 후 뜨는 추천 영상 메뉴등을 숨김" 기능이 켜진 경우 21:9 비율 비디오 등에서 상하단 레터박스가 이상하게 표시되는 문제를 고쳤어요.
+
 ### 1.1.4 - May 09, 2023
 
 - 특정 조건에서 상단 메뉴의 영화관 모드, 어두운 모드 버튼이 여러번 표시되는 버그를 고쳤어요.

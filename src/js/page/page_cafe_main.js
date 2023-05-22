@@ -98,11 +98,28 @@ export async function PAGE_CAFE_MAIN(){
         regexs[GLOBAL.TIKTOK] = /https:\/\/www\.tiktok.com\/[-A-Z0-9+&@#/%=~_|^ㄱ-ㅎㅏ-ㅣ가-힣]+\/video\/(\d+)/i;
     }
 
+    // 다크모드인지 체크하기 위한 변수
+    let isDarkModeChecked = false;
+    let isDarkMode = false;
+
     //$(document).arrive(".se-module-oembed iframe, .se-module-oglink, .se-module-video", { onlyOnce: true, existing: true }, function (elem) {try{
     $(document).arrive(".__se_module_data", { onlyOnce: true, existing: true }, function (elem) {try{
         let $elem = $(elem);
         if($elem.hasClass("fired")) return;
         $elem.addClass("fired");
+
+        // 다크모드인지 체크
+        if(!isDarkModeChecked){
+            isDarkModeChecked = true;
+            let htmlDark = $("html").data("dark");
+            if(GLOBAL.isDarkMode || (typeof(htmlDark === "boolean") && htmlDark) ){
+                isDarkMode = true;
+            }
+        }
+        // shortsAutoResize
+        if(GM_SETTINGS.shortsAutoResize){
+            //
+        }
 
         // let $seComponent = $elem.closest(".se-component");
         // let $moduleData = $seComponent.find(".__se_module_data");
@@ -239,7 +256,8 @@ export async function PAGE_CAFE_MAIN(){
                     origin:document.location.origin,
                     thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
-                    muted:muted
+                    muted:muted,
+                    darkMode:isDarkMode
                 });
                 vid.createIframeContainer($seComponent);
                 break;
@@ -257,7 +275,8 @@ export async function PAGE_CAFE_MAIN(){
                     origin:document.location.origin,
                     thumbnailUrl: thumbnailUrl,
                     autoPlay:autoPlay,
-                    muted:muted
+                    muted:muted,
+                    darkMode:isDarkMode
                 });
                 vid.createIframeContainer($seComponent);
                 break;
@@ -277,7 +296,8 @@ export async function PAGE_CAFE_MAIN(){
                     origin:document.location.origin,
                     thumbnailUrl: thumbnailUrl,
                     autoPlay:false,
-                    muted:muted
+                    muted:muted,
+                    darkMode:isDarkMode
                 });
                 vid.createIframeContainer($seComponent);
                 break;
@@ -498,6 +518,7 @@ export async function PAGE_CAFE_MAIN(){
                 ab_channel:ab_channel,
                 originalWidth:obj.data.originalWidth,
                 originalHeight:obj.data.originalHeight,
+                darkMode:isDarkMode
             });
             vid.createIframeContainer($seComponent);
         }
@@ -531,8 +552,10 @@ export async function PAGE_CAFE_MAIN(){
                     thumbnailUrl: obj.data.thumbnail,
                     autoPlay:autoPlay,
                     muted:muted,
-                    originalWidth:obj.data.width,
-                    originalHeight:obj.data.height
+                    originalWidth:obj.data.originalWidth,
+                    originalHeight:obj.data.originalHeight,
+                    width:obj.data.width,
+                    height:obj.data.height
                 });
                 vid.createIframeContainer($seComponent);
 

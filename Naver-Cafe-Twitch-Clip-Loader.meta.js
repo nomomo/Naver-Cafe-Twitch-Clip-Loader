@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Naver-Cafe-Clip-Loader
-// @version     1.1.4
+// @version     1.2.0
 // @author      Nomo
 // @description Naver Cafe 에서 Youtube Clip, Streamable, Afreecatv VOD, Clippy, Twitch(해외) 등의 외부 VOD 시청을 도와주는 유저스크립트 확장
 // @supportURL  https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues
@@ -11,7 +11,6 @@
 // @match       https://www.youtube.com/embed/*origin=https%3A%2F%2Fcafe.naver.com*
 // @match       https://*/*parent=cafe.naver.com&extension=NCCL*
 // @namespace   Naver-Cafe-Clip-Loader
-// @updatelog   2022/12/24 v1.0.0 - Script 이름 변경, 지원 VOD 플랫폼 추가, 최적화 등. 업데이트를 원하시면 '업그레이드' 버튼을 눌러주세요.
 // @memo        나타날 수 있습니다.
 // @icon        https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/logo.png
 // @homepageURL https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/

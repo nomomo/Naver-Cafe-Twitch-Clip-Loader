@@ -1,3 +1,4 @@
+import { NOMO_DEBUG } from "../lib/lib.js";
 
 // 설정 메뉴 추가 및 관리
 function openSettingsMenu(){
@@ -68,6 +69,8 @@ function openSettingsMenu(){
 }
     
 export default function PAGE_CAFE_TOP(){
+    initializeCafeTopMessage();
+
     if(typeof GM.registerMenuCommand === "function"){
         GM.registerMenuCommand("상세 설정 열기 (새 창)", function(){
             var ww = $(window).width(),
@@ -144,4 +147,60 @@ export default function PAGE_CAFE_TOP(){
             NOMO_DEBUG("Error from naverBoardDefaultArticleCount", e);
         }
     });
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// show system message
+export function messageCafeTop(msg, $elem) {
+    if (GLOBAL.isNaverCafeMain){
+        window.parent.postMessage({'type': 'NCCL_Message', 'msg': msg }, "https://cafe.naver.com");
+        return;
+    }
+    else if(!GLOBAL.isNaverCafeTop){
+        return;
+    }
+
+    if ($elem === undefined) {
+        return;
+    }
+    var prefix = "GM_setting_autosaved";
+    $elem.find("." + prefix).animate({ bottom: "+=40px" }, { duration: 300, queue: false });
+    $("<div class='" + prefix + " NCCL_NaverCafe_MessageBox'>" + msg + "</div>")
+        .appendTo($elem)
+        .fadeIn("fast")
+        .animate({
+            opacity: 1
+        }, 11000, function () {
+            $(this).fadeOut("fast").delay(600).remove();
+        })
+        .animate({ left: "+=30px" }, { duration: 300, queue: false });
+
+    if(msg.indexOf("NCCL_Message_Count") !== -1){
+        let NCCL_Message_Count = setInterval(function(){
+            let oriCount = $(".NCCL_Message_Count").text();
+            NOMO_DEBUG("oriCount", oriCount);
+            oriCount = Number(oriCount);
+            let newCount = oriCount - 1;
+            if(oriCount == 0){
+                clearInterval(NCCL_Message_Count);
+            }
+            else{
+                NOMO_DEBUG("newCount", newCount);
+                $(".NCCL_Message_Count").text(newCount);
+            }
+        },1000);
+    }
+}
+
+function initializeCafeTopMessage(){
+    if(!GLOBAL.isNaverCafeTop) return;
+
+    // add postMessage listener
+    window.addEventListener("message", function(event){
+        if (event.origin !== "https://cafe.naver.com" || event.data.type !== "NCCL_Message") return;
+        var data = event.data;
+        messageCafeTop(data.msg, $("body"));
+    }, false);
 }

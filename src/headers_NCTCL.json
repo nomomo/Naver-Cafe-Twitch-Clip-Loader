@@ -3,7 +3,6 @@
   "namespace": "Naver-Cafe-Clip-Loader",
   "author": "Nomo",
   "description": "Naver Cafe 에서 Youtube Clip, Streamable, Afreecatv VOD, Clippy, Twitch(해외) 등의 외부 VOD 시청을 도와주는 유저스크립트 확장",
-  "updatelog": "2022/12/24 v1.0.0 - Script 이름 변경, 지원 VOD 플랫폼 추가, 최적화 등. 업데이트를 원하시면 '업그레이드' 버튼을 눌러주세요.",
   "memo": "나타날 수 있습니다.",
   "match": [
     "https://cafe.naver.com/*",

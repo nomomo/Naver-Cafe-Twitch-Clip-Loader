@@ -1,4 +1,5 @@
 import {DEBUG, NOMO_DEBUG, GM_setting} from "js/lib/lib";
+import {messageCafeTop} from "js/page/page_cafe_top.js";
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Settings
@@ -121,7 +122,7 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: true,
-        title:"동영상 일시정지 시 뜨는 메뉴를 숨김",
+        title:"동영상 일시정지 시 뜨는 동영상 더보기 메뉴등을 숨김",
         desc:""
     },
     hideEndOverlay: {
@@ -139,8 +140,8 @@ const _settings = {
         under_dev:true,
         type: "checkbox",
         value: false,
-        title: "동영상 타이틀 및 설명을 표시하지 않음",
-        desc: "동영상 하단의 설명 부분 전체를 표시하지 않습니다."
+        title: "동영상 제목 및 설명을 표시하지 않음",
+        desc: "동영상 하단에 삽입되는 동영상 제목 및 설명 부분을 표시하지 않습니다. (플랫폼 로고, 동영상 제목, 링크 등)"
     },
     hideDescriptionLogo: {
         category: "videoCommon",
@@ -158,6 +159,15 @@ const _settings = {
         value: true,
         title: "재생 완료 후 전체화면 자동 해제",
         desc: "동영상 재생이 완료되면 전체화면을 자동으로 해제합니다. 자동 전체화면 해제는 동영상 별 1회에 한해 적용됩니다."
+    },
+    shortsAutoResize: {
+        category: "videoCommon",
+        depth: 1,
+        under_dev:true,
+        type: "checkbox",
+        value: false,
+        title: "🧪 Shorts 비디오 크기 자동 조절",
+        desc: "세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춥니다. 세로 비디오가 감지되면 현재 브라우저의 화면 높이에 맞게 크기를 키우고 가운데 정렬합니다. 네이버 비디오 및 Youtube 에 적용됩니다. 사용자가 직접 가로 비디오로 삽입한 Youtube Shorts 비디오 등 일부 비디오에는 본 기능이 적용되지 않을 수 있습니다."
     },
 
     // Naver Video
@@ -431,7 +441,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"⭐ 네이버 카페 전체화면 스크롤 동작 개선",
-        desc:"비디오를 전체화면 후 해제 시 스크롤 위치가 변경되는 문제를 개선합니다."
+        desc:"비디오를 전체화면 후 해제 시 스크롤 위치가 이상한 위치로 이동하는 문제를 고칩니다."
     },
     improvedRefresh:{
         category:"etc",
@@ -460,12 +470,19 @@ const _settings = {
         }
     },
     alwaysShowFavoriteBoard:{
-        under_dev:true,
         category:"etc",
         depth: 1,
         type: "checkbox",
         value: false,
         title:"⭐ 즐겨찾는 게시판을 항상 펼침",
+        desc:""
+    },
+    visitedArticleStyle : {
+        category:"etc",
+        depth: 1,
+        type: "checkbox",
+        value: false,
+        title:"글 목록에서 읽은 글의 제목을 흐릿하게 표시",
         desc:""
     },
     showDarkModeBtn : {
@@ -474,17 +491,8 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: false,
-        title:"[실험실] 어두운 모드 버튼을 표시",
+        title:"🧪 어두운 모드 버튼을 표시",
         desc:"카페 최상단 메뉴에 '어두운 모드' 버튼을 표시합니다."
-    },
-    visitedArticleStyle : {
-        category:"etc",
-        under_dev:true,
-        depth: 1,
-        type: "checkbox",
-        value: false,
-        title:"[실험실] 글 목록에서 읽은 글의 제목을 흐릿하게 표시",
-        desc:""
     },
 
     useTheaterMode : {
@@ -516,9 +524,17 @@ const _settings = {
         min_value:400,
         max_value:10000,
         title:"본문(컨텐츠) 가로 사이즈(px)",
-        desc:"영화관 모드 시 카페 컨텐츠의 가로 사이즈를 결정합니다.<br />(Default: 1100, Range: 400~10000, 권장: 700~1400)",
+        desc:"영화관 모드 시 카페 컨텐츠의 가로 사이즈를 결정합니다.<br />(Default: 1100, Range: 400~10000, 권장: 700~1400)"
     },
-    under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능과 실험실 기능을 직접 설정할 수 있습니다." },
+    under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능과 🧪실험실 기능을 직접 설정할 수 있습니다. 실험실 기능은 정상 동작하지 않을 수 있으며 소리소문 없이 사라질 수 있습니다." },
+    showUpdateMessage : {
+        category:"advanced",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"업데이트 알림 표시",
+        desc:"스크립트 버전 업데이트 시 화면 좌측 하단에 스크립트가 업데이트 되었다는 알림을 띄웁니다."
+    },
 };
 GM_addStyle(`
 body #GM_setting {min-width:800px;}
@@ -550,6 +566,62 @@ html body .se-viewer .se-module-oglink.twitchClipFound:before{
 `);
 window.GM_setting = GM_setting;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// version check
+const UP = 1;
+const DOWN = -1;
+const NOCHANGE = 0;
+function checkIsUpdated(oldvary, newvary){
+    NOMO_DEBUG("checkIsUpdated", oldvary, newvary);
+    if(!newvary || !oldvary || oldvary.length != newvary.length){
+        return NOCHANGE;
+    }
+
+    for(let i=0;i<oldvary.length;i++){
+        if(oldvary[i] < newvary[i]){
+            return UP;
+        }
+        else if(oldvary[i] > newvary[i]){
+            return DOWN;
+        }
+    }
+    return NOCHANGE;
+}
+function checkIsMigrationRequired(oldvary, newvary, tvary){
+    if(checkIsUpdated(oldvary, tvary) !== DOWN && checkIsUpdated(newvary, tvary) === DOWN){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// migration
+var GM_MIGRATION = function(prevConfig, config, oriSettings) {
+    let oldvary = prevConfig.latestVersionAry;
+    let newvary = config.latestVersionAry;
+    let tvary;
+
+    // && (GLOBAL.isNaverCafeMain || GLOBAL.isNaverCafeTop)
+    
+    let isUpdated = (checkIsUpdated(oldvary, newvary) === UP);
+    if(isUpdated && oriSettings.showUpdateMessage){
+        messageCafeTop(`<div style="text-align:center;">${GM.info.script.name}가 v${GM.info.script.version}로 업데이트 되었어요.<br /><a style="text-decoration:underline" href="https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader#change-log" target="_blank">[업데이트 내역 확인하러 가기]</a><br />이 알림은 <span class="NCCL_Message_Count">10</span>초 후 사라집니다.</div>`, $("body"));
+        NOMO_DEBUG("show update message");
+    }
+
+    // // 1.1.4 -> 1.1.5 or higher
+    // tvary = [1, 1, 4];
+    // if(checkIsMigrationRequired(oldvary, newvary, tvary)){
+    //     NOMO_DEBUG("[Migration] 1.1.4 -> 1.1.5 or higher");
+    //     oriSettings.shortsAutoResize = true;
+    // }
+
+    NOMO_DEBUG("migration completed", JSON.stringify(oriSettings));
+    return oriSettings;
+};
+
 export default async function GM_SETTINGS_INIT(){
-    await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false});
+    await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false, "MIGRATION":GM_MIGRATION});
 }

@@ -12,6 +12,7 @@ var video, firstPlayed = false;
 
 var url = new URL(document.location.href);
 var urlParam = new URLSearchParams(url.search);
+var isDarkMode = (urlParam.get("darkMode") === "true" ? true : false);
 var muted = (urlParam.get("mute") === "true" ? true : false);
 var autoplay = (urlParam.get("autoplay") === "true" ? true : false);
 var isList = (urlParam.get("list") ? true : false);
@@ -67,7 +68,7 @@ export default function PAGE_YOUTUBE_EMBED(){
             if (!YTQ){
                 var YTQ_obj = JSON.parse(YTQ);
                 //NOMO_DEBUG("Got YTQ localstorage", YTQ_obj);
-                if(YTQ_obj.data !== GM_SETTINGS.youtubeSetQuality){
+                if(YTQ_obj && YTQ_obj.data !== GM_SETTINGS.youtubeSetQuality){
                     YTQ_obj.data = GM_SETTINGS.youtubeSetQuality;
                     YTQ_obj.expiration = Number(new Date()) + 24*60*60*1000;
                     YTQ_obj.creation = Number(new Date());
@@ -102,6 +103,39 @@ export default function PAGE_YOUTUBE_EMBED(){
                 $(".ytp-gradient-top").fadeOut(250);
                 $(".ytp-chrome-top").fadeOut(250);
             }
+
+            // 비디오 비율 or scaling% 등에 따라 화면 좌측에 까만 줄이 생기는 것을 방지하기 위해 배경색을 하얀색으로 변경
+            // 다음의 경우에는 처리하지 않음
+            // 1. dark mode 의 경우
+            // 2. shorts, 4:3, 16:9 비율 등 레터박스가 필요한 비디오의 경우
+            // 3. full screen 의 경우
+            try{
+                if(!isDarkMode){
+                    NOMO_DEBUG("no darkMode detected");
+                    //$(".html5-main-video").css("left", "0px");
+                    let videoCssLeft = $(".html5-main-video").css("left");
+                    let videoCssTop = $(".html5-main-video").css("top");
+                    let videoCssLeftPxMatch = videoCssLeft.match(/(\d+)\s?px/i);
+                    let videoCssTopPxMatch = videoCssTop.match(/(\d+)\s?px/i);
+                    if(videoCssLeftPxMatch !== null && videoCssTopPxMatch !== null){
+                        let videoCssLeftPxNum = Number(videoCssLeftPxMatch[1]);
+                        let videoCssTopPxNum = Number(videoCssTopPxMatch[1]);
+                        NOMO_DEBUG("videoCssLeftPxNum", videoCssLeftPxNum, "videoCssTopPxNum", videoCssTopPxNum);
+                        if(videoCssLeftPxNum < 5 && videoCssTopPxNum < 5){
+                            GM_addStyle(`
+                                body, .html5-video-player:not(.ytp-fullscreen):not(.ended-mode) {background:none #fff !important;}
+                                body {background-color:#fff !important;}
+                            `);
+                        }
+                    }
+                }
+                else{
+                    NOMO_DEBUG("darkMode detected");
+                }
+            }
+            catch(e){
+                NOMO_DEBUG("youtube embed page 에서 Darkmode 체크 중 에러", e);
+            }
         });
 
         video.addEventListener('ended', (e) => {
@@ -120,7 +154,7 @@ export default function PAGE_YOUTUBE_EMBED(){
     if(GM_SETTINGS.hideEndOverlay){
         GM_addStyle(`
         /*동영상 종료 후 추천 동영상 숨기기*/
-        video.html5-main-video {top:0px !important}
+        .html5-video-player.ended-mode video.html5-main-video {top:0px !important}
         /*.html5-endscreen {display:none !important}*/
         .ytp-endscreen-content {display:none !important;}
         `);

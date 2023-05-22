@@ -143,12 +143,6 @@ export class VideoNaverPrism extends VideoBase {
         //         }
         //     `);
         // }
-
-        // 세로로 표시되는 경우 화질 변경 메시지 숨기기
-        GM_addStyle(`
-            .NCCL_prism_container.se-video-vertical .NCCL_pzp_qset_tooltip,
-            .NCCL_prism_container.se-video-vertical .NCCL_pzp_qset { display:none !important }
-        `);
     }
 
     // overwrite video related function
@@ -287,10 +281,47 @@ export class VideoNaverPrism extends VideoBase {
         //NOMO_DEBUG(this.$seComponent.html());
         this.$seSectionVideo = $oriElem.find(".se-section-video").first();
 
-        // set videoWidth
+        // se.component.js 의 _getIsVerticalVideo 에서 vertical 여부를 체크한다.
+        // (세로 > 가로 이면 vertical video)
+        let isVertical = this.originalHeight > this.originalWidth;
+        NOMO_DEBUG("isVertical", isVertical, this.originalWidth, this.originalHeight);
+
+        /////////////////////////////////////////////////////////////////////////////
+        // shortsAutoResize
+        //if(isVertical && GM_SETTINGS.shortsAutoResize){
+        this.$seComponent.attr("NCCL_vertical",this.id); // add special attr to set style
+        if(GM_SETTINGS.shortsAutoResize){
+            const {newWidth, newPaddingTop} = this.getNewWidth();
+
+            // add style
+            GM_addStyle(`
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-section-video {max-width:${newWidth}px !important; margin:0 auto !important;}
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-module-video {padding-top:${newPaddingTop}% !important}
+                `
+            );
+            // 세로로 표시되는 경우 550px 미만일 때만 화질 변경 메시지 숨기기
+            if(newWidth < 550.0){
+                GM_addStyle(`
+                .NCCL_prism_container[NCCL_vertical='${this.id}'].se-video-vertical .NCCL_pzp_qset_tooltip,
+                .NCCL_prism_container[NCCL_vertical='${this.id}'].se-video-vertical .NCCL_pzp_qset { display:none !important }
+                `);
+            }
+        }
+        else{
+            // 세로로 표시되는 경우 화질 변경 메시지 숨기기
+            GM_addStyle(`
+            .NCCL_prism_container.se-video-vertical .NCCL_pzp_qset_tooltip,
+            .NCCL_prism_container.se-video-vertical .NCCL_pzp_qset { display:none !important }
+            `);
+        }
+        /////////////////////////////////////////////////////////////////////////////
+
+        //else{
+        // set videoWidth for normal case
         this.$seComponent.removeClass("se-component-content-normal").addClass("se-component-content-fit");
         let $seVideo = this.$seComponent.find(".se-section-video");
         $seVideo.css("maxWidth",`${GM_SETTINGS.videoWidth}vw`);
+        //}
 
         // arrive video
         this.$seComponent.arrive("video", { existing: true }, function (subElem) {
