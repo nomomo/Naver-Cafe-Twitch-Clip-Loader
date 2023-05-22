@@ -11,7 +11,6 @@
 // @match       https://www.youtube.com/embed/*origin=https%3A%2F%2Fcafe.naver.com*
 // @match       https://*/*parent=cafe.naver.com&extension=NCCL*
 // @namespace   Naver-Cafe-Clip-Loader
-// @memo        나타날 수 있습니다.
 // @icon        https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/logo.png
 // @homepageURL https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/
 // @downloadURL https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js
