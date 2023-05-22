@@ -65,7 +65,7 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-### 1.2.0 - May 22 2023
+### 1.2.0 - May 22, 2023
 
 - 새로운 기능
   - "🧪 Shorts 비디오 크기 자동 조절" 기능 추가
