@@ -25,6 +25,29 @@ export async function PAGE_CAFE_MAIN(){
         <link rel="preconnect" href="https://static.twitchcdn.net/">
         <link rel="preconnect" href="https://production.assets.clips.twitchcdn.net/">
     `);
+    
+    // topUrlUpdateFromIframe
+    if(GM_SETTINGS.topUrlUpdateFromIframe){
+        var _wr = function(type) {
+            var orig = history[type];
+            return function() {
+                var rv = orig.apply(this, arguments);
+                var e = new Event(type);
+                e.arguments = arguments;
+                window.dispatchEvent(e);
+                return rv;
+            };
+        };
+        //history.pushState = _wr('pushState');
+        history.replaceState = _wr('replaceState');
+        // window.addEventListener('pushState', function(e) {
+        //
+        // });
+        window.parent.postMessage({'type': 'NCCL_UpdateHistory', 'url': document.location.href }, "https://cafe.naver.com");
+        window.addEventListener('replaceState', function(e) {
+            window.parent.postMessage({'type': 'NCCL_UpdateHistory', 'url': document.location.href }, "https://cafe.naver.com");
+        });
+    }
 
     // add style
     GM_addStyle(css_cafe_main.toString());

@@ -163,10 +163,9 @@ const _settings = {
     shortsAutoResize: {
         category: "videoCommon",
         depth: 1,
-        under_dev:true,
         type: "checkbox",
-        value: false,
-        title: "🧪 Shorts 비디오 크기 자동 조절",
+        value: true,
+        title: "Shorts 비디오 크기 자동 조절",
         desc: "세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춥니다. 세로 비디오가 감지되면 현재 브라우저의 화면 높이에 맞게 크기를 키우고 가운데 정렬합니다. 네이버 비디오 및 Youtube 에 적용됩니다. 사용자가 직접 가로 비디오로 삽입한 Youtube Shorts 비디오 등 일부 비디오에는 본 기능이 적용되지 않을 수 있습니다."
     },
 
@@ -290,6 +289,15 @@ const _settings = {
         value: true,
         title:"Youtube Playlist 링크를 비디오로 변환",
         desc:"<span style='color:#999'>예시) https://youtube.com/playlist?list=PLxxxxxxxxxxxxxxxxxxx</span>",
+    },
+    youtubeShortsPauseOverlayClear : {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        under_dev: true,
+        value: true,
+        title:"Youtube Shorts 일시정지 시 화면이 어두워지는 효과를 제거",
+        desc:"본 기능은 Shorts 비디오 크기 자동 조절 옵션을 켜야 효과가 있습니다.",
     },
     // youtubeAlzartakSize : {
     //     category:"youtube",
@@ -451,6 +459,15 @@ const _settings = {
         title:"⭐ 네이버 카페 새로고침 개선",
         desc:"새로고침 시 첫 화면 대신 마지막으로 탐색한 페이지를 불러옵니다."
     },
+    // topUrlUpdateFromIframe:{
+    //     category:"etc",
+    //     under_dev:true,
+    //     depth: 1,
+    //     type: "checkbox",
+    //     value: false,
+    //     title:"🧪 페이지 이동 시 주소창의 URL을 업데이트",
+    //     desc:"카페 게시판, 글 등의 페이지를 이동할 때 마다 주소창에 표시되는 URL을 현재 보고있는 페이지의 URL로 업데이트 합니다. 현재 보고있는 게시글의 URL을 복사하거나 즐겨찾기에 추가할 때 유용합니다. [네이버 카페 새로고침 개선] 기능을 꺼도 본 기능을 켜면 새로고침 시 이전 페이지를 유지하는 효과가 있습니다."
+    // },
     naverBoardDefaultArticleCount: {
         category:"etc",
         depth: 1,
@@ -611,12 +628,12 @@ var GM_MIGRATION = function(prevConfig, config, oriSettings) {
         NOMO_DEBUG("show update message");
     }
 
-    // // 1.1.4 -> 1.1.5 or higher
-    // tvary = [1, 1, 4];
-    // if(checkIsMigrationRequired(oldvary, newvary, tvary)){
-    //     NOMO_DEBUG("[Migration] 1.1.4 -> 1.1.5 or higher");
-    //     oriSettings.shortsAutoResize = true;
-    // }
+    // 1.2.0 -> 1.2.1 or higher
+    tvary = [1, 2, 0];
+    if(checkIsMigrationRequired(oldvary, newvary, tvary)){
+        NOMO_DEBUG("[Migration] 1.2.0 -> 1.2.1 or higher");
+        oriSettings.shortsAutoResize = true;
+    }
 
     NOMO_DEBUG("migration completed", JSON.stringify(oriSettings));
     return oriSettings;

@@ -199,8 +199,19 @@ function initializeCafeTopMessage(){
 
     // add postMessage listener
     window.addEventListener("message", function(event){
-        if (event.origin !== "https://cafe.naver.com" || event.data.type !== "NCCL_Message") return;
-        var data = event.data;
-        messageCafeTop(data.msg, $("body"));
+        if (event.origin !== "https://cafe.naver.com") return;
+        let data;
+        switch(event.data.type){
+        case "NCCL_Message":
+            data = event.data;
+            messageCafeTop(data.msg, $("body"));
+            break;
+        case "NCCL_UpdateHistory":
+            data = event.data;
+            window.history.replaceState(null, null, data.url);
+            break;
+        default:
+            break;
+        }
     }, false);
 }

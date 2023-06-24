@@ -320,7 +320,8 @@ export class VideoYoutube extends VideoBase {
 
 
                 // parse story board
-                const rpt_match2 = rpt.match(/"playerStoryboardSpecRenderer":{"spec":"([a-zA-Z0-9-_,./?=|!@#$%^&*():]+)"}/i);
+                //
+                const rpt_match2 = rpt.match(/"playerStoryboardSpecRenderer":{"spec":"([a-zA-Z0-9-_,./?=|!@#$%^&*():]+)"/i);
                 const rpt_match3 = rpt.match(/"lengthSeconds":"(\d+)"/i);
                 const rpt_match4 = rpt.match(/"startTimeMs":"(\d+)"/i);
                 const rpt_match5 = rpt.match(/"endTimeMs":"(\d+)"/i);

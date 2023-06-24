@@ -173,6 +173,11 @@ export default function PAGE_YOUTUBE_EMBED(){
         });
     }
 
+    // youtubeShortsPauseOverlayClear
+    if(GM_SETTINGS.youtubeShortsPauseOverlayClear){
+        GM_addStyle(`.ytp-shorts-mode .ytp-pause-overlay-backdrop{background:unset !important}`);
+    }
+
     // set_volume_when_stream_starts
     try{
         if(GM_SETTINGS.set_volume_when_stream_starts){

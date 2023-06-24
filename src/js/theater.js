@@ -77,8 +77,8 @@ export async function applyTheaterMode(){
         isTheaterMode = await GM.getValue("theaterMode", false);
         if(theaterModeCSSElem !== undefined) $(theaterModeCSSElem).remove();
         if(nonTheaterModeCSSElem !== undefined) $(nonTheaterModeCSSElem).remove();
-        if(GLOBAL.isCafeWritingMode) {
-            NOMO_DEBUG("CafeWritingMode - NO TheaterMode");
+        if(GLOBAL.isCafeWritingMode || GLOBAL.isCafeManageMenu) {
+            NOMO_DEBUG("CafeWritingMode or isCafeManageMenu - NO TheaterMode");
             return;
         }
             
@@ -110,12 +110,12 @@ export async function applyTheaterMode(){
                 .footer {display:none;}
                 `;
             }
-
+//html.theaterMode .CafeViewer .se-viewer .se-caption,
             theaterModeCSSElem = GM_addStyle(theaterModeCSSText+`
                 #front-cafe, #front-img {overflow:hidden; object-fit:cover !important;}
 
-                html.theaterMode .CafeViewer .se-viewer .se-caption
-                ,html.theaterMode .CafeViewer .se-viewer .se-component-content
+                
+                html.theaterMode .CafeViewer .se-viewer .se-component-content
                 ,html.theaterMode .CafeViewer .se-viewer .se-component-content.se-component-content-fit
                 {
                     max-width:${cwPure}px !important;
