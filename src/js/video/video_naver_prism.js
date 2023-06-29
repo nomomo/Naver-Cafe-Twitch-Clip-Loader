@@ -295,7 +295,7 @@ export class VideoNaverPrism extends VideoBase {
 
             // add style
             GM_addStyle(`
-                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-section-video {max-width:${newWidth}px !important; margin:0 auto !important;}
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-section-video {max-width:${newWidth}px !important; margin:0 auto !important; box-shadow:0px 0px 1px 1px rgb(0 0 0 / 4%);}
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-module-video {padding-top:${newPaddingTop}% !important}
                 `
             );

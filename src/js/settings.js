@@ -168,6 +168,19 @@ const _settings = {
         title: "Shorts 비디오 크기 자동 조절",
         desc: "세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춥니다. 세로 비디오가 감지되면 현재 브라우저의 화면 높이에 맞게 크기를 키우고 가운데 정렬합니다. 네이버 비디오 및 Youtube 에 적용됩니다. 사용자가 직접 가로 비디오로 삽입한 Youtube Shorts 비디오 등 일부 비디오에는 본 기능이 적용되지 않을 수 있습니다."
     },
+    shortsAutoResizeType: {
+        category:"videoCommon",
+        under_dev:true,
+        depth: 2,
+        type: "combobox",
+        value: "0",
+        title:"Shorts 비디오 크기 자동 조절 타입",
+        desc: "- 화면 가득: 현재 브라우저의 화면 높이에 맞게 세로 비디오의 사이즈를 변경합니다. 스크롤을 살짝하면 비디오를 화면 가득 볼 수 있습니다. (1080p 해상도 권장)<br />- 적당히: 스크롤 없이 글 제목과 세로 비디오를 한 눈에 볼 수 있도록 비디오 사이즈를 적당히 변경합니다. (4K 해상도 권장)",
+        options:{
+            "0":{title:"화면 가득"},
+            "1":{title:"적당히"}
+        }
+    },
 
     // Naver Video
     useNaver: {

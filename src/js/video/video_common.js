@@ -538,11 +538,20 @@ export class VideoBase {
     getNewWidth(){
         // set default values
         let parentWidth = 800.0;
-        let parentHeight = parent.window.innerHeight - 230.0; // 150:
+        let parentHeight = parent.window.innerHeight;// - 230.0; // 150:
+
+        // full - fit to height of the browser
+        if(GM_SETTINGS.shortsAutoResizeType == "0"){
+            parentHeight -= 0.0;
+        }
+        else{
+            parentHeight -= 230.0;
+        }
+
         NOMO_DEBUG("parentHeight", parentHeight);
 
         // set description height according to hideDescription option
-        let descriptionHeight = (GM_SETTINGS.hideDescription ? 0.0 : 40.0);
+        let descriptionHeight = (GM_SETTINGS.hideDescription ? 10.0 : 40.0);
 
         // set max width
         let shortsMaxWidth = 300.0;
@@ -551,8 +560,8 @@ export class VideoBase {
         // set shortsMaxHeight from parent window height
         let goodVideoHeight = parentHeight - descriptionHeight;
         if(goodVideoHeight > 0){
-            // 하단에 설정될 여백은 30px or 10% 중 작은 것이다
-            shortsMaxHeight = Math.max(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
+            // 하단에 설정될 여백은 20px or 10% 중 작은 것이다
+            shortsMaxHeight = Math.max(goodVideoHeight - 20.0, goodVideoHeight * 0.9);
         }
 
         // set shortsMaxWidth from article_container element width
