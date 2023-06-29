@@ -129,13 +129,11 @@ export class VideoYoutube extends VideoBase {
             this.$container.attr("NCCL_vertical",this.id);      // add special attr to set style
             this.$iframeContainer.attr("NCCL_vertical",this.id); // add special attr to set style
             if(GM_SETTINGS.shortsAutoResize){
-                const {newWidth, newPaddingTop} = this.getNewWidth();
-    
-                let originalRatio = this.originalWidth / this.originalHeight;
+                const {newWidth, newHeight, newRatio, newPaddingTop} = this.getNewWidth();
                 // add style
                 GM_addStyle(`
-                    .NCCL_container[NCCL_vertical='${this.id}'] {max-width:${newWidth}px !important; margin:0 auto !important;  box-shadow:0px 0px 1px 1px rgb(0 0 0 / 4%);}
-                    .NCCL_iframe_container[NCCL_vertical='${this.id}'] {max-width:${newWidth}px !important; aspect-ratio:${originalRatio} !important;}
+                    .NCCL_container[NCCL_vertical='${this.id}'] {box-shadow:0px 0px 1px 1px rgb(0 0 0 / 4%);}
+                    .NCCL_iframe_container[NCCL_vertical='${this.id}'] {aspect-ratio:${newRatio} !important;}
                     `
                 );
             }

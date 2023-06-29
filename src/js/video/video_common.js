@@ -590,8 +590,11 @@ export class VideoBase {
         }
 
         //let newPaddingTop = parseInt(100.0 / originalRatio);
-        let newPaddingTop = 100.0 / originalRatio;
+        let newHeight = newWidth / originalRatio;
+        let contentWidth = $("div.content").width();
+        let newRatio = contentWidth / newHeight;
+        let newPaddingTop = 100.0 / newRatio;
 
-        return {"newWidth":newWidth, "newPaddingTop":newPaddingTop};
+        return {"newWidth":/*newWidth*/contentWidth, "newHeight":newHeight, "newRatio":newRatio, "newPaddingTop":newPaddingTop};
     }
 }

@@ -291,12 +291,13 @@ export class VideoNaverPrism extends VideoBase {
         //if(isVertical && GM_SETTINGS.shortsAutoResize){
         this.$seComponent.attr("NCCL_vertical",this.id); // add special attr to set style
         if(GM_SETTINGS.shortsAutoResize){
-            const {newWidth, newPaddingTop} = this.getNewWidth();
-
+            const {newWidth, newHeight, newRatio, newPaddingTop} = this.getNewWidth();
             // add style
             GM_addStyle(`
-                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-section-video {max-width:${newWidth}px !important; margin:0 auto !important; box-shadow:0px 0px 1px 1px rgb(0 0 0 / 4%);}
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-section-video {max-width:unset !important; margin:0 auto !important; box-shadow:0px 0px 1px 1px rgb(0 0 0 / 4%);}
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-module-video {padding-top:${newPaddingTop}% !important}
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .webplayer-internal-video{object-fit: contain !important;}
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .pzp-poster{background-size: contain !important;}
                 `
             );
             // 세로로 표시되는 경우 550px 미만일 때만 화질 변경 메시지 숨기기
