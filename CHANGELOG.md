@@ -2,7 +2,7 @@
 
 이 프로젝트에 대한 모든 주목할만한 변경 사항은 이 파일에 기록됩니다.
 
-## 1.2.2 - June 29, 2023
+## 1.2.1b - June 29, 2023
 
 - "Shorts 비디오 크기 자동 조절"시 비디오가 이전보다 더 크게, 비디오가 화면 가득 표시되도록 변경했어요. (1080p 해상도 사용자를 위함)<br />![v1.2.2](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/230629_shortsAutoResizeType.png)
 - 고급 사용자를 위해 "Shorts 비디오 크기 자동 조절 타입" 기능을 추가했어요. 기본값은 "화면 가득" 입니다. 변경하려면 "숨겨진 고급 기능 설정"을 활성화하세요.

@@ -65,7 +65,7 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-### 1.2.2 - June 29, 2023
+### 1.2.1b - June 29, 2023
 
 - "Shorts 비디오 크기 자동 조절"시 비디오가 이전보다 더 크게, 비디오가 화면 가득 표시되도록 변경했어요. (1080p 해상도 사용자를 위함)<br />![v1.2.2](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/230629_shortsAutoResizeType.png)
 - 고급 사용자를 위해 "Shorts 비디오 크기 자동 조절 타입" 기능을 추가했어요. 기본값은 "화면 가득" 입니다. 변경하려면 "숨겨진 고급 기능 설정"을 활성화하세요.
