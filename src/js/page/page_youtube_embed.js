@@ -56,7 +56,10 @@ export default function PAGE_YOUTUBE_EMBED(){
         25% { opacity: 0.85; transform: translate(-50%, 0%); }
         80% { opacity: 0.85; transform: translate(-50%, 0%); }
         100% { opacity: 0.0; transform: translate(-50%, 6px) }
-    };
+    }
+
+    /* shorts 의 경우 일반 비디오처럼 autohide 시 title 을 숨긴다. */
+    .ytp-autohide .ytp-shorts-title-channel { display:none !important; }
     `);
     
 
@@ -155,21 +158,33 @@ export default function PAGE_YOUTUBE_EMBED(){
         GM_addStyle(`
         /*동영상 종료 후 추천 동영상 숨기기*/
         .html5-video-player.ended-mode video.html5-main-video {top:0px !important}
+
+        /* 동영상 종료 후 확대를 막는다. */
+        .ytp-fit-cover-video.ended-mode .html5-main-video { object-fit: contain !important }
+
         /*.html5-endscreen {display:none !important}*/
         .ytp-endscreen-content {display:none !important;}
+
+        /*for youtube shorts*/
+        .html5-endscreen.ytp-shorts-branded-ui .ytp-watch-on-youtube-button,
+        .ytp-watch-again-on-youtube-endscreen-more-videos-container {display:none !important;}
         `);
-        $(document).on("mouseup", ".videowall-endscreen.html5-endscreen", function(e){
+        // .videowall-endscreen.html5-endscreen
+        $(document).on("mouseup", ".html5-endscreen", function(e){
             NOMO_DEBUG("Clicked youtube endscreen", e, e.target);
 
             let $target = $(e.target);
             if($target.closest(".ytp-chrome-bottom").length !== 0) return;
 
-            $(".ytp-play-button").trigger("click");
+            setTimeout(function(){
+                $(".ytp-play-button").trigger("click");
+            },50);
             setTimeout(function(){
                 if($("video").get(0).paused){
                     $(".ytp-play-button").trigger("click");
                 }
             },300);
+
         });
     }
 
@@ -302,6 +317,10 @@ function onPlayerReady(){
         if(isDEBUG()){
             unsafeWindow.YTPlayer = YTPlayer;
             unsafeWindow.video = video;
+            GM_addStyle(`
+            /* tooltip */
+            .ytp-tooltip:not([aria-hidden=true]) {display:none !important}
+            `);
         }
 
 

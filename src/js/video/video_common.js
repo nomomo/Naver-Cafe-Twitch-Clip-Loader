@@ -406,7 +406,7 @@ export class VideoBase {
 
         // hide loader and error
         this.hideLoader();
-        this.hideError();
+        //this.hideError();
 
         // update postMessageUrl
         this.postMessageUrl = "https://"+this.iframeUrl.split("/")[2];
@@ -492,9 +492,14 @@ export class VideoBase {
         this.$error = $(`<div class="NCCL_error_container"><div class="NCCL_error">${html}</div></div>`);
         if(this.$iframeContainer){
             this.$iframeContainer.append(this.$error);
+            this.$error.show();
         }
         else if(this.$seComponent){
             this.$seComponent.append(this.$error);
+            this.$error.show();
+        }
+        else{
+            NOMO_DEBUG("There is no proper element in showError function");
         }
     }
     hideError(){
@@ -560,8 +565,8 @@ export class VideoBase {
         // set shortsMaxHeight from parent window height
         let goodVideoHeight = parentHeight - descriptionHeight;
         if(goodVideoHeight > 0){
-            // 하단에 설정될 여백은 20px or 10% 중 작은 것이다
-            shortsMaxHeight = Math.max(goodVideoHeight - 20.0, goodVideoHeight * 0.9);
+            // 하단에 설정될 여백은 30px or 10% 중 작은 것이다
+            shortsMaxHeight = Math.max(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
         }
 
         // set shortsMaxWidth from article_container element width

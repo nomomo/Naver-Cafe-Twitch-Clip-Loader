@@ -1,6 +1,7 @@
 import { NOMO_DEBUG, NOMO_ERROR, NOMO_WARN } from "js/lib/lib.js";
 import { sanitizeUrl } from "js/lib/sanitizeurl.ts";
 import {VideoBase} from "js/video/video_common.js";
+import { escapeHtml } from "../lib/lib.js";
 
 const YTlogo = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 461.001 461.001" style="enable-background:new 0 0 461.001 461.001;" xml:space="preserve">
 <g>
@@ -67,10 +68,12 @@ export class VideoYoutube extends VideoBase {
 
     static init(){try{
         if(!GM_SETTINGS.useYoutube) return;
+        // loaded in unsafeWindow
         $("head").prepend(`<script async type="text/javascript" src="https://www.youtube.com/iframe_api"></script>`);
     }
     catch(e){
         NOMO_DEBUG("FAIL TO LOAD YOUTUBE IFRAME API. TRY TO INSERT YT API MANUALLY", e);
+        // loaded in window(userscript window)
         // eslint-disable-next-line
         const scriptUrl = 'https:\/\/www.youtube.com\/s\/player\/4c3f79c5\/www-widgetapi.vflset\/www-widgetapi.js';try{var ttPolicy=window.trustedTypes.createPolicy("youtube-widget-api",{createScriptURL:function(x){return x}});scriptUrl=ttPolicy.createScriptURL(scriptUrl)}catch(e){}if(!window["YT"])var YT={loading:0,loaded:0};if(!window["YTConfig"])var YTConfig={"host":"https://www.youtube.com"};if(!YT.loading){YT.loading=1;(function(){var l=[];YT.ready=function(f){if(YT.loaded)f();else l.push(f)};window.onYTReady=function(){YT.loaded=1;for(var i=0;i<l.length;i++)try{l[i]()}catch(e$0){}};YT.setConfig=function(c){for(var k in c)if(c.hasOwnProperty(k))YTConfig[k]=c[k]};var a=document.createElement("script");a.type="text/javascript";a.id="www-widgetapi-script";a.src=scriptUrl;a.async=true;var c=document.currentScript;if(c){var n=c.nonce||c.getAttribute("nonce");if(n)a.setAttribute("nonce",n)}var b=document.getElementsByTagName("script")[0];if(!b){document.getElementsByTagName('head')[0].appendChild(a)}else{b.parentNode.insertBefore(a,b)}})()};
     }}
@@ -99,13 +102,14 @@ export class VideoYoutube extends VideoBase {
         }
     }
     createIframe(){try{
+        let that = this;
         if(YT === undefined || !YT.loading) {
             if(!this.recur) this.recur = 0;
             this.recur += 1;
             NOMO_DEBUG("[createIframe] There is no youtube iframe api yet, reload", this.id, this.recur);
             if(this.recur < 10){
                 setTimeout(function(){
-                    this.createIframe();
+                    that.createIframe();
                 },(this.recur) * 100);
                 return;
             }
@@ -194,11 +198,11 @@ export class VideoYoutube extends VideoBase {
         NOMO_DEBUG("CREATE YTPlayer", this.id, YTOptions, this.YTPlayer);
 
         this.$iframe = this.$iframeContainer.find(".NCCL_iframe");
-        let that = this;
         setTimeout(function(){that.$iframe.attr("title", "");},1000);
     }
     catch(e){
         NOMO_DEBUG("Error from createYTIframe", e);
+        this.showError(`[${GLOBAL.scriptName} v${GLOBAL.version}]<br />${"알 수 없는 에러가 발생했습니다. 페이지를 직접 새로고침 해보세요.<br />"+escapeHtml(e)}<br /><a class="errorURL"></a>`);
     }}
 
     

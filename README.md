@@ -65,6 +65,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.2.4 - July 1, 2023
+
+- "동영상 시청 종료 후 뜨는 추천 영상 메뉴등을 숨김" 기능을 업데이트 했어요.
+- 버그 수정 및 안정성 개선
+
 ### 1.2.2~3 - June 29, 2023
 
 - Youtube Shorts 비디오의 가로 사이즈가 작으면(특히 1080p 해상도의 경우) 볼륨 조절이 불가능한 문제 때문에 비디오 가로 사이즈를 본문에 맞게 키워 좌우 레터박스가 표시되도록 변경했어요.

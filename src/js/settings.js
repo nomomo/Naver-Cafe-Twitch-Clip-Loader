@@ -132,7 +132,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"동영상 시청 종료 후 뜨는 추천 영상 메뉴등을 숨김",
-        desc:""
+        desc:"추천 영상 메뉴를 숨기고, Youtube 의 경우 동영상 종료 후 화면을 클릭하여 리플레이 할 수 있도록 합니다."
     },
     hideDescription: {
         category: "videoCommon",
