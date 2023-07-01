@@ -218,7 +218,7 @@ const _settings = {
         depth: 2,
         type: "checkbox",
         value: true,
-        title:"네이버 비디오를 항상 최대 품질로 시작",
+        title:"네이버 비디오를 항상 최고 품질로 시작",
         desc:""
     },
     NaverVideoAddLoopBtn: {
@@ -336,7 +336,7 @@ const _settings = {
         depth: 2,
         type: "checkbox",
         value: true,
-        title:"Afreecatv 비디오를 항상 최대 품질로 시작",
+        title:"Afreecatv 비디오를 항상 최고 품질로 시작",
         desc:""
     },
     aftvShowChat: {

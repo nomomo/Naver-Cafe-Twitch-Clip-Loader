@@ -227,7 +227,7 @@ export class VideoNaverPrism extends VideoBase {
 
                     that.insertQsetDisplay();
                     let text = $(liElem).find(".pzp-pc-ui-setting-intro-panel__value").text();
-                    that.$NCCL_pzp_qset.html(`<span class="NCCL_pzp_qset_tooltip">NCCL에 의해 최대 품질로 자동 설정됨</span>` + text + `<span> (최대 품질)<span>`);    // color:#03C75A;
+                    that.$NCCL_pzp_qset.html(`<span class="NCCL_pzp_qset_tooltip">NCCL에 의해 최고 품질로 자동 설정됨</span>` + text + `<span> (최고 품질)<span>`);    // color:#03C75A;
 
                     // BANJJAK
                     setTimeout(function(){
