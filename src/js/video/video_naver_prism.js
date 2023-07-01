@@ -298,6 +298,7 @@ export class VideoNaverPrism extends VideoBase {
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-module-video {padding-top:${newPaddingTop}% !important}
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .webplayer-internal-video{object-fit: contain !important;}
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .pzp-poster{background-size: contain !important;}
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] video {background: radial-gradient(ellipse at center, rgb(0 0 0 / 0%) 0%,rgb(16 16 16) 70%,rgba(0,0,0,1) 100%);}
                 `
             );
             // 세로로 표시되는 경우 550px 미만일 때만 화질 변경 메시지 숨기기

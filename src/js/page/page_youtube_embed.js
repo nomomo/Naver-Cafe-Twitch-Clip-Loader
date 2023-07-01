@@ -65,7 +65,6 @@ export default function PAGE_YOUTUBE_EMBED(){
     .ytp-impression-link {display:none !important; }
     `);
     
-
     // youtubeSetQuality
     useSetQuality = GM_SETTINGS.youtubeSetQuality !== "default" && YOUTUBE_EMBED_SET_QUALITY_CHECK_QUALITY();
     if(useSetQuality){
@@ -141,6 +140,20 @@ export default function PAGE_YOUTUBE_EMBED(){
             }
             catch(e){
                 NOMO_DEBUG("youtube embed page 에서 Darkmode 체크 중 에러", e);
+            }
+
+            // shortsAutoResize
+            let $video = $(video);
+            try{
+                if(GM_SETTINGS.shortsAutoResize && ($video.width() + 1.0 < $video.height()) ){
+                    GM_addStyle(`
+                    /* Youtube Shorts .ytp-shorts-mode */
+                    .html5-video-player { background: radial-gradient(ellipse at center, rgb(0 0 0 / 0%) 0%,rgb(16 16 16) 70%,rgba(0,0,0,1) 100%) !important; }
+                    `);
+                }
+            }
+            catch(e){
+                NOMO_DEBUG("youtube embed page 에서 shorts 여부 체크 중 에러", e);
             }
         });
 
