@@ -564,9 +564,15 @@ export class VideoBase {
 
         // set shortsMaxHeight from parent window height
         let goodVideoHeight = parentHeight - descriptionHeight;
-        if(goodVideoHeight > 0){
-            // 하단에 설정될 여백은 30px or 10% 중 작은 것이다
-            shortsMaxHeight = Math.max(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
+        if(goodVideoHeight > 0){    
+            if(GM_SETTINGS.shortsAutoResizeType == "0"){
+                // 하단에 설정될 여백은 30px or 10% 중 큰 것이다
+                shortsMaxHeight = Math.min(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
+            }
+            else{
+                // 하단에 설정될 여백은 30px or 10% 중 작은 것이다
+                shortsMaxHeight = Math.max(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
+            }
         }
 
         // set shortsMaxWidth from article_container element width
