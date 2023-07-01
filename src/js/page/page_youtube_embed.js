@@ -60,6 +60,9 @@ export default function PAGE_YOUTUBE_EMBED(){
 
     /* shorts 의 경우 일반 비디오처럼 autohide 시 title 을 숨긴다. */
     .ytp-autohide .ytp-shorts-title-channel { display:none !important; }
+
+    /* 다음에서 보기: YouTube */
+    .ytp-impression-link {display:none !important; }
     `);
     
 
