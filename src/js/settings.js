@@ -312,6 +312,16 @@ const _settings = {
         title:"Youtube Shorts 일시정지 시 화면이 어두워지는 효과를 제거",
         desc:"본 기능은 Shorts 비디오 크기 자동 조절 옵션을 켜야 효과가 있습니다.",
     },
+    youtubeParamList : {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        under_dev: true,
+        debug: true,
+        value: false,
+        title:"🧪🐞 Youtube 비디오 링크에서 list 파라미터를 인식",
+        desc:"Youtube 비디오 링크에서 list 파라미터를 인식합니다. 예시) https://youtu.be/xxxxxxx?list=PLxxxxxxxxxxxxx<br />list 파라미터의 값이 유효할 경우 우측 상단에 playlist 를 펼칠 수 있는 버튼이 추가됩니다. 본 기능은 딱히 원하는 사람이 많지 않을 것으로 예상되지만 문제가 발생할 소지가 많아 정식 기능에 포함되지 않았습니다. 디버그 모드를 활성화 한 상태에서만 보입니다.",
+    },
     // youtubeAlzartakSize : {
     //     category:"youtube",
     //     depth: 2,

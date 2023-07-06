@@ -313,6 +313,7 @@ export async function PAGE_CAFE_MAIN(){
                     type:GLOBAL.YOUTUBE_PLAYLIST,
                     originalUrl:src,
                     url:src,
+                    iframeUrl:src,
                     title:title,
                     desc:desc,
                     view:null,
@@ -496,29 +497,32 @@ export async function PAGE_CAFE_MAIN(){
             end = (end !== null ? end[1] : undefined);
             
             // playlist
-            let list = obj.data.inputUrl.match(/[?&]list=([a-zA-Z0-9-_]+)/);
+            let list = undefined;
             let index = undefined;
             let ab_channel = undefined;
-            if(list !== null){
-                list = list[1];
-                index = obj.data.inputUrl.match(/[?&]index=(\d+)/);
-                ab_channel = obj.data.inputUrl.match(/[?&]ab_channel=([-A-Z0-9+&@#/%=~_|^ㄱ-ㅎㅏ-ㅣ가-힣]+)/);
-                if(index !== null){
-                    index = index[1];
+            if(GM_SETTINGS.youtubeParamList){
+                list = obj.data.inputUrl.match(/[?&]list=([a-zA-Z0-9-_]+)/);
+                if(list !== null){
+                    list = list[1];
+                    index = obj.data.inputUrl.match(/[?&]index=(\d+)/);
+                    ab_channel = obj.data.inputUrl.match(/[?&]ab_channel=([-A-Z0-9+&@#/%=~_|^ㄱ-ㅎㅏ-ㅣ가-힣]+)/);
+                    if(index !== null){
+                        index = index[1];
+                    }
+                    else{
+                        index = undefined;
+                    }
+    
+                    if(ab_channel !== null){
+                        ab_channel = ab_channel[1];
+                    }
+                    else{
+                        ab_channel = undefined;
+                    }
                 }
                 else{
-                    index = undefined;
+                    list = undefined;
                 }
-
-                if(ab_channel !== null){
-                    ab_channel = ab_channel[1];
-                }
-                else{
-                    ab_channel = undefined;
-                }
-            }
-            else{
-                list = undefined;
             }
 
             let vid = new VideoYoutube({
@@ -543,7 +547,81 @@ export async function PAGE_CAFE_MAIN(){
                 originalHeight:obj.data.originalHeight,
                 darkMode:isDarkMode
             });
-            vid.createIframeContainer($seComponent);
+
+            if(vid.list === undefined){
+                vid.createIframeContainer($seComponent);
+            }
+            ///////////////////////////
+            // $$$V1.2.5 - vid.list 에 해당하는 playlist 가 존재하지 않을 때 "이 동영상은 볼 수 없습니다" 라고 나오는 문제
+            // Youtude Data API 는 할당량 제한이 있으므로 playlist 에 해당하는 oembed 를 fetch 하는 방식을 사용한다.
+            // 존재하지 않는 playlist 의 경우 응답으로 Forbidden 이 리턴된다.
+            // TODO: 중복되는 코드가 많으므로 추후 코드 정리가 필요하다.
+            else{
+                // check if playlist available
+                if(VideoYoutube.playlistAvailable[vid.list] === undefined){
+                    VideoYoutube.playlistAvailable[vid.list] = 2; // loading
+                    VideoYoutube.playlistAvailableParsingQueue[vid.list] = [];
+                    NOMO_DEBUG("HERE");
+                    fetch(`https://www.youtube.com/oembed?format=json&url=https://youtube.com/playlist?list=${vid.list}`)
+                        .then(response => response.json())
+                        .then(json => {
+                            NOMO_DEBUG("Playlist json", vid.id, json);
+                            VideoYoutube.playlistAvailable[vid.list] = 1; // true
+                            vid.createIframeContainer($seComponent);
+
+                            // run queue
+                            while(VideoYoutube.playlistAvailableParsingQueue[vid.list].length > 0){
+                                NOMO_DEBUG(`PLAYLIST QUEUE 1/${VideoYoutube.playlistAvailableParsingQueue[vid.list].length}`);
+                                VideoYoutube.playlistAvailableParsingQueue[vid.list][0].call();
+                                VideoYoutube.playlistAvailableParsingQueue[vid.list].shift();
+                            }
+                        })
+                        .catch(error => {
+                            // forbidden 등
+                            NOMO_DEBUG('Playlist Parsing Error:', vid.id, error);
+                            let svidlist = vid.list;
+                            vid.list = undefined;
+                            vid.index = undefined;
+                            vid.ab_channel = undefined;
+                            VideoYoutube.playlistAvailable[svidlist] = 0; // false
+                            vid.createIframeContainer($seComponent);
+
+                            // run queue
+                            while(VideoYoutube.playlistAvailableParsingQueue[svidlist].length > 0){
+                                NOMO_DEBUG(`PLAYLIST QUEUE 1/${VideoYoutube.playlistAvailableParsingQueue[svidlist].length}`);
+                                VideoYoutube.playlistAvailableParsingQueue[svidlist][0].call();
+                                VideoYoutube.playlistAvailableParsingQueue[svidlist].shift();
+                            }
+                        });
+                }
+                else if(VideoYoutube.playlistAvailable[vid.list] == 1){ // true
+                    NOMO_DEBUG('Playlist Parsing 결과가 이미 존재: True', vid.id);
+                    vid.createIframeContainer($seComponent);
+                }
+                else if(VideoYoutube.playlistAvailable[vid.list] == 0){ // false
+                    NOMO_DEBUG('Playlist Parsing 결과가 이미 존재: False', vid.id);
+                    vid.list = undefined;
+                    vid.index = undefined;
+                    vid.ab_channel = undefined;
+                    vid.createIframeContainer($seComponent);
+                }
+                else if(VideoYoutube.playlistAvailable[vid.list] == 2){ // loading
+                    NOMO_DEBUG("PUSH TO playlistAvailableParsingQueue");
+                    VideoYoutube.playlistAvailableParsingQueue[vid.list].push(function(){
+                        if(VideoYoutube.playlistAvailable[vid.list] == 1){
+                            NOMO_DEBUG('Playlist Parsing 결과가 이미 존재: True', vid.id);
+                            vid.createIframeContainer($seComponent);
+                        }
+                        else if(VideoYoutube.playlistAvailable[vid.list] == 0){
+                            NOMO_DEBUG('Playlist Parsing 결과가 이미 존재: False', vid.id);
+                            vid.list = undefined;
+                            vid.index = undefined;
+                            vid.ab_channel = undefined;
+                            vid.createIframeContainer($seComponent);
+                        }
+                    });
+                }
+            }
         }
         // Naver Video
         else if(GM_SETTINGS.useNaver && obj.type.indexOf("video") !== -1){

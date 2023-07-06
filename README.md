@@ -65,6 +65,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.2.5 - July 6, 2023
+
+- 버그 수정
+  - 본문에 삽입된 Youtube 동영상 주소에 playlist 와 관련된 파라미터가 있을 때, 실제로 해당 playlist 가 존재하지 않는 경우 "이 동영상을 볼 수 없습니다." 라고 표시되는 문제가 있었어요. 이제 일반 Youtube 동영상에 대해 playlist 관련 파라미터를 무시하도록 수정했어요. https://youtube.com/playlist?list=PLxxxxxxxx 와 같은 형태의 주소는 이전처럼 플레이리스트 형태로 보여줘요.
+
 ### 1.2.4 - July 1, 2023
 
 - "동영상 시청 종료 후 뜨는 추천 영상 메뉴등을 숨김" 기능을 업데이트 했어요.

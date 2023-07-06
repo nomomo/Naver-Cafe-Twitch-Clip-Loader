@@ -12,6 +12,9 @@ const YTShortsLogo = `<svg style="vertical-align: middle;" fill="none" height="1
 
 
 export class VideoYoutube extends VideoBase {
+    static playlistAvailable = {};
+    static playlistAvailableParsingQueue = {};
+
     constructor(options) {
         options.logoSVG = YTlogo;
         super(options);

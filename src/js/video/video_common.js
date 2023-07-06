@@ -409,7 +409,13 @@ export class VideoBase {
         //this.hideError();
 
         // update postMessageUrl
-        this.postMessageUrl = "https://"+this.iframeUrl.split("/")[2];
+        try{
+            this.postMessageUrl = "https://"+this.iframeUrl.split("/")[2];
+        }
+        catch(e){
+            NOMO_DEBUG("There is no iframeUrl", this);
+            this.postMessageUrl = "https://www.youtube.com";
+        }
     }
 
     autoPlayPauseOthers(eventType){
