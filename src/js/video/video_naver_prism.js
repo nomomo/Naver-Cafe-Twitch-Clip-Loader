@@ -28,6 +28,8 @@ export class VideoNaverPrism extends VideoBase {
         this.tryToReload = false;
         this.lastTime = 0.0;            // to recover time when reload player
 
+        this.$NCCL_pzp_qset = undefined;
+
         // 동영상 제목이 길어서 잘리는 경우에 대한 처리
         if(this.title && this.title.length > 37){
             let $articleTitle = $("#app div.ArticleContentBox div.article_header div.ArticleTitle h3");
@@ -79,6 +81,27 @@ export class VideoNaverPrism extends VideoBase {
             transform: translateX(-50%);
         }
             div.pzp-pc__header .pzp-pc-header__top-shadow { display:none; }
+
+
+            /* loop btn */
+            .pzp.pzp-pc.pzp-pc--controls .NCCL_Loopbtn {
+                opacity:1;
+            }
+            .pzp .pzp-button.NCCL_Loopbtn {
+                width: 36px;
+                height: 36px;
+                padding:5px;
+                margin-right:5px;
+                opacity: 0;
+                transition-property: opacity;
+                transition-duration: 0.2s;
+            }
+            .pzp .pzp-button.NCCL_Loopbtn svg {
+                fill:#999;
+            }
+            .pzp .pzp-button.NCCL_Loopbtn.loopActivated svg {
+                fill:#ffffff;
+            }
         `);
 
         if(GM_SETTINGS.alwaysShowVolumeController){
@@ -223,7 +246,6 @@ export class VideoNaverPrism extends VideoBase {
                 that.$seComponent.arrive(".pzp-pc-setting-intro-quality", { onlyOnce: true, existing: true}, function(liElem){
                     $qlis[1].click();
                     that.isSetMaxQuality = true;
-                    that.$NCCL_pzp_qset = that.$seComponent.find(".NCCL_pzp_qset");
 
                     that.insertQsetDisplay();
                     let text = $(liElem).find(".pzp-pc-ui-setting-intro-panel__value").text();
@@ -242,7 +264,6 @@ export class VideoNaverPrism extends VideoBase {
                     let observer = new MutationObserver(function(mutations) {
                         mutations.forEach(function(mutation) {
                             NOMO_DEBUG(mutation);
-                            that.$NCCL_pzp_qset = that.$seComponent.find(".NCCL_pzp_qset");
                             that.insertQsetDisplay();
                             that.$NCCL_pzp_qset.text(mutation.target.wholeText);
 
@@ -265,10 +286,25 @@ export class VideoNaverPrism extends VideoBase {
     // flag 1 : max, 0 : normal
     insertQsetDisplay(){
         let that = this;
-        if(this.$seComponent.find(".NCCL_pzp_qset").length == 0){
+        if(this.$seComponent.find(".NCCL_pzp_qset").length == 0 && this.$NCCL_pzp_qset == undefined){
             this.$NCCL_pzp_qset = $(`<div class="NCCL_pzp_qset"></div>`);
             this.$seComponent.find(".pzp-pc__bottom-buttons-right").prepend(this.$NCCL_pzp_qset);
         }
+    }
+    insertLoopButton(){
+        if(!GM_SETTINGS.NaverVideoAddLoopBtn) return;
+
+        let that = this;
+        this.$seComponent.arrive(".pzp-pc__bottom-buttons-right", { onlyOnce: true, existing: true}, function(elem){
+            that.$seComponent.find(".NCCL_loopbtn").remove();
+            let $loopBtn = $(`<button class="pzp-button pzp-pc-ui-button NCCL_Loopbtn" aria-label="루프" aria-haspopup="true" ><span class="pzp-pc-ui-button__tooltip">루프</span><svg width="22px" height="22px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M20 7v7c0 1.103-.896 2-2 2H2c-1.104 0-2-.897-2-2V7a2 2 0 0 1 2-2h7V3l4 3.5L9 10V8H3v5h14V8h-3V5h4a2 2 0 0 1 2 2z"/></svg></button>`);
+            $loopBtn.on("click", function(e){
+                if(!that.video) return;
+                that.video.loop = !that.video.loop;
+                $loopBtn.toggleClass("loopActivated");
+            });
+            $(elem).prepend($loopBtn);
+        });
     }
 
     createIframeContainer($oriElem){
@@ -298,7 +334,44 @@ export class VideoNaverPrism extends VideoBase {
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .se-module-video {padding-top:${newPaddingTop}% !important}
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .webplayer-internal-video{object-fit: contain !important;}
                 .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .pzp-poster{background-size: contain !important;}
-                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] video {background: radial-gradient(ellipse at center, rgb(0 0 0 / 0%) 0%,rgb(16 16 16) 70%,rgba(0,0,0,1) 100%);}
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] video {background: radial-gradient(ellipse at center, rgb(0 0 0 / 0%) 0%,rgb(20 20 20) 70%,rgba(0,0,0,1) 100%);}
+
+                /*
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] video {
+                    position:relative;
+                    z-index:0;
+                    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+                }
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .webplayer-internal-source-wrapper::before,
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .pzp-poster::before {
+                    content:'';
+                    position: absolute;
+                    top: 0%;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;           
+                    background: url(${this.thumbnailUrl};);
+                    background-size: cover;
+                    background-position: center;
+                    filter: blur(50px) brightness(0.4);
+                    z-index: 0;    
+                    background-repeat: no-repeat;
+                    scale: 150%;
+                }
+                .se-viewer .se-video.se-video-vertical.NCCL_prism_container[NCCL_vertical='${this.id}'] .pzp-pc__poster::after {
+                    content:'';
+                    position: absolute;
+                    top: 0%;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;           
+                    background: url(${this.thumbnailUrl};);
+                    background-size: contain;
+                    background-position: center;
+                    z-index: 0;
+                    background-repeat: no-repeat;
+                }
+                */
                 `
             );
             // 세로로 표시되는 경우 550px 미만일 때만 화질 변경 메시지 숨기기
@@ -391,6 +464,9 @@ export class VideoNaverPrism extends VideoBase {
             });
             observer.observe(that.$seComponent.find(".prismplayer-area")[0], { attributes: true, childList: false, characterData: false, subtree: false });
         });
+
+        // insert Loop Button
+        this.insertLoopButton();
 
         // set quality
         this.setMaxQuality();

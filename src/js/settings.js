@@ -223,12 +223,11 @@ const _settings = {
     },
     NaverVideoAddLoopBtn: {
         category:"naver",
-        under_dev: true,
         depth: 2,
         type: "checkbox",
         value: false,
-        title:"(Legacy) Loop 버튼 추가",
-        desc:"플레이어에 Loop 버튼을 추가합니다. 재생시간이 긴 동영상을 오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다. Player type 이 Legacy 인 경우에만 적용됩니다."
+        title:"Loop 버튼 추가",
+        desc:"플레이어에 Loop 버튼을 추가합니다. 재생시간이 긴 동영상을 오랜 시간 반복 재생 시 네트워크 에러가 발생할 수 있습니다."
     },
     NaverVideoEnhancedClick: {
         category:"naver",
