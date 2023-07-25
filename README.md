@@ -65,6 +65,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.2.7 - July 25, 2023
+
+- 특정 환경에서 Naver video 의 비디오 품질 표시가 두 번 표시되는 문제가 있어요. 개발자 환경에서 문제를 재현하지는 못했지만 이를 예방하기 위한 코드를 삽입했어요. - 2트
+
 ### 1.2.6 - July 21, 2023
 
 - 기능 개선

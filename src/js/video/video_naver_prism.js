@@ -25,6 +25,7 @@ export class VideoNaverPrism extends VideoBase {
         this.$seSectionVideo = undefined;
         this.videoFound = false;
         this.isSetMaxQuality = false;
+        this.latestVideoQuality = undefined;
         this.tryToReload = false;
         this.lastTime = 0.0;            // to recover time when reload player
 
@@ -244,11 +245,12 @@ export class VideoNaverPrism extends VideoBase {
 
             if($qlis.length > 1){
                 that.$seComponent.arrive(".pzp-pc-setting-intro-quality", { onlyOnce: true, existing: true}, function(liElem){
-                    $qlis[1].click();
                     that.isSetMaxQuality = true;
+                    $qlis[1].click();
 
                     that.insertQsetDisplay();
                     let text = $(liElem).find(".pzp-pc-ui-setting-intro-panel__value").text();
+                    that.latestVideoQuality = text;
                     that.$NCCL_pzp_qset.html(`<span class="NCCL_pzp_qset_tooltip">NCCL에 의해 최고 품질로 자동 설정됨</span>` + text + `<span> (최고 품질)<span>`);    // color:#03C75A;
 
                     // BANJJAK
@@ -263,6 +265,13 @@ export class VideoNaverPrism extends VideoBase {
                     // new MutationObserver
                     let observer = new MutationObserver(function(mutations) {
                         mutations.forEach(function(mutation) {
+                            if(!that.firstPlayed){
+                                if(that.latestVideoQuality !== mutation.target.wholeText){
+                                    that.$NCCL_pzp_qset.text(mutation.target.wholeText);
+                                    that.latestVideoQuality = mutation.target.wholeText;
+                                }
+                                return;
+                            }
                             NOMO_DEBUG(mutation);
                             that.insertQsetDisplay();
                             that.$NCCL_pzp_qset.text(mutation.target.wholeText);
@@ -272,9 +281,7 @@ export class VideoNaverPrism extends VideoBase {
                                 that.$NCCL_pzp_qset.fadeIn(300);
                             },200);
                             setTimeout(function(){
-                                if(that.firstPlayed){
-                                    that.$NCCL_pzp_qset.fadeOut(300);
-                                }
+                                that.$NCCL_pzp_qset.fadeOut(300);
                             },3000);
                         });    
                     });
