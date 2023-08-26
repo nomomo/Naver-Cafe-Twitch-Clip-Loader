@@ -305,3 +305,11 @@ html[data-darkreader-scheme="dark"] .NCCL_container .NCCL_description .NCCL_link
 .pzp-pc-ui-error-dialog__message.reloaded div.naver_player_reload_error_btn, .pzp-pc__error-dialog.reloaded div.naver_player_reload_error_btn {
     cursor: default;
 }
+
+
+
+
+/* naver prism player 에 NCCL_container 가 연달아 오는 경우 */
+.NCCL_prism_container + .NCCL_container {
+    margin-top:15px;
+}

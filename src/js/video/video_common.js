@@ -44,8 +44,9 @@ export class VideoBase {
         // LazyLoad observe
         this.createIframeLazyObserve = false;
         this.parseDataObserve = false;
-
+       
         // player element (cafe main)
+        this.$outermostContainer = undefined;
         this.$iframeContainer = undefined;
         this.$iframe = undefined;
         this.iframeLoaded = false;
@@ -151,7 +152,9 @@ export class VideoBase {
 
     // video related event
     eventPlay(){
-
+        if(GM_SETTINGS.autoScrollByVideoVisibility){
+            this.autoScrollToView();
+        }
     }
     eventPause(){
 
@@ -226,7 +229,7 @@ export class VideoBase {
         let that = this;
 
         // insert main container
-        this.$container = $(`<div class="NCCL_container"></div>`).data("NCCL-type", this.typeName);
+        this.$outermostContainer = $(`<div class="NCCL_container"></div>`).data("NCCL-type", this.typeName);
         this.$iframeContainer = $(`<div class="NCCL_iframe_container"></div>`).data("NCCL-type", this.typeName);
 
         // insert thumbnail container
@@ -281,10 +284,10 @@ export class VideoBase {
             this.$desc.hide();
         }
 
-        this.$container.append(this.$iframeContainer).append(this.$desc);
+        this.$outermostContainer.append(this.$iframeContainer).append(this.$desc);
         
         // insert
-        $oriElem.after(this.$container);
+        $oriElem.after(this.$outermostContainer);
 
         // remove original element
         $oriElem.remove();
@@ -305,7 +308,7 @@ export class VideoBase {
                     }
                 });
             }, options);
-            io.observe(this.$container[0]);
+            io.observe(this.$outermostContainer[0]);
         }
         else{
             this.insertIframe();
@@ -377,7 +380,7 @@ export class VideoBase {
                 }
             });
         }, options);
-        io.observe(this.$container[0]);
+        io.observe(this.$outermostContainer[0]);
     }
 
     createIframe(){
@@ -529,7 +532,7 @@ export class VideoBase {
         }
 
         this.showError(`[${GLOBAL.scriptName} v${GLOBAL.version}]<br />${errormsg}<br /><a class="errorURL"></a>`);
-        this.$container.find(".errorURL").attr("href", this.originalUrl).text(this.originalUrl);
+        this.$outermostContainer.find(".errorURL").attr("href", this.originalUrl).text(this.originalUrl);
         this.$thumbnailContainer.css("cursor","default");
     }
     resizeByRatio(ratio, viewportRatio, heightMargin){
@@ -613,5 +616,68 @@ export class VideoBase {
         let newPaddingTop = 100.0 / newRatio;
 
         return {"newWidth":/*newWidth*/contentWidth, "newHeight":newHeight, "newRatio":newRatio, "newPaddingTop":newPaddingTop};
+    }
+
+    
+    autoScrollToView(){
+        if(this.$outermostContainer === undefined){
+            return;
+        }
+        NOMO_DEBUG("------------------------------------");
+        let iframeOffset = 0.0;
+        if(window !== parent.window){
+            if(window.parent.getCafeMainScrollTop === undefined){
+                NOMO_DEBUG("there is no window.parent.getCafeMainScrollTop");
+                return;
+            }
+
+            iframeOffset = window.parent.getCafeMainScrollTop();
+            if(iframeOffset == -1){
+                NOMO_DEBUG("error in getCafeMainScrollTop");
+                return;
+            }
+
+            NOMO_DEBUG("iframeOffset", iframeOffset);
+        }
+
+        // Get the top and bottom positions of the element
+        let elementTop = this.$outermostContainer.offset().top;
+        elementTop += iframeOffset;
+        let elementOuterheight = this.$outermostContainer.outerHeight();
+        var elementBottom = elementTop + elementOuterheight;
+
+        // Get the current visible top and bottom positions
+        let visibleTop = $(window.parent).scrollTop();
+        let visibleBottom = visibleTop + $(window.parent).innerHeight();
+
+        NOMO_DEBUG("elementTop", elementTop);
+        NOMO_DEBUG("elementOuterheight", elementOuterheight);
+        NOMO_DEBUG("elementBottom", elementBottom);
+        NOMO_DEBUG("visibleTop", visibleTop);
+        NOMO_DEBUG("visibleBottom", visibleBottom);
+        
+        let newScrollTop;
+        // Check if the element is above the visible area
+        if (elementTop < visibleTop) {
+            NOMO_DEBUG(`elementTop < visibleTop, ${elementTop} < ${visibleTop}`);
+            newScrollTop = elementTop - 20;
+            NOMO_DEBUG("move to ", newScrollTop);
+            $(window.parent).scrollTop(newScrollTop);
+        }
+        // Check if the element is below the visible area
+        else if (elementBottom > visibleBottom) {
+            NOMO_DEBUG(`elementBottom < visibleBottom, ${elementBottom} < ${visibleBottom}`);
+            // Scroll to bring the bottom of the element into view
+            newScrollTop = visibleTop + elementBottom - visibleBottom + 20;
+            NOMO_DEBUG("move to ", newScrollTop);
+
+            if(newScrollTop > elementTop){
+                NOMO_DEBUG(`newScrollTop > elementTop, ${newScrollTop} > ${elementTop}`);
+                newScrollTop = elementTop;
+            }
+
+            $(window.parent).scrollTop(newScrollTop);
+        }
+        NOMO_DEBUG("------------------------------------");
     }
 }

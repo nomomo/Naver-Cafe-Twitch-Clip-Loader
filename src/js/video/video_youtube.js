@@ -12,6 +12,9 @@ const YTShortsLogo = `<svg style="vertical-align: middle;" fill="none" height="1
 
 
 export class VideoYoutube extends VideoBase {
+    static nytvideos = 0;
+    static ytvideo = [];
+
     static playlistAvailable = {};
     static playlistAvailableParsingQueue = {};
 
@@ -67,6 +70,12 @@ export class VideoYoutube extends VideoBase {
         
         // cafe 가 dark 모드인지 여부
         this.darkMode = (options.darkMode ? options.darkMode : false);
+
+        // youtubeFixClickAfterScrolling
+        this.$scrollOveray = undefined;
+
+        VideoYoutube.nytvideos += 1;
+        VideoYoutube.ytvideo.push(this);
     }
 
     static init(){try{
@@ -133,7 +142,7 @@ export class VideoYoutube extends VideoBase {
         NOMO_DEBUG("isVertical", this.id, isVertical);
         if(isVertical && GM_SETTINGS.shortsAutoResize){
             this.$logoSVG.replaceWith(YTShortsLogo);
-            this.$container.attr("NCCL_vertical",this.id);      // add special attr to set style
+            this.$outermostContainer = this.$iframeContainer;
             this.$iframeContainer.attr("NCCL_vertical",this.id); // add special attr to set style
             if(GM_SETTINGS.shortsAutoResize){
                 const {newWidth, newHeight, newRatio, newPaddingTop} = this.getNewWidth();
@@ -201,7 +210,42 @@ export class VideoYoutube extends VideoBase {
         NOMO_DEBUG("CREATE YTPlayer", this.id, YTOptions, this.YTPlayer);
 
         this.$iframe = this.$iframeContainer.find(".NCCL_iframe");
-        setTimeout(function(){that.$iframe.attr("title", "");},1000);
+        setTimeout(function(){
+            that.$iframe.attr("title", "");
+        },1000);
+
+        // youtubeFixClickAfterScrolling
+        if(GM_SETTINGS.youtubeFixClickAfterScrolling) {
+            let overlayDebug = false;
+            this.$iframeContainer.css('position','relative');
+            let topOffsetText = "";
+            if(GM_SETTINGS.hideTopOverlay){
+                topOffsetText = "0px";
+            }
+            else{
+                topOffsetText = "55px";
+            }
+            this.$scrollOveray = $(`<div class="NCCL_scrolloveray" style="position:absolute;width:100%;height: calc(100% - ${topOffsetText} - 50px);top:${topOffsetText};left:0px;z-index:1000;${overlayDebug?"background:red;":""}"></div>`);
+            this.$scrollOveray.on("click", function(e){
+                NOMO_DEBUG("clicked.");
+                if(!that.$iframe || typeof that.YTPlayer.getPlayerState !== "function") {
+                    return;
+                }
+                let playerState = that.YTPlayer.getPlayerState();
+
+                if(playerState == -1 || playerState == 0 || playerState == 2 || playerState == 5){
+                    NOMO_DEBUG("NCCL_scrolloveray clicked. Play video.");
+                    that.play();
+                }
+                else if(playerState == 1){
+                    NOMO_DEBUG("NCCL_scrolloveray clicked. Pause video.");
+                    that.pause();
+                }
+            });
+            that.$iframeContainer.append(that.$scrollOveray);
+            that.$scrollOveray.hide();
+        }
+
     }
     catch(e){
         NOMO_DEBUG("Error from createYTIframe", e);

@@ -181,6 +181,14 @@ const _settings = {
             "1":{title:"적당히"}
         }
     },
+    autoScrollByVideoVisibility : {
+        category: "videoCommon",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title: "동영상 재생 시 자동 스크롤",
+        desc: "비디오가 재생될 때 비디오가 현재 보이는 영역에 위치해있지 않다면 적절한 위치로 스크롤 해줍니다. 만약 스크롤이 자동으로 이동하는 것을 원하지 않거나, 비디오가 재생될 때 스크롤 위치가 이상하게 변경되는 경우 본 기능을 끄세요."
+    },
 
     // Naver Video
     useNaver: {
@@ -310,6 +318,14 @@ const _settings = {
         value: true,
         title:"Youtube Shorts 일시정지 시 화면이 어두워지는 효과를 제거",
         desc:"본 기능은 Shorts 비디오 크기 자동 조절 옵션을 켜야 효과가 있습니다.",
+    },
+    youtubeFixClickAfterScrolling: {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title: "스크롤 직후 동영상 재생 동작 개선",
+        desc: "Chrome 브라우저에서 마우스 스크롤을 한 직후 Youtube 동영상을 클릭했을 때 재생/일시정지가 되지 않거나, 여러번 화면을 클릭해야지만 동영상이 재생되는 불편함을 해결해줍니다. <br /><br />본 기능을 활성화 하면 Youtube 비디오의 경우 스크롤 직후 1초간 재생/일시정지 외 버튼 동작이 불가능합니다. 만약 Youtube 비디오를 클릭해도 재생/일시정지 되지 않는 버그가 발생하는 경우 본 기능을 끄거나, 하단 바의 재생 버튼을 눌러 재생하세요."
     },
     youtubeParamList : {
         category:"youtube",

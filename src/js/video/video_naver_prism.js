@@ -319,6 +319,7 @@ export class VideoNaverPrism extends VideoBase {
         let that = this;
 
         this.$seComponent = $oriElem;
+        this.$outermostContainer = this.$seComponent;
         this.$seComponent.addClass("NCCL_prism_container");
 
         //NOMO_DEBUG(this.$seComponent.html());

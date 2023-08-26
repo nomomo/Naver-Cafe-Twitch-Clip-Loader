@@ -147,6 +147,38 @@ export default function PAGE_CAFE_TOP(){
             NOMO_DEBUG("Error from naverBoardDefaultArticleCount", e);
         }
     });
+
+    
+    // autoScrollByVideoVisibility
+    if(GM_SETTINGS.autoScrollByVideoVisibility){
+        unsafeWindow.getCafeMainScrollTop = function(){
+            let $contentArea = $("#content-area");
+            if($contentArea.length === 0){
+                return -1;
+            }
+            else{
+                return $contentArea.offset().top;
+            }
+        };
+    }
+
+    // youtubeFixClickAfterScrolling
+    if(GM_SETTINGS.youtubeFixClickAfterScrolling){
+        let $cafe_main = undefined;
+        $(document).on("wheel", function(e){
+            NOMO_DEBUG("wheel event", e);
+            if(!$cafe_main){
+                $cafe_main = $("iframe#cafe_main");
+            }
+
+            if($cafe_main.length == 0){
+                $cafe_main = undefined;
+                return;
+            }
+
+            $cafe_main[0].contentWindow.parentScrollEvent(e);
+        });
+    }
 }
 
 

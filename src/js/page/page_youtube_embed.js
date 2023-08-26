@@ -63,8 +63,61 @@ export default function PAGE_YOUTUBE_EMBED(){
 
     /* 다음에서 보기: YouTube */
     .ytp-impression-link {display:none !important; }
+
     `);
+
+    // $$$ TEST $$$
+    // $(document).on("click", function(){
+    //     NOMO_DEBUG("embed youtube document clicked");
+    // });
+
+    // unsafeWindow._addEventListener = unsafeWindow.addEventListener;
+    // unsafeWindow.addEventListener = function(a,b,c){
+    //     if(a === "wheel" || a === "mousewheel" || a === "DOMMouseScroll" || a == "scroll" || a == "touchmove"){
+    //         NOMO_DEBUG("window 의 scroll 이벤트 무력화", a, b, c);
+    //         return;
+    //     }
+
+    //     if(c==undefined)
+    //         c=false;
+    //     unsafeWindow._addEventListener(a,b,c);
+    // };
+    // unsafeWindow.document._addEventListener = unsafeWindow.document.addEventListener;
+    // unsafeWindow.document.addEventListener = function(a,b,c){
+    //     if(a === "wheel" || a === "mousewheel" || a === "DOMMouseScroll" || a == "scroll" || a == "touchmove"){
+    //         NOMO_DEBUG("document 의 scroll 이벤트 무력화", a, b, c);
+    //         return;
+    //     }
+
+    //     if(c==undefined)
+    //         c=false;
+    //     unsafeWindow.document._addEventListener(a,b,c);
+    // };
     
+    // Element.prototype._addEventListener = Element.prototype.addEventListener;
+    // Element.prototype.addEventListener = function(a,b,c){
+    //     if(a === "wheel" || a === "mousewheel" || a === "DOMMouseScroll" || a == "scroll" || a == "touchmove"){
+    //         NOMO_DEBUG("Element 의 scroll 이벤트 무력화", a, b, c);
+    //         return;
+    //     }
+
+    //     if(c==undefined)
+    //         c=false;
+    //     this._addEventListener(a,b,c);
+    // };
+
+    
+    if(GM_SETTINGS.youtubeFixClickAfterScrolling) {
+        GM_addStyle(`
+        video, .ytp-iv-video-content {pointer-events: none;}
+        `);
+        $(document).on("wheel", function(e){
+            NOMO_DEBUG("iframe youtube embed wheel event", e);
+            NOMO_DEBUG("send postMessage (embed -> naver), scroll event");
+            window.parent.postMessage({"scrollEvent":true}, "https://cafe.naver.com");
+        });
+    }
+
     // youtubeSetQuality
     useSetQuality = GM_SETTINGS.youtubeSetQuality !== "default" && YOUTUBE_EMBED_SET_QUALITY_CHECK_QUALITY();
     if(useSetQuality){
