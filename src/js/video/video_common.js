@@ -76,6 +76,9 @@ export class VideoBase {
         if(this.seq === 0 && GM_SETTINGS.autoPlayNextClip){
             this.lazyLoad = false;
         }
+
+        // don't move scroll automatically once
+        this.noAutoScrollOnce = false;
     }
 
     static init(){
@@ -152,9 +155,7 @@ export class VideoBase {
 
     // video related event
     eventPlay(){
-        if(GM_SETTINGS.autoScrollByVideoVisibility){
-            this.autoScrollToView();
-        }
+        //this.autoScrollToView(Number(GM_SETTINGS.autoScrollByVideoVisibility));
     }
     eventPause(){
 
@@ -387,7 +388,7 @@ export class VideoBase {
         //NOMO_DEBUG("VideoBase - createIframe");
         let that = this;
         this.iframeLoaded = false;
-        this.$iframe = $(`<iframe class="NCCL_iframe" frameborder="0" allowfullscreen="true" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" scrolling="no"></iframe>`)
+        this.$iframe = $(`<iframe class="NCCL_iframe" frameborder="0" allowfullscreen="true" allow="${this.autoPlay? "autoplay; " : ""}accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" scrolling="no"></iframe>`)
             .data("NCCL-id", this.id)
             .data("NCCL-type", this.typeName)
             .attr("src", this.iframeUrl);
@@ -422,7 +423,7 @@ export class VideoBase {
     }
 
     autoPlayPauseOthers(eventType){
-        if(!GM_SETTINGS.autoPauseOtherClips && !GM_SETTINGS.autoPlayNextClip) return;
+        //if(!GM_SETTINGS.autoPauseOtherClips && !GM_SETTINGS.autoPlayNextClip) return;
         
         NOMO_DEBUG("autoPlayPauseOthers", eventType, "id=", this.id, "seq=", this.seq);
         let endedNextFound = false;
@@ -431,10 +432,12 @@ export class VideoBase {
 
             let seq = VideoBase.videos[i].seq;
             if(eventType === "play"){
-                if(!GM_SETTINGS.autoPauseOtherClips) return false;
-                if(this.seq === seq) continue;
+                if(this.seq === seq) {
+                    this.autoScrollToView(Number(GM_SETTINGS.autoScrollByVideoVisibility));
+                    continue;
+                }
                 
-                //NOMO_DEBUG("autoPlayPauseOthers pause - ", i);
+                if(!GM_SETTINGS.autoPauseOtherClips) return false;
                 VideoBase.videos[i].pause();
             }
             else if (eventType === "ended"){
@@ -555,10 +558,10 @@ export class VideoBase {
         let parentHeight = parent.window.innerHeight;// - 230.0; // 150:
 
         // full - fit to height of the browser
-        if(GM_SETTINGS.shortsAutoResizeType == "0"){
+        if(GM_SETTINGS.shortsAutoResizeType == "1"){
             parentHeight -= 0.0;
         }
-        else{
+        else if(GM_SETTINGS.shortsAutoResizeType == "2"){
             parentHeight -= 230.0;
         }
 
@@ -574,11 +577,11 @@ export class VideoBase {
         // set shortsMaxHeight from parent window height
         let goodVideoHeight = parentHeight - descriptionHeight;
         if(goodVideoHeight > 0){    
-            if(GM_SETTINGS.shortsAutoResizeType == "0"){
+            if(GM_SETTINGS.shortsAutoResizeType == "1"){
                 // 하단에 설정될 여백은 30px or 10% 중 큰 것이다
                 shortsMaxHeight = Math.min(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
             }
-            else{
+            else if(GM_SETTINGS.shortsAutoResizeType == "2"){
                 // 하단에 설정될 여백은 30px or 10% 중 작은 것이다
                 shortsMaxHeight = Math.max(goodVideoHeight - 30.0, goodVideoHeight * 0.9);
             }
@@ -619,8 +622,13 @@ export class VideoBase {
     }
 
     
-    autoScrollToView(){
-        if(this.$outermostContainer === undefined){
+    autoScrollToView(type){
+        // "0":{title:"사용 안 함"},
+        // "1":{title:"안 보일 때만 가장 가깝게"},
+        // "2":{title:"안 보일 때만 화면 중앙"},
+        // "3":{title:"항상 화면 중앙"}
+
+        if(type == 0 || this.$outermostContainer === undefined){
             return;
         }
         NOMO_DEBUG("------------------------------------");
@@ -648,36 +656,84 @@ export class VideoBase {
 
         // Get the current visible top and bottom positions
         let visibleTop = $(window.parent).scrollTop();
-        let visibleBottom = visibleTop + $(window.parent).innerHeight();
+        let visibleHeight = $(window.parent).innerHeight();
+        let visibleBottom = visibleTop + visibleHeight;
 
         NOMO_DEBUG("elementTop", elementTop);
         NOMO_DEBUG("elementOuterheight", elementOuterheight);
         NOMO_DEBUG("elementBottom", elementBottom);
         NOMO_DEBUG("visibleTop", visibleTop);
+        NOMO_DEBUG("visibleHeight", visibleHeight);
         NOMO_DEBUG("visibleBottom", visibleBottom);
         
         let newScrollTop;
-        // Check if the element is above the visible area
-        if (elementTop < visibleTop) {
-            NOMO_DEBUG(`elementTop < visibleTop, ${elementTop} < ${visibleTop}`);
-            newScrollTop = elementTop - 20;
-            NOMO_DEBUG("move to ", newScrollTop);
-            $(window.parent).scrollTop(newScrollTop);
+        let margin = 0;
+        if(elementOuterheight + 20 <= visibleHeight){
+            margin = 20;
         }
-        // Check if the element is below the visible area
-        else if (elementBottom > visibleBottom) {
-            NOMO_DEBUG(`elementBottom < visibleBottom, ${elementBottom} < ${visibleBottom}`);
-            // Scroll to bring the bottom of the element into view
-            newScrollTop = visibleTop + elementBottom - visibleBottom + 20;
-            NOMO_DEBUG("move to ", newScrollTop);
+        else if(elementOuterheight + 5 <= visibleHeight){
+            margin = 5;
+        }
 
-            if(newScrollTop > elementTop){
-                NOMO_DEBUG(`newScrollTop > elementTop, ${newScrollTop} > ${elementTop}`);
-                newScrollTop = elementTop;
+        switch(type){
+        default:
+            break;
+        case 1: // 안 보일 때만 가장 가깝게
+        case 2: // 안 보일 때만 화면 중앙
+            // Check if the element is above the visible area
+            if (elementTop < visibleTop) {
+                NOMO_DEBUG(`elementTop < visibleTop, ${elementTop} < ${visibleTop}`);
+                if(elementOuterheight > visibleHeight){
+                    newScrollTop = elementTop - 5;
+                }
+                else{
+                    // Scroll to bring the top of the element into view
+                    if(type == 1){
+                        newScrollTop = elementTop - margin;
+                    }
+                    // Scroll to middle
+                    else if (type == 2){
+                        newScrollTop = (elementTop + elementBottom - visibleHeight) * 0.5;
+                    }
+                }
             }
+            // Check if the element is below the visible area
+            else if (elementBottom > visibleBottom) {
+                NOMO_DEBUG(`elementBottom < visibleBottom, ${elementBottom} < ${visibleBottom}`);
+                if(elementOuterheight > visibleHeight){
+                    newScrollTop = elementTop - 5;
+                }
+                else{
+                    // Scroll to bring the bottom of the element into view
+                    if(type == 1){
+                        newScrollTop = visibleTop + elementBottom - visibleBottom + margin;
+                    }
+                    // Scroll to middle
+                    else if (type == 2){
+                        newScrollTop = (elementTop + elementBottom - visibleHeight) * 0.5;
+                    }
+                }
+            }
+            if(newScrollTop < 0 ) newScrollTop = 0;
+            break;
 
+        // 항상 가운데
+        case 3:
+            if(elementOuterheight > visibleHeight){
+                newScrollTop = elementTop - 5;
+            }
+            else{
+                newScrollTop = (elementTop + elementBottom - visibleHeight) * 0.5;
+            }
+            if(newScrollTop < 0 ) newScrollTop = 0;
             $(window.parent).scrollTop(newScrollTop);
+            break;
         }
+
+        NOMO_DEBUG("move to ", newScrollTop);
+        $(window.parent).scrollTop(newScrollTop);
+
+
         NOMO_DEBUG("------------------------------------");
     }
 }

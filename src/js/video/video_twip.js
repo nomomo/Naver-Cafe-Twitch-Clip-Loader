@@ -13,9 +13,16 @@ export class VideoTwip extends VideoBase {
         super(options);
 
         this.vodType = options.vodType; // "clip" or "vod"
-        this.parseDataRequired = true;
+        this.parseDataRequired = (GM_SETTINGS.convertMethod === "autoLoad" ? false : true);
+
+        if(!this.start){
+            this.start = 0;
+        }
+
+        this.title = this.title.replace(/^TWIP CLIP\s?-?\s?/, "");
+
         // twip 의 경우 iframe 내에 cloudflarestream 에 대한 iframe 이 다시 한 번 삽입됨
-        this.iframeUrl = `https://vod.twip.kr/${this.vodType}/${this.id}/embed?start=${this.start}&autoplay=${this.autoPlay}&muted=${this.muted}`;
+        this.iframeUrl = `https://vod.twip.kr/${this.vodType}/${this.id}/embed?parent=cafe.naver.com&extension=NCCL&seq=${this.seq}&start=${this.start}&autoplay=${this.autoPlay}&muted=${this.muted}`;
         NOMO_DEBUG("new VideoTwip", options);
     }
 
@@ -47,10 +54,7 @@ export class VideoTwip extends VideoBase {
                         }
                     }
                     if(json.data.title){
-                        let newTitle = escapeHtml(json.data.title) + " - TWIP " + this.vodType.toUpperCase();
-                        // if(json.data.viewCount){
-                        //     newTitle += ` ${viewCountIcon} ${escapeHtml(json.data.viewCount)}`;
-                        // }
+                        let newTitle = json.data.title;
                         this.updateTitle(newTitle);
                     }
                 }
@@ -61,6 +65,7 @@ export class VideoTwip extends VideoBase {
                 this.isDataLoading = false;
                 this.isDataLoaded = true;
                 this.isDataSucceed = false;
+
                 this.postParseData();
             }
         }

@@ -1,51 +1,52 @@
 import {DEBUG, NOMO_DEBUG, GM_setting} from "js/lib/lib";
 import {messageCafeTop} from "js/page/page_cafe_top.js";
+import {Naverlogo} from "js/video/video_naver_prism";
+import {AFTVLogo} from "js/video/video_aftv";
+import {YTlogo} from "js/video/video_youtube";
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Settings
 ////////////////////////////////////////////////////////////////////////////////////
-const _settings = {
-    
+
+const _settings = {    
     // video common
     convertMethod : {
         category:"videoCommon",
-        category_name: "Video 공통",
+        category_name: "⚙️ 플레이어 설정",
+        category_desc: "비디오 링크를 변환하는 시점, 재생 방법, 플레이어 동작을 설정합니다.",
         depth: 1,
         type: "radio",
         value: "autoLoad",
-        title:"Video 링크 변환 시점 선택",
-        desc:" - 페이지 로딩 시: 링크를 비디오로 자동 변환<br /> - 섬네일 클릭 시: 섬네일을 클릭할 때 비디오로 변환", radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "섬네일 클릭 시", value:"clickRequired"}},
+        title:"비디오 링크 변환 시점 선택",
+        desc:"<optdesc>페이지 로딩 시: 링크를 비디오로 자동 변환</optdesc><optdesc>섬네일 클릭 시: 섬네일을 클릭할 때 비디오로 변환</optdesc>",
+        radio: {autoLoad: {title: "페이지 로딩 시", value:"autoLoad"}, clickRequired: {title: "섬네일 클릭 시", value:"clickRequired"}},
     },
     autoPlayFirstClip: {
-        category: "type",
-        category_name: "페이지 로딩 시",
+        category:"videoCommon",
         depth: 2,
-        under_dev:true,
         radio_enable_value: "autoLoad",
         type: "checkbox",
         value: false,
-        title: "페이지 로딩과 동시에 첫 번째 동영상을 자동 재생",
+        title: "[페이지 로딩 시] 페이지 로딩과 동시에 첫 번째 동영상을 자동 재생",
         desc: "일부 동영상 플랫폼의 경우 지원하지 않을 수 있습니다."
     },
     autoPlayFirstClipMuted: {
-        category: "type",
+        category:"videoCommon",
         depth: 2,
-        under_dev:true,
         radio_enable_value: "autoLoad",
         type: "checkbox",
         value: true,
-        title: "첫 번째 클립 자동 재생 시 음소거로 시작",
+        title: "[페이지 로딩 시] 첫 번째 클립 자동 재생 시 음소거로 시작",
         desc: "일부 동영상 플랫폼의 경우 시작 시 음소거 기능을 지원하지 않아 소리가 켜진채로 자동 재생될 수 있으므로 주의하세요."
     },
     clickRequiredAutoPlay: {
-        category: "type",
-        category_name: "섬네일 클릭 시",
+        category:"videoCommon",
         depth: 2,
         under_dev:true,
         radio_enable_value: "clickRequired",
         type: "checkbox",
         value: true,
-        title: "클립 로드 시 섬네일 클릭과 동시에 자동 재생",
+        title: "[섬네일 클릭 시] 클립 로드 시 섬네일 클릭과 동시에 자동 재생",
         desc: ""
     },
 
@@ -54,36 +55,17 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: false,
-        title: {en:"Set the volume when stream starts", ko:"동영상 로드 시 특정 사운드 볼륨(Volume)으로 설정"},
-        desc: "TIP: Chrome 계열 브라우저는 자동 재생되는 클립을 종종 음소거합니다. 음소거 문제를 피하려면 본 옵션을 사용해보세요(안 될 수도 있음)."
+        title: {en:"Set the volume when stream starts", ko:"비디오 로드 시 사운드 볼륨(Volume) 설정"},
+        desc: "비디오 로드 시 플레이어의 사운드 볼륨을 원하는 값으로 설정합니다.<br />TIP: Chrome 계열 브라우저는 자동 재생되는 클립을 종종 음소거합니다. 음소거 문제를 피하려면 본 옵션을 사용해보세요(안 될 수도 있음)."
     },
     target_start_volume : {
-        category:"advanced", depth:2,
+        category:"videoCommon", depth:2,
         type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
         title:{en:"Volume", ko:"Volume"},
         desc:{en:"(Max Volume: 1.0, Mute: 0.0, Range: 0.0 ~ 1.0)", ko:"(Max Volume: 1.0, 음소거: 0.0, 범위: 0.0 ~ 1.0)"}
     },
-    alwaysShowVolumeController : {
-        category:"videoCommon",
-        depth: 1,
-        type: "checkbox",
-        value: false,
-        title:"볼륨 컨트롤바를 항상 표시",
-        desc:"Youtube, Twitch, Naver Video 에서 볼륨 컨트롤바를 항상 표시합니다."
-    },
-    videoWidth : {
-        category:"videoCommon",
-        depth:1,
-        under_dev:true,
-        type: "text",
-        value: 100,
-        valid:"number",
-        min_value:1,
-        max_value:100,
-        title:"비디오 가로 사이즈(%)", desc:"본문 사이즈 대비 비디오 가로 사이즈를 결정합니다.<br />(Default: 100, Range: 1~100)" },
     autoPauseOtherClips: {
         category:"videoCommon",
-        under_dev:true,
         depth: 1,
         type: "checkbox",
         value: true,
@@ -92,65 +74,11 @@ const _settings = {
     },
     autoPlayNextClip: {
         category:"videoCommon",
-        under_dev:true,
         depth: 1,
         type: "checkbox",
         value: false,
         title:"다음 영상을 자동으로 이어서 재생",
         desc:"본문에 여러 개의 동영상이 존재할 때 동영상이 종료되면 다음 영상을 자동으로 재생합니다(편하다!). 일부 동영상 플랫폼의 경우 본 기능이 지원되지 않을 수 있습니다."
-    },
-    removeOriginalLinks: {
-        category:"videoCommon",
-        under_dev:true,
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title:"글 본문에서 비디오의 원본 링크 삭제",
-        desc:"삽입된 비디오와 동일한 링크가 글 본문에 존재하는 경우 삭제하여 보기 좋게 만듭니다. 원본 동영상 링크를 삭제하지 않으려면 본 기능을 끄세요."
-    },
-    hideTopOverlay: {
-        category:"videoCommon",
-        depth: 1,
-        type: "checkbox",
-        value: false,
-        title:"동영상 상단 메뉴를 숨김",
-        desc:"동영상 위에 마우스를 올렸을 때 나타나는 상단 메뉴를 숨깁니다. 화면을 더욱 깔끔하게 표시할 수 있습니다.<br />Youtube Playlist 의 경우 본 옵션은 무시됩니다."
-    },
-    hidePauseOverlay: {
-        category:"videoCommon",
-        under_dev:true,
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title:"동영상 일시정지 시 뜨는 동영상 더보기 메뉴등을 숨김",
-        desc:""
-    },
-    hideEndOverlay: {
-        category:"videoCommon",
-        under_dev:true,
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title:"동영상 시청 종료 후 뜨는 추천 영상 메뉴등을 숨김",
-        desc:"추천 영상 메뉴를 숨기고, Youtube 의 경우 동영상 종료 후 화면을 클릭하여 리플레이 할 수 있도록 합니다."
-    },
-    hideDescription: {
-        category: "videoCommon",
-        depth: 1,
-        under_dev:true,
-        type: "checkbox",
-        value: false,
-        title: "동영상 제목 및 설명을 표시하지 않음",
-        desc: "동영상 하단에 삽입되는 동영상 제목 및 설명 부분을 표시하지 않습니다. (플랫폼 로고, 동영상 제목, 링크 등)"
-    },
-    hideDescriptionLogo: {
-        category: "videoCommon",
-        depth: 1,
-        under_dev:true,
-        type: "checkbox",
-        value: false,
-        title: "동영상 설명의 플랫폼 로고를 표시하지 않음",
-        desc: "동영상 하단 설명에서 플랫폼 로고만을 숨깁니다."
     },
     exitFullscreenAfterEnd: {
         category: "videoCommon",
@@ -160,45 +88,134 @@ const _settings = {
         title: "재생 완료 후 전체화면 자동 해제",
         desc: "동영상 재생이 완료되면 전체화면을 자동으로 해제합니다. 자동 전체화면 해제는 동영상 별 1회에 한해 적용됩니다."
     },
-    shortsAutoResize: {
-        category: "videoCommon",
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title: "Shorts 비디오 크기 자동 조절",
-        desc: "세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춥니다. 세로 비디오가 감지되면 현재 브라우저의 화면 높이에 맞게 크기를 키우고 가운데 정렬합니다. 네이버 비디오 및 Youtube 에 적용됩니다. 사용자가 직접 가로 비디오로 삽입한 Youtube Shorts 비디오 등 일부 비디오에는 본 기능이 적용되지 않을 수 있습니다."
-    },
     shortsAutoResizeType: {
         category:"videoCommon",
-        under_dev:true,
-        depth: 2,
+        depth: 1,
         type: "combobox",
-        value: "0",
-        title:"Shorts 비디오 크기 자동 조절 타입",
-        desc: "- 화면 가득: 현재 브라우저의 화면 높이에 맞게 세로 비디오의 사이즈를 변경합니다. 스크롤을 살짝하면 비디오를 화면 가득 볼 수 있습니다. (1080p 해상도 권장)<br />- 적당히: 스크롤 없이 글 제목과 세로 비디오를 한 눈에 볼 수 있도록 비디오 사이즈를 적당히 변경합니다. (4K 해상도 권장)",
+        value: "1",
+        title:"Shorts 비디오 크기 자동 조절",
+        desc: "세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춥니다.<br />Shorts 비디오가 이상하게 표시되는 경우 본 기능을 '사용 안 함'으로 설정하세요.<br /><br /><optdesc>화면 가득: 현재 브라우저의 화면 높이에 맞게 세로 비디오의 사이즈를 키웁니다. 스크롤을 살짝하면 비디오를 화면 가득 볼 수 있습니다. (1080p 해상도 권장)</optdesc><optdesc>적당히: 스크롤 없이 글 제목과 세로 비디오를 한 눈에 볼 수 있도록 비디오 사이즈를 적당히 키웁니다. (4K 해상도 권장)</optdesc><br />* 사용자가 직접 가로 비디오로 삽입한 Youtube Shorts 비디오 등 일부 비디오에는 본 기능이 적용되지 않을 수 있습니다.",
         options:{
-            "0":{title:"화면 가득"},
-            "1":{title:"적당히"}
+            "0":{title:"사용 안 함"},
+            "1":{title:"화면 가득"},
+            "2":{title:"적당히"}
         }
     },
-    autoScrollByVideoVisibility : {
+    autoScrollByVideoVisibility: {
         category: "videoCommon",
+        depth: 1,
+        type: "combobox",
+        value: "1",
+        title: "비디오 재생 시 자동 스크롤",
+        desc: "비디오가 재생될 때 적절한 위치로 자동 스크롤 합니다.<br />만약 스크롤이 자동으로 이동하는 것을 원하지 않거나, 비디오가 재생될 때 스크롤 위치가 이상하게 변경되는 문제가 발생하는 경우 본 기능을 '사용 안 함'으로 설정하세요.<br /><br /><optdesc>안 보일 때만 가장 가깝게: 비디오 재생 시 플레이어의 일부가 화면에 보이지 않는 경우, 플레이어를 전체를 화면에 표시할 수 있는 가장 가까운 위치로 자동 스크롤 합니다.</optdesc><optdesc>안 보일 때만 화면 중앙: 비디오 재생 시 플레이어의 일부가 화면에 보이지 않는 경우, 플레이어가 화면 중앙에 위치하도록 자동 스크롤 합니다.</optdesc><optdesc>항상 화면 중앙: 비디오가 재생될 때 플레이어가 화면 중앙에 위치하도록 무조건 자동 스크롤 합니다.</optdesc><br />* 플레이어 높이가 화면 전체 높이보다 큰 경우 플레이어의 가장 위를 화면에 맞춥니다.",
+        options:{
+            "0":{title:"사용 안 함"},
+            "1":{title:"안 보일 때만 가장 가깝게"},
+            "2":{title:"안 보일 때만 화면 중앙"},
+            "3":{title:"항상 화면 중앙"}
+        }
+    },
+
+
+    // 개인화
+    alwaysShowVolumeController : {
+        category:"personal",
+        category_name: "🛠️ 개인화",
+        category_desc: "비디오 플레이어의 외형을 개인화 합니다.",
+        depth: 1,
+        type: "checkbox",
+        value: false,
+        title:"볼륨 컨트롤바를 항상 표시",
+        desc:"Youtube, Twitch, Naver Video 에서 플레이어의 볼륨 컨트롤바를 항상 표시합니다."
+    },
+    videoWidth : {
+        category:"personal",
+        depth:1,
+        under_dev:true,
+        type: "text",
+        value: 100,
+        valid:"number",
+        min_value:1,
+        max_value:100,
+        title:"플레이어 가로 사이즈(%)", desc:"본문 사이즈 대비 비디오 플레이어의 가로 사이즈를 결정합니다.<br />(Default: 100, Range: 1~100)" },
+    removeOriginalLinks: {
+        category:"personal",
         depth: 1,
         type: "checkbox",
         value: true,
-        title: "동영상 재생 시 자동 스크롤",
-        desc: "비디오가 재생될 때 비디오가 현재 보이는 영역에 위치해있지 않다면 적절한 위치로 스크롤 해줍니다. 만약 스크롤이 자동으로 이동하는 것을 원하지 않거나, 비디오가 재생될 때 스크롤 위치가 이상하게 변경되는 경우 본 기능을 끄세요."
+        title:"글 본문에서 비디오의 원본 링크 삭제",
+        desc:"삽입된 비디오와 동일한 링크가 글 본문에 존재하는 경우 삭제하여 보기 좋게 만듭니다.<br />원본 동영상 링크를 삭제하지 않으려면 본 기능을 끄세요."
     },
+    hideTopOverlay: {
+        category:"videoCommon",
+        depth: 1,
+        type: "checkbox",
+        value: false,
+        title:"플레이어 상단 메뉴를 숨김",
+        desc:"플레이어 위에 마우스를 올렸을 때 표시되는 상단 메뉴를 숨깁니다. 화면을 더욱 깔끔하게 표시할 수 있습니다.<br />Youtube Playlist 의 경우 본 옵션은 무시됩니다."
+    },
+    hidePauseOverlay: {
+        category:"personal",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"동영상 일시정지 시 표시되는 메뉴를 숨김",
+        desc:"동영상 일시정지 시 동영상 더보기, 추천 영상 등의 화면을 가리는 오버레이를 숨깁니다."
+    },
+    hideEndOverlay: {
+        category:"personal",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"동영상 시청 종료 후 표시되는 메뉴를 숨김",
+        desc:"동영상 시청 종료 후 표시되는 추천 영상 메뉴 등의 오버레이를 숨기고, Youtube 의 경우 동영상 종료 후 화면을 클릭하여 리플레이 할 수 있도록 합니다."
+    },
+    hideDescription: {
+        category:"personal",
+        depth: 1,
+        type: "checkbox",
+        value: false,
+        title: "동영상 제목 및 설명을 표시하지 않음",
+        desc: "플레이어 하단에 삽입되는 동영상 제목 및 설명 부분을 표시하지 않습니다. (플랫폼 로고, 동영상 제목, 링크 등)<br />깔끔하게 비디오만 표시하고 싶다면 본 기능을 켜세요."
+    },
+    hideDescriptionLogo: {
+        category:"personal",
+        depth: 1,
+        under_dev:true,
+        type: "checkbox",
+        value: false,
+        title: "동영상 설명의 플랫폼 로고를 표시하지 않음",
+        desc: "플레이어 하단 설명에서 플랫폼 로고만을 숨깁니다."
+    },
+    topBottomShadowOpacity: {
+        category:"personal",
+        depth:1,
+        under_dev:true,
+        type: "text", value: 1.0, valid:"number", min_value:0.0, max_value:1.0,
+        title: "플레이어 상하단 그림자 투명도",
+        desc:"Naver Prism Player 및 Youtube Player 에 마우스를 올렸을 때 플레이어 상하단 그림자의 투명도를 조절하여 비디오를 더욱 밝게 볼 수 있도록 합니다. 이 값을 0에 가깝게 설정하면 하얀 배경에서 컨트롤러 버튼이 제대로 보이지 않음에 주의하세요.<br />(범위: 0.0[그림자 없음] ~ 1.0[기본])"
+    },
+    bottomShadowButton: {
+        category:"personal",
+        depth: 1,
+        under_dev:true,
+        type: "checkbox",
+        value: false,
+        title: "플레이어 하단 버튼 그림자 추가",
+        desc: "Naver Prism Player 및 Youtube Player 에 마우스를 올렸을 때 나타나는 하단 버튼에 그림자를 추가합니다. '비디오 상하단 그림자 투명도' 값을 0에 가깝게 설정했을 때 사용하세요."
+    },
+
 
     // Naver Video
     useNaver: {
         category:"naver",
-        category_name: "Naver Video",
+        category_name: Naverlogo + "Naver Video",
+        category_desc: "",
         depth: 1,
         type: "checkbox",
         value: true,
         title:"Naver 관련 기능 사용",
-        desc:"Naver video 와 관련한 스크립트 기능을 적용합니다. Naver 동영상 재생에 문제가 발생하는 경우 본 기능을 꺼주세요."
+        desc:"Naver video 와 관련한 스크립트 기능을 적용합니다.<br />Naver 동영상 재생에 문제가 발생하는 경우 본 기능을 꺼주세요."
     },
     naverVideoPlayerType: {
         category:"naver",
@@ -206,7 +223,7 @@ const _settings = {
         type: "combobox",
         value: "0",
         title:"Naver Video Player 타입",
-        desc: "- Prism Player: 최신 플레이어 입니다. 체감 상 조금 더 빠릅니다.<br />- Legacy: 2023년 2월 이전에 적용되던 Naver Media Player 입니다. Lazyload가 적용되어 동영상이 아주 많은 글에서 좋은 퍼포먼스를 보일 수 있습니다. 이전 플레이어가 익숙하신 분들은 이 플레이어를 선택하세요.",
+        desc: "<optdesc>Prism Player: 최신 플레이어 입니다. 체감 상 조금 더 빠릅니다.</optdesc><optdesc>Legacy: 2023년 2월 이전에 적용되던 Naver Media Player 입니다. Lazyload가 적용되어 동영상이 아주 많은 글에서 좋은 퍼포먼스를 보일 수 있습니다. 이전 플레이어가 익숙하신 분들은 이 플레이어를 선택하세요.</optdesc>",
         options:{
             "0":{title:"Prism Player"},
             "1":{title:"Legacy"}
@@ -250,12 +267,13 @@ const _settings = {
     // Youtube
     useYoutube : {
         category:"youtube",
-        category_name:"Youtube",
+        category_name:YTlogo+"Youtube",
+        category_desc: "",
         depth: 1,
         type: "checkbox",
         value: true,
         title:"Youtube 관련 기능 사용",
-        desc:"Youtube video 와 관련한 스크립트 기능을 적용합니다. Youtube 동영상 재생에 문제가 발생하는 경우 본 기능을 꺼주세요.",
+        desc:"Youtube video 와 관련한 스크립트 기능을 적용합니다.<br />Youtube 동영상 재생에 문제가 발생하는 경우 본 기능을 꺼주세요.",
     },
     youtubeSetQuality : {
         category:"youtube",
@@ -325,7 +343,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title: "스크롤 직후 동영상 재생 동작 개선",
-        desc: "Chrome 브라우저에서 마우스 스크롤을 한 직후 Youtube 동영상을 클릭했을 때 재생/일시정지가 되지 않거나, 여러번 화면을 클릭해야지만 동영상이 재생되는 불편함을 해결해줍니다. <br /><br />본 기능을 활성화 하면 Youtube 비디오의 경우 스크롤 직후 1초간 재생/일시정지 외 버튼 동작이 불가능합니다. 만약 Youtube 비디오를 클릭해도 재생/일시정지 되지 않는 버그가 발생하는 경우 본 기능을 끄거나, 하단 바의 재생 버튼을 눌러 재생하세요."
+        desc: "Chrome 브라우저에서 마우스 스크롤을 한 직후 Youtube 동영상을 클릭했을 때 재생/일시정지가 되지 않거나, 여러번 화면을 클릭해야지만 동영상이 재생되는 불편함을 해결합니다.<br />만약 Youtube 비디오를 클릭해도 재생/일시정지 되지 않는 버그가 발생하는 경우 본 기능을 끄세요."
     },
     youtubeParamList : {
         category:"youtube",
@@ -349,7 +367,8 @@ const _settings = {
     // Afreecatv
     useAftv : {
         category:"aftv",
-        category_name:"Afreecatv",
+        category_name:AFTVLogo+"Afreecatv",
+        category_desc: "",
         depth: 1,
         type: "checkbox",
         value: true,
@@ -366,7 +385,6 @@ const _settings = {
     },
     aftvShowChat: {
         category:"aftv",
-        under_dev: true,
         depth: 2,
         type: "checkbox",
         value: false,
@@ -387,7 +405,8 @@ const _settings = {
     // Twitch
     useTwitch : {
         category:"others",
-        category_name:"그 외",
+        category_name:"🌐 그 외 플랫폼",
+        category_desc: "Naver, Youtube, Afreecatv 외 다른 비디오 플랫폼을 설정합니다.",
         depth: 1,
         type: "checkbox",
         value: false,
@@ -429,6 +448,14 @@ const _settings = {
         value: true,
         title:"Twip Clip & VOD 링크를 비디오로 변환 ",
         desc:"<span style='color:#999'>예시) https://vod.twip.kr/vod/xxxxxxxxx<br />https://vod.twip.kr/clip/xxxxxxxxx</span>",
+    },
+    twipAutoMaxQuality: {
+        category:"others",
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"Twip 비디오를 항상 최고 품질로 시작",
+        desc:""
     },
 
     useKakao :{
@@ -482,7 +509,8 @@ const _settings = {
 
     fixFullScreenScrollChange: {
         category:"etc",
-        category_name: "편의 기능",
+        category_name: "⭐ 편의 기능",
+        category_desc: "",
         depth: 1,
         type: "checkbox",
         value: true,
@@ -552,17 +580,16 @@ const _settings = {
 
     useTheaterMode : {
         category:"theaterMode",
-        category_name: "영화관 모드",
-        under_dev:true,
+        category_name: "🎬 영화관 모드",
+        category_desc: "",
         depth: 1,
         type: "checkbox",
         value: true,
         title:"영화관 모드 버튼을 표시",
-        desc:"카페 최상단 메뉴에 '영화관 모드' 버튼을 표시합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다."
+        desc:"카페 최상단 메뉴에 '영화관 모드' 버튼을 표시합니다. 영화관 모드에서는 카페 글 영역을 더 넓게, 동영상을 더 크게 표시합니다."
     },
     theaterModeAlignCenter : {
         category:"theaterMode",
-        under_dev:true,
         depth: 2,
         type: "checkbox",
         value: true,
@@ -572,7 +599,6 @@ const _settings = {
     useTheaterModeContentWidth : {
         category:"theaterMode",
         depth: 2,
-        under_dev:true,
         type: "text",
         value: 1100,
         valid:"number",
@@ -581,7 +607,7 @@ const _settings = {
         title:"본문(컨텐츠) 가로 사이즈(px)",
         desc:"영화관 모드 시 카페 컨텐츠의 가로 사이즈를 결정합니다.<br />(Default: 1100, Range: 400~10000, 권장: 700~1400)"
     },
-    under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능과 🧪실험실 기능을 직접 설정할 수 있습니다. 실험실 기능은 정상 동작하지 않을 수 있으며 소리소문 없이 사라질 수 있습니다." },
+    under_dev : { category:"advanced", category_name:"🧪 고급", category_desc: "", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능과 🧪실험실 기능을 직접 설정할 수 있습니다. 실험실 기능은 정상 동작하지 않을 수 있으며 소리소문 없이 사라질 수 있습니다." },
     showUpdateMessage : {
         category:"advanced",
         depth: 1,
@@ -593,16 +619,12 @@ const _settings = {
 };
 GM_addStyle(`
 body #GM_setting {min-width:800px;}
+/*
 body #GM_setting .GM_setting_depth1 .GM_setting_list_head{width:370px;}
 body #GM_setting .GM_setting_depth2 .GM_setting_list_head{width:340px;}
 body #GM_setting .GM_setting_depth3 .GM_setting_list_head{width:310px;}
+*/
 
-#GM_setting li[GM_setting_key="set_volume_when_stream_starts"]
-{
-    border-top: 1px solid #ccc !important;
-    margin-top: 10px !important;
-    padding-top: 10px !important;
-}
 #GM_setting .GM_setting_desc {
     letter-spacing: -0.3px;
 }
@@ -673,10 +695,26 @@ var GM_MIGRATION = function(prevConfig, config, oriSettings) {
         oriSettings.shortsAutoResize = true;
     }
 
+    tvary = [1, 2, 9];
+    if(checkIsMigrationRequired(oldvary, newvary, tvary)){
+        NOMO_DEBUG("[Migration] 1.2.x -> 1.3.0 or higher");
+        if(!oriSettings.shortsAutoResize){
+            oriSettings.shortsAutoResizeType = "0";
+        }
+        else{
+            if(oriSettings.shortsAutoResizeType == "0" || oriSettings.shortsAutoResizeType == "1"){
+                oriSettings.shortsAutoResizeType = String(Number(oriSettings.shortsAutoResizeType) + 1);
+            }
+            else{
+                oriSettings.shortsAutoResizeType = "1";
+            }
+        }
+    }
+
     NOMO_DEBUG("migration completed", JSON.stringify(oriSettings));
     return oriSettings;
 };
 
 export default async function GM_SETTINGS_INIT(){
-    await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false, "MIGRATION":GM_MIGRATION});
+    await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false, "TABS":true, "MIGRATION":GM_MIGRATION, "feedbackLink":"https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues/new/choose"});
 }

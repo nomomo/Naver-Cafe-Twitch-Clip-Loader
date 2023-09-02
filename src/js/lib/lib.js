@@ -52,7 +52,7 @@ window.NOMO_ERROR = NOMO_ERROR;
 export const Arrive = function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbindEvent),l.addMethod(t,n,e.unbindEventWithSelectorOrCallback),l.addMethod(t,n,e.unbindEventWithSelectorAndCallback);}function i(e){e.arrive=f.bindEvent,r(f,e,"unbindArrive"),e.leave=d.bindEvent,r(d,e,"unbindLeave");}if(e.MutationObserver&&"undefined"!=typeof HTMLElement){var o=0,l=function(){var t=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;return{matchesSelector:function(e,n){return e instanceof HTMLElement&&t.call(e,n);},addMethod:function(e,t,r){var i=e[t];e[t]=function(){return r.length==arguments.length?r.apply(this,arguments):"function"==typeof i?i.apply(this,arguments):n;};},callCallbacks:function(e,t){t&&t.options.onceOnly&&1==t.firedElems.length&&(e=[e[0]]);for(var n,r=0;n=e[r];r++)n&&n.callback&&n.callback.call(n.elem,n.elem);t&&t.options.onceOnly&&1==t.firedElems.length&&t.me.unbindEventWithSelectorAndCallback.call(t.target,t.selector,t.callback);},checkChildNodesRecursively:function(e,t,n,r){for(var i,o=0;i=e[o];o++)n(i,t,r)&&r.push({callback:t.callback,elem:i}),i.childNodes.length>0&&l.checkChildNodesRecursively(i.childNodes,t,n,r);},mergeArrays:function(e,t){var n,r={};for(n in e)e.hasOwnProperty(n)&&(r[n]=e[n]);for(n in t)t.hasOwnProperty(n)&&(r[n]=t[n]);return r;},toElementsArray:function(t){return n===t||"number"==typeof t.length&&t!==e||(t=[t]),t;}};}(),c=function(){var e=function(){this._eventsBucket=[],this._beforeAdding=null,this._beforeRemoving=null;};return e.prototype.addEvent=function(e,t,n,r){var i={target:e,selector:t,options:n,callback:r,firedElems:[]};return this._beforeAdding&&this._beforeAdding(i),this._eventsBucket.push(i),i;},e.prototype.removeEvent=function(e){for(var t,n=this._eventsBucket.length-1;t=this._eventsBucket[n];n--)if(e(t)){this._beforeRemoving&&this._beforeRemoving(t);var r=this._eventsBucket.splice(n,1);r&&r.length&&(r[0].callback=null);}},e.prototype.beforeAdding=function(e){this._beforeAdding=e;},e.prototype.beforeRemoving=function(e){this._beforeRemoving=e;},e;}(),a=function(t,r){var i=new c,o=this,a={fireOnAttributesModification:!1};return i.beforeAdding(function(n){var i,l=n.target;(l===e.document||l===e)&&(l=document.getElementsByTagName("html")[0]),i=new MutationObserver(function(e){r.call(this,e,n);});var c=t(n.options);i.observe(l,c),n.observer=i,n.me=o;}),i.beforeRemoving(function(e){e.observer.disconnect();}),this.bindEvent=function(e,t,n){t=l.mergeArrays(a,t);for(var r=l.toElementsArray(this),o=0;o<r.length;o++)i.addEvent(r[o],e,t,n);},this.unbindEvent=function(){var e=l.toElementsArray(this);i.removeEvent(function(t){for(var r=0;r<e.length;r++)if(this===n||t.target===e[r])return!0;return!1;});},this.unbindEventWithSelectorOrCallback=function(e){var t,r=l.toElementsArray(this),o=e;t="function"==typeof e?function(e){for(var t=0;t<r.length;t++)if((this===n||e.target===r[t])&&e.callback===o)return!0;return!1;}:function(t){for(var i=0;i<r.length;i++)if((this===n||t.target===r[i])&&t.selector===e)return!0;return!1;},i.removeEvent(t);},this.unbindEventWithSelectorAndCallback=function(e,t){var r=l.toElementsArray(this);i.removeEvent(function(i){for(var o=0;o<r.length;o++)if((this===n||i.target===r[o])&&i.selector===e&&i.callback===t)return!0;return!1;});},this;},s=function(){function e(e){var t={attributes:!1,childList:!0,subtree:!0};return e.fireOnAttributesModification&&(t.attributes=!0),t;}function t(e,t){e.forEach(function(e){var n=e.addedNodes,i=e.target,o=[];null!==n&&n.length>0?l.checkChildNodesRecursively(n,t,r,o):"attributes"===e.type&&r(i,t,o)&&o.push({callback:t.callback,elem:i}),l.callCallbacks(o,t);});}function r(e,t){return l.matchesSelector(e,t.selector)&&(e._id===n&&(e._id=o++),-1==t.firedElems.indexOf(e._id))?(t.firedElems.push(e._id),!0):!1;}var i={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};f=new a(e,t);var c=f.bindEvent;return f.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t);var o=l.toElementsArray(this);if(t.existing){for(var a=[],s=0;s<o.length;s++)for(var u=o[s].querySelectorAll(e),f=0;f<u.length;f++)a.push({callback:r,elem:u[f]});if(t.onceOnly&&a.length)return r.call(a[0].elem,a[0].elem);setTimeout(l.callCallbacks,1,a);}c.call(this,e,t,r);},f;},u=function(){function e(){var e={childList:!0,subtree:!0};return e;}function t(e,t){e.forEach(function(e){var n=e.removedNodes,i=[];null!==n&&n.length>0&&l.checkChildNodesRecursively(n,t,r,i),l.callCallbacks(i,t);});}function r(e,t){return l.matchesSelector(e,t.selector);}var i={};d=new a(e,t);var o=d.bindEvent;return d.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t),o.call(this,e,t,r);},d;},f=new s,d=new u;t&&i(t.fn),i(HTMLElement.prototype),i(NodeList.prototype),i(HTMLCollection.prototype),i(HTMLDocument.prototype),i(Window.prototype);var h={};return r(f,h,"unbindAllArrive"),r(d,h,"unbindAllLeave"),h;}}(window,"undefined"==typeof jQuery?null:jQuery,void 0);
 
 /* GM_setting.js
-* Version: July. 6, 2023
+* Version: Aug. 27, 2023
 * MIT licensed
 * https://github.com/nomomo/
 * nomotg@gmail.com
@@ -61,6 +61,8 @@ export const Arrive = function(e,t,n){"use strict";function r(e,t,n){l.addMethod
 // eslint-disable-next-line
 export var GM_setting = (function ($, global, document) { //
     var version = "23.7.6";
+
+    var feedbackLink = "";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // local vars
@@ -73,6 +75,9 @@ export var GM_setting = (function ($, global, document) { //
     var userSettings = {};
     var userSettingsValues = {};
 
+    var useTabs = false;        // 탭 기능 사용 여부
+    var userTabs = {};          // 유저 입력 탭
+
     var prevConfig = {};        // 버전 업데이트 시 이전 config backup 용
     var config = {};            // 지난 버전 등 script 유지 보수에 필요한 정보
     var isUpdated = false;
@@ -81,11 +86,13 @@ export var GM_setting = (function ($, global, document) { //
     var GUI = {
         "$container":undefined,
         "$GM_setting_head":undefined,
+        "$GM_setting_content":undefined,
         "$GM_homepage_link":undefined,
         "$GM_multilang":undefined,
         "$ul":undefined,
         "$inputs":undefined,
-        "$lis":{}
+        "$lis":{},
+        "$tabs":undefined
     };
 
     var $inputs = {};
@@ -130,12 +137,13 @@ export var GM_setting = (function ($, global, document) { //
             "err_value_empty":"Something for which no value exists, such as an empty value.",
             "err_value_dup":"Duplicate value exists: ",
             "err_value_blank":"There is an item of a space in the string: ",
-            "setting_changed_from_other_window":"설정이 다른 창에서 변경되어 다시 불러옵니다."
+            "setting_changed_from_other_window":"설정이 다른 창에서 변경되어 다시 불러옵니다.",
+            "sendFeedback":"Send Feedback"
         },
         "ko":{
             "title_settings":"Settings",
             "title_reset":"Reset",
-            "donate":"후원하기",
+            "donate":"Happy?",
             "buymeacoffee":"Buy me a coffee 로 커피 한 잔 사주기",
             "buymeacoffeeDesc":"커피 한 잔☕ 으로 프로젝트를 지원해주세요~",
             "toonation":"Toonation 으로 후원하기",
@@ -154,7 +162,8 @@ export var GM_setting = (function ($, global, document) { //
             "err_value_empty":"공백 값 등 값이 존재하지 않는 항목이 존재합니다.",
             "err_value_dup":"중복된 값이 존재합니다: ",
             "err_value_blank":"문자열 내 공백이 존재하는 항목이 있습니다: ",
-            "setting_changed_from_other_window":"설정이 다른 창에서 변경되어 다시 불러옵니다: "
+            "setting_changed_from_other_window":"설정이 다른 창에서 변경되어 다시 불러옵니다: ",
+            "sendFeedback":"피드백 보내기"
         }
     };
     var getTextFromObjectbyLang = function(obj){
@@ -226,6 +235,12 @@ export var GM_setting = (function ($, global, document) { //
                     defaultLang = usInput.LANG_DEFAULT;
                 }
             }
+            if(usInput.TABS){
+                useTabs = true;
+            }
+            if(usInput.feedbackLink){
+                feedbackLink = usInput.feedbackLink;
+            }
         }
         else{
             // error
@@ -273,6 +288,19 @@ export var GM_setting = (function ($, global, document) { //
 
             // 저장
             await save_();
+        }
+
+        if(useTabs){
+            for(let key in userSettings){
+                let category = userSettings[key].category;
+                let category_name = userSettings[key].category_name;
+                let category_desc = userSettings[key].category_desc;
+                if(category !== undefined && category_name !== undefined && category_desc !== undefined){
+                    userTabs[category] = {};
+                    userTabs[category].title = category_name;
+                    userTabs[category].desc = category_desc;
+                }
+            }
         }
     };
 
@@ -445,14 +473,14 @@ export var GM_setting = (function ($, global, document) { //
                 notdebug = ":not(.GM_setting_debug)";
             }
             if ($this.is(":checked")) {
-                $(".GM_setting_under_dev"+notdebug).css("opacity", 0).slideDown("fast").animate({
+                $g_elem.find(".GM_setting_under_dev"+notdebug).css("opacity", 0).slideDown("fast").animate({
                     opacity: 1
                 }, {
                     queue: false,
                     duration: "fast"
                 });
             } else {
-                $(".GM_setting_under_dev"+notdebug).css("opacity", 1).slideUp("fast").animate({
+                $g_elem.find(".GM_setting_under_dev"+notdebug).css("opacity", 1).slideUp("fast").animate({
                     opacity: 0.0
                 }, {
                     queue: false,
@@ -498,27 +526,58 @@ export var GM_setting = (function ($, global, document) { //
 #GM_setting .GM_multilang{margin-left:15px;}
 
 #GM_setting_head{margin-left:auto; margin-right:auto; padding:20px 0px 10px 10px;font-size:18px;font-weight:800;max-width:1400px; min-width:750px; box-sizing:content-box;}
-#GM_setting ul {padding:0;}
-#GM_setting li {display:flex;list-style:none;margin:0px;padding:10px;border-top:1px solid #eee;}
+#GM_setting ul {padding:0 0 20px 0;border-top: 2px solid #999;}
+#GM_setting li {display:block;list-style:none;margin:0px;padding:0px;}
 
-#GM_setting .GM_setting_depth1.GM_setting_category:first-child {margin-top:0px}
-#GM_setting .GM_setting_depth1.GM_setting_category {border-top: 2px solid #999;margin-top:30px;padding-top:10px;}
+#GM_setting .GM_setting_depth1.GM_setting_category:first-child {margin-top:0px;}
+#GM_setting .GM_setting_depth1.GM_setting_category {margin-top:30px;padding-top:10px;}
 #GM_setting li[GM_setting_key='version_check'] {margin-top:0px !important}
 
-#GM_setting .GM_setting_category_name{display:block;box-sizing:border-box;padding:0 0 0 0px;font-weight:700;vertical-align:top;flex:0 0 100px;font-size:14px;}
+#GM_setting .GM_setting_category_name{display:block;box-sizing:border-box;font-weight:700;vertical-align:top;flex:0 0 100px;font-size:16px;}
+#GM_setting .GM_setting_category_name svg{
+    width:16px !important;
+    height:16px !important;
+    vertical-align:middle !important;
+    margin-right:5px !important;
+}
+#GM_setting .GM_setting_category_desc{margin-bottom: 5px;}
 #GM_setting .GM_setting_category_blank{display:block;box-sizing:border-box;padding:0 0 0 0px;vertical-align:top;flex:0 0 100px;font-size:14px;}
 
-#GM_setting .GM_setting_list_head{display:block;box-sizing:border-box;vertical-align:top;flex:1 0 370px;}
+#GM_setting .GM_setting_list_sub{display:flex;background:#fff;border-radius:5px;padding:10px 20px;margin:0 0 1px 0;border:1px solid #eee;cursor:default;}
+/*#GM_setting li:not(.GM_setting_item_disable) .GM_setting_list_sub:hover{background:#f9f9f9;}*/
+
+#GM_setting .GM_setting_list_head{box-sizing:border-box;vertical-align:top;flex:3 1 0;}
 #GM_setting .GM_setting_depth1 .GM_setting_list_head {padding-left:0px;}
 #GM_setting .GM_setting_depth2 .GM_setting_list_head {padding-left:30px;}
 #GM_setting .GM_setting_depth3 .GM_setting_list_head {padding-left:60px;}
 #GM_setting .GM_setting_depth4 .GM_setting_list_head {padding-left:90px;}
 #GM_setting .GM_setting_depth5 .GM_setting_list_head {padding-left:120px;}
 
-#GM_setting .GM_setting_title{display:block;font-weight:700;font-size:14px;}
-#GM_setting .GM_setting_desc{display:block;font-size:13px;}
+/*
+li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_category)
+{
+    border-top: 1px solid #ccc !important;
+    margin-top: 10px !important;
+    padding-top: 10px !important;
+}
+*/
 
-#GM_setting .GM_setting_input_container {display:block;box-sizing:border-box;padding:0 0 0 30px;vertical-align:top;flex:1 1 100%;}
+#GM_setting li.depthStart {
+    /*border-top: 1px solid #ccc !important;
+    padding-top: 10px !important;*/
+    margin-top: 10px !important;
+}
+#GM_setting li.depthEnd {
+    /*border-bottom: 1px solid #ccc !important;
+    padding-bottom: 10px !important;*/
+    margin-bottom: 10px !important;
+}
+
+
+#GM_setting .GM_setting_title{display:block;font-size:13px;color:#000;}
+#GM_setting .GM_setting_desc{display:block;font-size:12px;color:#666;}
+
+#GM_setting .GM_setting_input_container {box-sizing:border-box;padding:0 0 0 30px;vertical-align:top;flex:1 1 0;min-width:200px;}
 #GM_setting .GM_setting_input_container span{vertical-align:top;}
 #GM_setting .GM_setting_input_container span.btn{margin:0 0 0 10px;}
 #GM_setting input{display:inline}
@@ -527,8 +586,8 @@ export var GM_setting = (function ($, global, document) { //
 #GM_setting input[type="checkbox"] { display:none; width: 20px;height:20px; padding: 0; margin:0; }
 #GM_setting input[type="radio"] {width: 20px;height:20px; padding: 0; margin:0; }
 
-#GM_setting .radio-inline{ padding-left:0; padding-right:10px; }
-#GM_setting .radio-inline input{ margin:0 5px 0 0; }
+#GM_setting .radio-inline{ font-size:12px; padding-left:0; padding-right:10px; margin:0 0 3px 0; cursor:pointer;}
+#GM_setting .radio-inline input{ margin:0 5px 0 0; cursor:pointer; }
 
 #GM_setting table {margin:0; width:100%;}
 #GM_setting th, #GM_setting td {height: 24px;}
@@ -558,8 +617,75 @@ export var GM_setting = (function ($, global, document) { //
 
 #GM_setting .cp {cursor:pointer}
 
-#GM_setting .form-group {margin-bottom:0px;}
+#GM_setting .form-group {margin-bottom:0px;text-align:-webkit-right;}
 #GM_setting .form-control {width:auto;}
+
+#GM_setting optdesc {
+    display: list-item;
+    list-style-type: initial;
+    padding-inline-start: 0;
+    text-indent: 0px;
+    margin-left: 20px;
+}
+
+#GM_setting #GM_setting_content.useTabs {
+    display:flex;
+}
+
+#GM_setting #GM_setting_content.useTabs #GM_tabs {
+    flex-shrink:0;
+    width:140px;
+    font-size:14px;
+    padding-right:0px;
+    margin-right:20px;
+    border-right:1px solid #ccc;
+    border-top: 2px solid #999;
+}
+
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container:first-child {
+    border-top: 1px solid #eee;
+}
+
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container {
+    position:sticky;
+    top:20px;
+}
+
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container svg{
+    width:13px !important;
+    height:13px !important;
+    vertical-align:middle !important;
+    margin-right:5px !important;
+}
+
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item {
+    font-size:13px;
+    padding:2px 5px;
+    border-radius:2px;
+    margin-bottom:2px;
+    cursor:pointer;
+}
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item:hover {
+    color:#000;
+    background:#eee;
+}
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item.on {
+    color:#000;
+    background:#eee;
+}
+
+#GM_setting #GM_setting_content.useTabs > ul {
+    flex-grow: 1;
+}
+
+#GM_setting .lihide {
+    display:none !important;
+}
+
+.lihide + li.GM_setting_depth1.GM_setting_category {
+    margin-top: 0px !important;
+}
+
 `);
     };
 
@@ -573,6 +699,7 @@ export var GM_setting = (function ($, global, document) { //
         var depth = userSettings[key].depth;
         var type = userSettings[key].type;
         var category_name = getTextFromObjectbyLang(userSettings[key].category_name);
+        var category_desc = getTextFromObjectbyLang(userSettings[key].category_desc);
         var under_dev = userSettings[key].under_dev;
         var radio_enable_value = userSettings[key].radio_enable_value;
         var title = getTextFromObjectbyLang(userSettings[key].title);
@@ -636,11 +763,17 @@ export var GM_setting = (function ($, global, document) { //
 
         var $category;
         if (category_name !== undefined) {
-            $category = $(`<div class='GM_setting_category_name'>${category_name}</div>`);
+            if(category_desc !== undefined){
+                $category = $(`<div class='GM_setting_category_name'>${category_name}</div><div class='GM_setting_category_desc'>${category_desc}</div>`);
+            }
+            else{
+                $category = $(`<div class='GM_setting_category_name'>${category_name}</div>`);
+            }
         } else {
             $category = $("<div class='GM_setting_category_blank'></div>");
         }
 
+        var $subContainer = $("<div class='GM_setting_list_sub'></div>");
         var $head = $("<div class='GM_setting_list_head'></div>");
         var $title = $(`<span class='GM_setting_title'>${title}</span>`);
         var $desc = $(`<span class='GM_setting_desc'>${desc}</span>`);
@@ -668,7 +801,8 @@ export var GM_setting = (function ($, global, document) { //
         }
 
         //$li.append($category).append($head).append($inputContainer);
-        GUI.$lis[key].empty().append($category).append($head).append($inputContainer);
+        $subContainer.append($head).append($inputContainer);
+        GUI.$lis[key].empty().append($category).append($subContainer);
         $inputs[key] = $input;
 
         if (userSettings[key].append !== undefined) {
@@ -687,10 +821,68 @@ export var GM_setting = (function ($, global, document) { //
         // }
 
         GUI.$container = $("<div id='GM_setting'></div>");
+        GUI.$GM_setting_content = $("<div id='GM_setting_content'></div>");
         GUI.$ul = $("<ul></ul>");
         GUI.$GM_setting_head = $("<div id='GM_setting_head'></div>");
+
+        // tab 관련 설정
+        if(useTabs){
+            GUI.$tabs = $("<div id='GM_tabs'></div>");
+            GUI.$tabs_item_container = $(`<div id='GM_tabs_item_container'></div>`);
+            GUI.$tabs_item_container.append(`<div class="GM_tab_item on" gm_setting_key="all">전체 보기</div>`);
+            for (let key in userTabs) {
+                GUI.$tabs_item_container.append(`<div class="GM_tab_item" gm_setting_key="${key}">${userTabs[key].title}</div>`);
+            }
+            GUI.$tabs.append(GUI.$tabs_item_container);
+            GUI.$GM_setting_content.append(GUI.$tabs);
+            GUI.$GM_setting_content.addClass("useTabs");
+            GUI.$tabs_item_container.on("click", ".GM_tab_item", function(e){
+                GUI.$tabs_item_container.find(".GM_tab_item").removeClass("on");
+                $(e.target).addClass("on");
+                let key = $(e.target).attr("gm_setting_key");
+
+                // if(key === "all"){
+                //     GUI.$ul.find("li").removeClass("lihide").removeClass("lishow");
+                // }
+                // else{
+                //     GUI.$ul.find("li").addClass("lihide").removeClass("lishow");
+                //     GUI.$ul.find(`li[gm_setting_category="${key}"]`).removeClass("lihide").addClass("lishow");
+                // }
+
+
+                if(key === "all"){
+                    $g_elem.animate({
+                        scrollTop:0
+                    },100);
+                }
+                else{
+                    unsafeWindow.$ = $;
+                    let offsetTop = GUI.$ul.find(`li[gm_setting_category="${key}"]`).get(0).offsetTop - $g_elem.get(0).offsetTop - 2;
+                    $g_elem.animate({
+                        scrollTop:offsetTop
+                    },100);
+                }
+
+            });
+
+            $g_elem.on("scroll", function(){
+                let currentScrollTop = $g_elem.scrollTop();
+                NOMO_DEBUG("currentScrollTop", currentScrollTop);
+
+                $(".GM_setting_category").each(function () {
+                    let $elem = $(this);
+                    NOMO_DEBUG("$elem.position().top", $elem.position().top);
+                    if($elem.position().top <= 0 && $elem.position().top + $elem.height() > 0){
+                        GUI.$tabs_item_container.find(".GM_tab_item").removeClass("on");
+                        GUI.$tabs_item_container.find(`.GM_tab_item[gm_setting_key='${$elem.attr("gm_setting_category")}']`).addClass("on");
+                    }
+                });
+            });
+        }
+        GUI.$GM_setting_content.append(GUI.$ul);
+
         $g_elem.append(GUI.$container);
-        GUI.$container.append(GUI.$GM_setting_head).append(GUI.$ul);
+        GUI.$container.append(GUI.$GM_setting_head).append(GUI.$GM_setting_content);
 
         //////////////////////////////////
         // $setting_head
@@ -726,7 +918,7 @@ export var GM_setting = (function ($, global, document) { //
             );
         
         //////////////////////////////////////
-        for (var key in userSettings) {
+        for (let key in userSettings) {
             var category = userSettings[key].category;
             var depth = userSettings[key].depth;
             var type = userSettings[key].type;
@@ -734,6 +926,7 @@ export var GM_setting = (function ($, global, document) { //
             var under_dev = userSettings[key].under_dev;
             var debug = userSettings[key].debug;
             var radio_enable_value = userSettings[key].radio_enable_value;
+            var tab = userSettings[key].tab;
 
             /////////////////////////////////////////
             // set $li
@@ -745,7 +938,8 @@ export var GM_setting = (function ($, global, document) { //
                 "GM_setting_key":key,
                 "GM_setting_depth":depth,
                 "GM_setting_category": (category === undefined ? "default" : category),
-                "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
+                "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value),
+                "GM_setting_tab": (tab === undefined ? "default" : tab)
             });
             GUI.$lis[key].addClass(`GM_setting_depth${depth}`);
             if(radio_enable_value !== undefined) GUI.$lis[key].attr("GM_setting_radio_enable_value",userSettings[key].radio_enable_value);
@@ -904,16 +1098,19 @@ export var GM_setting = (function ($, global, document) { //
         });
 
         // 리셋 버튼 추가
-        GUI.$ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
+        GUI.$ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1" gm_setting_category="advanced">
             <div class="GM_setting_category_name">${getSystemTextbyLang("title_reset")}</div>
-            <div class="GM_setting_list_head">
-                <span class="GM_setting_title">
-                    <span class="GM_setting_reset btn btn-primary" style="margin-left:0;">${getSystemTextbyLang("button_reset_settings")}</span>
-                    <!--<span class="GM_setting_reset_all btn btn-primary">${"button_reset_settings_all"}</span>-->
-                </span>
-                <span class="GM_setting_desc"></span>
-            </div>
-            <div class="GM_setting_input_container form-group">
+            <div class="GM_setting_category_desc"></div>
+            <div class="GM_setting_list_sub">
+                <div class="GM_setting_list_head">
+                    <span class="GM_setting_title">
+                        <span class="GM_setting_reset btn btn-primary" style="margin-left:0;">${getSystemTextbyLang("button_reset_settings")}</span>
+                        <!--<span class="GM_setting_reset_all btn btn-primary">${"button_reset_settings_all"}</span>-->
+                    </span>
+                    <span class="GM_setting_desc"></span>
+                </div>
+                <div class="GM_setting_input_container form-group">
+                </div>
             </div>
         </li>`);
         GUI.$ul.find(".GM_setting_reset").on("click", async function () {
@@ -939,23 +1136,46 @@ export var GM_setting = (function ($, global, document) { //
         });
 
         // 후원 버튼 추가
-        GUI.$ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
+        GUI.$ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1" gm_setting_category="advanced">
         <div class="GM_setting_category_name">${getSystemTextbyLang("donate")}</div>
-        <div class="GM_setting_list_head">
-            <span class="GM_setting_title">
-                ${getSystemTextbyLang("buymeacoffee")}
-            </span>
-            <span class="GM_setting_desc">
-                ${getSystemTextbyLang("buymeacoffeeDesc")}
-            </span>
-        </div>
-        <div class="GM_setting_input_container form-group">
-        <a href="https://www.buymeacoffee.com/nomomo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+        <div class="GM_setting_category_desc"></div>
+        <div class="GM_setting_list_sub">
+            <div class="GM_setting_list_head">
+                <span class="GM_setting_title">
+                    ${getSystemTextbyLang("buymeacoffee")}
+                </span>
+                <span class="GM_setting_desc">
+                    ${getSystemTextbyLang("buymeacoffeeDesc")}
+                </span>
+            </div>
+            <div class="GM_setting_input_container form-group">
+            <a href="https://www.buymeacoffee.com/nomomo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+            </div>
         </div>
         </li>
-    `);
+        `);
+
+        // 피드백 보내기 버튼 추가
+        if(feedbackLink){
+            GUI.$ul.append( /*html*/ `<li class="GM_setting_depth1" gm_setting_category="advanced">
+            <div class="GM_setting_category_blank"></div>
+            <div class="GM_setting_list_sub">
+                <div class="GM_setting_list_head">
+                    <span class="GM_setting_title">
+                        <a href="${feedbackLink}" target="_blank"><span class="GM_setting_reset btn btn-primary" style="margin-left:0;">${getSystemTextbyLang("sendFeedback")}</span></a>
+                    </span>
+                    <span class="GM_setting_desc">
+                    </span>
+                </div>
+                <div class="GM_setting_input_container form-group">
+                </div>
+            </div>
+            </li>
+            `);
+        }
+
         // footer 추가
-        GUI.$ul.after(/*html*/`
+        GUI.$GM_setting_content.after(/*html*/`
         <div id="GM_setting_footer">
             <a href="${(GM.info.script.homepage)}" target="_blank">${(GM.info.script.name)}</a> v${(GM.info.script.version)}
             <div class="footer_divider"></div> <span class="GM_Setting_Debug_Toggle">GM Setting v${version}</span>
@@ -1199,6 +1419,7 @@ export var GM_setting = (function ($, global, document) { //
             $curr.removeClass("GM_setting_item_disable");
             $curr.find("input, textarea, select").prop("disabled", false);
             $curr.find("input[type='checkbox']").trigger("change");
+            $curr.removeClass("depthStart").removeClass("depthEnd");
         }
 
         var enable = [true, true];
@@ -1230,6 +1451,9 @@ export var GM_setting = (function ($, global, document) { //
                     }
                 }
                 else if (prev_depth < curr_depth) {
+                    if(prev_depth == 1 && !$prev.hasClass("GM_setting_category")){
+                        $prev.addClass("depthStart");
+                    }
                     prevTopRadioVal = undefined;
                     var $prev_checkbox = $prev.find("input[type='checkbox']");
                     var $prev_radio = $prev.find("input[type='radio']");
@@ -1262,6 +1486,10 @@ export var GM_setting = (function ($, global, document) { //
                     // if($prev_checkbox.length !== 0){
                     //     enable[prev_depth] = true;
                     // }
+                }
+
+                if(!$curr.hasClass("GM_setting_category") && curr_depth == 1 && curr_depth < prev_depth){
+                    $prev.addClass("depthEnd");
                 }
             }
 

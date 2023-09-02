@@ -176,10 +176,6 @@ export async function PAGE_CAFE_MAIN(){
                 isDarkMode = true;
             }
         }
-        // shortsAutoResize
-        if(GM_SETTINGS.shortsAutoResize){
-            //
-        }
 
         // let $seComponent = $elem.closest(".se-component");
         // let $moduleData = $seComponent.find(".__se_module_data");

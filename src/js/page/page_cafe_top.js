@@ -16,7 +16,7 @@ function openSettingsMenu(){
 
         var $container = $( /*html*/ `
         <div id="nomo_settings_container" style="display:none;cursor:pointer;position:fixed;top:0;left:0;width:100%;height:100%;z-index:200000;background:rgba(0,0,0,0.93);">
-            <div id="nomo_settings" style="cursor:default;font-size:12px;max-width:850px;max-height:calc(100% - 40px);margin:20px auto;background:#fff;padding:10px 20px;border-radius:5px;overflow-y:scroll;"></div>
+            <div id="nomo_settings" style="background-color:#f5f5f5;cursor:default;font-size:12px;max-width:900px;max-height:calc(100% - 40px);margin:20px auto;padding:10px 20px;border-radius:5px;overflow-y:scroll;"></div>
         </div>`).appendTo("body");
         $container.on("click", function () {
             $("#GM_Setting_css_temp").remove();
@@ -150,7 +150,7 @@ export default function PAGE_CAFE_TOP(){
 
     
     // autoScrollByVideoVisibility
-    if(GM_SETTINGS.autoScrollByVideoVisibility){
+    if(GM_SETTINGS.autoScrollByVideoVisibility != "0"){
         unsafeWindow.getCafeMainScrollTop = function(){
             let $contentArea = $("#content-area");
             if($contentArea.length === 0){

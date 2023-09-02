@@ -10,6 +10,7 @@ import PAGE_NAVER_EMBED from "./js/page/page_naver_embed";
 import PAGE_YOUTUBE_EMBED from "./js/page/page_youtube_embed";
 import PAGE_AFTV_EMBED from "./js/page/page_aftv_embed";
 import PAGE_STREAMABLE_EMBED from "./js/page/page_streamable_embed";
+import PAGE_TWIP_EMBED from "./js/page/page_twip_embed";
 import {applyTheaterMode} from "./js/theater";
 import { PageBase } from "js/page/page_common.js";
 import css_common from "css/common.css";
@@ -100,10 +101,9 @@ import css_common from "css/common.css";
     }
 
     else if (GLOBAL.isTwipEmbed){
-        let pageBase = new PageBase({
-            id:document.location.href.match(/^https?:\/\/vod\.twip\.kr\/(?:clip|vod)\/([a-zA-Z0-9-_]+)/)[1],
-            url:document.location.href
-        });
+        if(GM_SETTINGS.useTwip){
+            PAGE_TWIP_EMBED();
+        }
     }
 
 })();

@@ -66,6 +66,23 @@ export default function PAGE_YOUTUBE_EMBED(){
 
     `);
 
+    
+    if(GM_SETTINGS.topBottomShadowOpacity != 1.0){
+        GM_addStyle(`
+        .ytp-gradient-top,
+        .ytp-gradient-bottom {
+            opacity:${GM_SETTINGS.topBottomShadowOpacity} !important;
+        }
+        `);
+    }
+
+    if(GM_SETTINGS.bottomShadowButton){
+        GM_addStyle(`
+            div.ytp-left-controls, div.ytp-right-controls { filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, .9)) }
+            div.ytp-chrome-top  { filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, .7)) }
+        `);
+    }
+
     // $$$ TEST $$$
     // $(document).on("click", function(){
     //     NOMO_DEBUG("embed youtube document clicked");
@@ -198,7 +215,7 @@ export default function PAGE_YOUTUBE_EMBED(){
             // shortsAutoResize
             let $video = $(video);
             try{
-                if(GM_SETTINGS.shortsAutoResize && ($video.width() + 1.0 < $video.height()) ){
+                if(GM_SETTINGS.shortsAutoResizeType !== "0" && ($video.width() + 1.0 < $video.height()) ){
                     GM_addStyle(`
                     /* Youtube Shorts .ytp-shorts-mode */
                     .html5-video-player { background: radial-gradient(ellipse at center, rgb(0 0 0 / 0%) 0%,rgb(16 16 16) 70%,rgba(0,0,0,1) 100%) !important; }
