@@ -620,7 +620,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 #GM_setting .form-select{width:auto;max-width:95%;cursor:pointer;}
 #GM_setting .form-check{min-height:unset;}
 
-#GM_setting .GM_setting_input_container {box-sizing:border-box;padding:0 0 0 30px;vertical-align:top;flex:1 1 0;min-width:200px; position:relative;text-align:-webkit-right;}
+#GM_setting .GM_setting_input_container {box-sizing:border-box;padding:0 0 0 30px;vertical-align:top;flex:1 1 0;min-width:200px; position:relative;text-align: right;text-align: -moz-right;text-align: -o-right;text-align: -ms-right;text-align: -webkit-right;}
 #GM_setting .GM_setting_input_container .form-check-input {margin-top:0px; cursor:pointer;}
 #GM_setting .GM_setting_input_container.form-switch .form-check-input {margin-left:0px;position:absolute;top:3px;right:3px;transform: scale(1.4);}
 #GM_setting .GM_setting_input_container span{vertical-align:top;}
