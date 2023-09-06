@@ -1192,7 +1192,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
                 <div class="GM_setting_list_head">
                     <span class="GM_setting_title">
                     <span class="currentVersion">현재 버전: ${currentVersion}</span>
-                    <span class="availableVersion">${config.lastCheckedVersion ? "<span style='color:#ddd;user-select:none;'> | </span>마지막으로 확인된 버전: " + config.lastCheckedVersion : ""}</span>
+                    <span class="availableVersion"></span>
                     </span>
                     <span class="GM_setting_desc">
                         <div class="lastVersionCheckedDate"></div>
@@ -1261,6 +1261,10 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 
             let updateVersionText = function(type){
                 if(config.lastCheckedVersion){
+                    GUI.$version.find(".availableVersion").html(`<span style='color:#ddd;user-select:none;'> | </span>마지막으로 확인된 버전: ${config.lastCheckedVersion}`);
+                }
+
+                if(config.lastCheckedVersion){
                     let currentVersion = GM.info.script.version;
                     let cvary = currentVersion.split(".");
                     let isUpdateAvailable = false;
@@ -1287,7 +1291,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
                             GUI.$version.find(".v_updateAvailable").show();
                         }
                         GUI.$version.find(".GM_setting_list_sub").addClass("bg_lightgreen");
-                        GUI.$version.find(".availableVersion").html(`<svg style="vertical-align: baseline;color: mediumseagreen;margin: 0 2px 0 0;" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        GUI.$version.find(".availableVersion").html(`<span style='color:#ddd;user-select:none;'> | </span><svg style="vertical-align: baseline;color: mediumseagreen;margin: 0 2px 0 0;" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                       </svg><strong>업데이트를 설치할 준비가 완료됨: ${config.lastCheckedVersion}</string>`);
                     }
