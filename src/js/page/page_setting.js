@@ -44,5 +44,8 @@ export default function PAGE_SETTING(){
     }
 
     document.title = "Naver-Cafe-Clip-Loader 상세 설정 페이지";
-    GM_setting.createlayout($("body"));
+    $(document).ready(function(){
+        $("body").empty().css("padding","0px 30px 0px 30px");
+        GM_setting.createlayout($("body"));
+    });
 }

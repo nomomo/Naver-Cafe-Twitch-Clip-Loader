@@ -382,33 +382,33 @@ export var GM_setting = (function ($, global, document) { //
     /////////////////////////////////////////////////////////////////////////////////////////////////
     var versionCheck_ = async function(url, callbackSuccess, callbackFail) {
         try {
-            NOMO_DEBUG("versionCheck_", url);
+            CONSOLE_MSG("versionCheck_", url);
             const response = await fetch(url);
         
             if (!response.ok) {
-                NOMO_DEBUG("check version error, response is not ok.", response);
+                CONSOLE_MSG("check version error, response is not ok.", response);
                 //throw new Error(`Network response was not ok (${response.status})`);
                 callbackFail();
                 return;
             }
 
-            NOMO_DEBUG("response", response);
+            CONSOLE_MSG("response", response);
 
             const jsonData = await response.json();
 
-            NOMO_DEBUG("jsonData", jsonData);
+            CONSOLE_MSG("jsonData", jsonData);
 
             if(callbackSuccess !== undefined && jsonData && jsonData.version){
                 await loadConfig_();
                 config.lastVersionCheckDate = Number(new Date());
                 config.lastCheckedVersion = jsonData.version;
                 await saveConfig_();
-                NOMO_DEBUG("version check", config);
+                CONSOLE_MSG("version check", config);
                 callbackSuccess(jsonData.version);
                 return;
             }
         } catch (error) {
-            NOMO_DEBUG("check version error.", error);
+            CONSOLE_MSG("check version error.", error);
             if(callbackFail !== undefined){
                 callbackFail();
                 return;
@@ -881,7 +881,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
         }
     };
     var createlayout_ = function (elem) {
-        //CONSOLE_MSG("createlayout_");
+        CONSOLE_MSG("createlayout_ | $g_elem = ", elem);
         $inputs = {};
 
         // set $g_elem
@@ -907,7 +907,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
             versionUpdateUrl = undefined;
             currentVersion = "알 수 없음";
         }
-        NOMO_DEBUG("versionUpdateUrl", versionUpdateUrl);
+        CONSOLE_MSG("versionUpdateUrl", versionUpdateUrl);
 
         // tab 관련 설정
         if(useTabs){
@@ -952,11 +952,11 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 
             $g_elem.on("scroll", function(){
                 let currentScrollTop = $g_elem.scrollTop();
-                NOMO_DEBUG("currentScrollTop", currentScrollTop);
+                CONSOLE_MSG("currentScrollTop", currentScrollTop);
 
                 $(".GM_setting_category").each(function () {
                     let $elem = $(this);
-                    NOMO_DEBUG("$elem.position().top", $elem.position().top);
+                    CONSOLE_MSG("$elem.position().top", $elem.position().top);
                     if($elem.position().top <= 0 && $elem.position().top + $elem.height() > 0){
                         GUI.$tabs_item_container.find(".GM_tab_item").removeClass("on");
                         GUI.$tabs_item_container.find(`.GM_tab_item[gm_setting_key='${$elem.attr("gm_setting_category")}']`).addClass("on");
