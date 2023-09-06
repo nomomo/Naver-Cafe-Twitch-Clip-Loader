@@ -1,5 +1,7 @@
 import { NOMO_DEBUG } from "../lib/lib.js";
 
+var setTimeoutClearSettingCSS = undefined;
+
 // 설정 메뉴 추가 및 관리
 function openSettingsMenu(){
     try{
@@ -11,6 +13,7 @@ function openSettingsMenu(){
             NOMO_DEBUG("no naver cafe: return from openSettingsMenu");
             return;
         }
+        clearTimeout(setTimeoutClearSettingCSS);
         var GM_Setting_Bootstrap = 'GM_Setting_Bootstrap';
         $("#nomo_settings_container").remove();
 
@@ -19,11 +22,13 @@ function openSettingsMenu(){
             <div id="nomo_settings" style="background-color:#f5f5f5;cursor:default;font-size:12px;max-width:900px;max-height:calc(100% - 40px);margin:20px auto;padding:10px 20px;border-radius:5px;overflow-y:scroll;"></div>
         </div>`).appendTo("body");
         $container.on("click", function () {
-            $("#GM_Setting_css_temp").remove();
-            $("#GM_Setting_Bootstrap").remove();
             $(this).fadeOut(500, function () {
                 $(this).remove();
             });
+            setTimeoutClearSettingCSS = setTimeout(function(){
+                $("#GM_Setting_css_temp").remove();
+                $("#GM_Setting_Bootstrap").remove();
+            }, 500);
         });
         $container.find("#nomo_settings").on("click", function (e) {
             e.stopPropagation();
@@ -40,7 +45,10 @@ function openSettingsMenu(){
             link.id = GM_Setting_Bootstrap;
             link.rel = 'stylesheet';
             link.type = 'text/css';
-            link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css';
+            //link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css';
+            link.crossOrigin ="anonymous";
+            link.href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css";
+            link.integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9";
             link.media = 'all';
             head.appendChild(link);
         }
@@ -52,8 +60,11 @@ function openSettingsMenu(){
             <style id='GM_Setting_css_temp' rel='stylesheet' type='text/css'>ul, ol{margin:0; padding:0 !important;}
             #nomo_settings::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
             #nomo_settings::-webkit-scrollbar-thumb { background: #ccc; }
-            body{overflow-y:hidden;}
+            html{overflow-y:hidden;}
+            body{overflow-y:scroll;height:100dvh;}
             body #GM_setting .GM_setting_list_head {vertical-align:bottom;}
+            body #GM_setting .form-check-input:checked{background-color: #2DB400; border-color: #2DB400;}
+            body #GM_setting .btn.btn-primary {filter: hue-rotate(280deg);}
 
             #GM_setting, #GM_setting .GM_setting_title, #GM_setting .GM_setting_desc, #GM_setting .GM_setting_logo, #GM_setting .GM_homepage_link
             {font-family: 'Inter',"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;}

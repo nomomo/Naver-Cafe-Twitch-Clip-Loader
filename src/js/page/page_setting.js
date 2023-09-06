@@ -18,6 +18,8 @@ export default function PAGE_SETTING(){
         body #GM_setting .GM_setting_list_head {vertical-align:bottom;}
         body #wrap {display:none;}
         body {background-color:#f5f5f5 !important;overflow-y: scroll;  height: 100dvh;}
+        body #GM_setting .form-check-input:checked{background-color: #2DB400; border-color: #2DB400;}
+        body #GM_setting .btn.btn-primary {filter: hue-rotate(280deg);}
     `);
     var GM_Setting_Bootstrap = 'GM_Setting_Bootstrap';
     if (!document.getElementById(GM_Setting_Bootstrap)) {
@@ -26,10 +28,10 @@ export default function PAGE_SETTING(){
         link.id = GM_Setting_Bootstrap;
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css';
-        //link.href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css";
-        //link.integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9";
-        //link.crossorigin="anonymous";
+        //link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css';
+        link.crossOrigin ="anonymous";
+        link.href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css";
+        link.integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9";
         link.media = 'all';
         head.appendChild(link);
 

@@ -8,12 +8,23 @@ import {YTlogo} from "js/video/video_youtube";
 // Settings
 ////////////////////////////////////////////////////////////////////////////////////
 
-const _settings = {    
+const _settings = {
+    // version
+    showUpdateMessage : {
+        category:"version",
+        depth: 1,
+        under_dev: true,
+        type: "checkbox",
+        value: true,
+        title:"업데이트 알림 표시",
+        desc:"스크립트 버전 업데이트 시 화면 좌측 하단에 스크립트가 업데이트 되었다는 알림을 띄웁니다."
+    },
+
     // video common
     convertMethod : {
         category:"videoCommon",
         category_name: "⚙️ 플레이어 설정",
-        category_desc: "비디오 링크를 변환하는 시점, 재생 방법, 플레이어 동작을 설정합니다.",
+        category_desc: "비디오 링크를 변환하는 시점, 재생 방법, 플레이어 동작을 설정합니다.<br />Youtube, Twitch Clip, Naver Video 외 플랫폼에는 적용되지 않을 수 있습니다.",
         depth: 1,
         type: "radio",
         value: "autoLoad",
@@ -55,7 +66,7 @@ const _settings = {
         depth: 1,
         type: "checkbox",
         value: false,
-        title: {en:"Set the volume when stream starts", ko:"비디오 로드 시 사운드 볼륨(Volume) 설정"},
+        title: {en:"Set the volume when stream starts", ko:"비디오 로드 시 기본 사운드 볼륨(Volume) 설정"},
         desc: "비디오 로드 시 플레이어의 사운드 볼륨을 원하는 값으로 설정합니다.<br />TIP: Chrome 계열 브라우저는 자동 재생되는 클립을 종종 음소거합니다. 음소거 문제를 피하려면 본 옵션을 사용해보세요(안 될 수도 있음)."
     },
     target_start_volume : {
@@ -70,7 +81,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"비디오 재생 시 다른 재생 중인 비디오 일시정지",
-        desc:"Youtube, Twitch Clip, Naver Video 를 재생 시, 다른 재생 중인 모든 비디오를 일시정지 합니다. 다음 동영상을 재생하기 위하여 이전 동영상을 정지할 필요가 없습니다. (엄청 편하다!)"
+        desc:"다른 재생 중인 모든 비디오를 일시정지 합니다. 다음 동영상을 재생하기 위하여 이전 동영상을 정지할 필요가 없습니다. (엄청 편하다!)"
     },
     autoPlayNextClip: {
         category:"videoCommon",
@@ -78,7 +89,7 @@ const _settings = {
         type: "checkbox",
         value: false,
         title:"다음 영상을 자동으로 이어서 재생",
-        desc:"본문에 여러 개의 동영상이 존재할 때 동영상이 종료되면 다음 영상을 자동으로 재생합니다(편하다!). 일부 동영상 플랫폼의 경우 본 기능이 지원되지 않을 수 있습니다."
+        desc:"본문에 여러 개의 동영상이 존재할 때 재생이 종료되면 다음 영상을 자동으로 재생합니다."
     },
     exitFullscreenAfterEnd: {
         category: "videoCommon",
@@ -94,7 +105,7 @@ const _settings = {
         type: "combobox",
         value: "1",
         title:"Shorts 비디오 크기 자동 조절",
-        desc: "세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춥니다.<br />Shorts 비디오가 이상하게 표시되는 경우 본 기능을 '사용 안 함'으로 설정하세요.<br /><br /><optdesc>화면 가득: 현재 브라우저의 화면 높이에 맞게 세로 비디오의 사이즈를 키웁니다. 스크롤을 살짝하면 비디오를 화면 가득 볼 수 있습니다. (1080p 해상도 권장)</optdesc><optdesc>적당히: 스크롤 없이 글 제목과 세로 비디오를 한 눈에 볼 수 있도록 비디오 사이즈를 적당히 키웁니다. (4K 해상도 권장)</optdesc><br />* 사용자가 직접 가로 비디오로 삽입한 Youtube Shorts 비디오 등 일부 비디오에는 본 기능이 적용되지 않을 수 있습니다.",
+        desc: "세로 비디오(예: Shorts)의 크기를 보기 좋은 사이즈로 맞춥니다.<br />Shorts 비디오가 이상하게 표시되는 경우 본 기능을 '사용 안 함'으로 설정하세요.<br /><br /><optdesc>화면 가득(기본값): 현재 브라우저의 화면 높이에 맞게 세로 비디오의 사이즈를 키웁니다. 스크롤을 살짝하면 비디오를 화면 가득 볼 수 있습니다. (1080p 해상도 권장)</optdesc><optdesc>적당히: 스크롤 없이 글 제목과 세로 비디오를 한 눈에 볼 수 있도록 비디오 사이즈를 적당히 키웁니다. (4K 해상도 권장)</optdesc><br />* 사용자가 직접 가로 비디오로 삽입한 Youtube Shorts 비디오 등 일부 비디오에는 본 기능이 적용되지 않을 수 있습니다.",
         options:{
             "0":{title:"사용 안 함"},
             "1":{title:"화면 가득"},
@@ -107,7 +118,7 @@ const _settings = {
         type: "combobox",
         value: "1",
         title: "비디오 재생 시 자동 스크롤",
-        desc: "비디오가 재생될 때 적절한 위치로 자동 스크롤 합니다.<br />만약 스크롤이 자동으로 이동하는 것을 원하지 않거나, 비디오가 재생될 때 스크롤 위치가 이상하게 변경되는 문제가 발생하는 경우 본 기능을 '사용 안 함'으로 설정하세요.<br /><br /><optdesc>안 보일 때만 가장 가깝게: 비디오 재생 시 플레이어의 일부가 화면에 보이지 않는 경우, 플레이어를 전체를 화면에 표시할 수 있는 가장 가까운 위치로 자동 스크롤 합니다.</optdesc><optdesc>안 보일 때만 화면 중앙: 비디오 재생 시 플레이어의 일부가 화면에 보이지 않는 경우, 플레이어가 화면 중앙에 위치하도록 자동 스크롤 합니다.</optdesc><optdesc>항상 화면 중앙: 비디오가 재생될 때 플레이어가 화면 중앙에 위치하도록 무조건 자동 스크롤 합니다.</optdesc><br />* 플레이어 높이가 화면 전체 높이보다 큰 경우 플레이어의 가장 위를 화면에 맞춥니다.",
+        desc: "비디오가 재생될 때 적절한 위치로 자동 스크롤 합니다.<br />만약 스크롤이 자동으로 이동하는 것을 원하지 않거나, 비디오가 재생될 때 스크롤 위치가 이상하게 변경되는 문제가 발생하는 경우 본 기능을 '사용 안 함'으로 설정하세요.<br /><br /><optdesc>안 보일 때만 가장 가깝게(기본값): 비디오 재생 시 플레이어의 일부가 화면에 보이지 않는 경우, 플레이어를 전체를 화면에 표시할 수 있는 가장 가까운 위치로 자동 스크롤 합니다.</optdesc><optdesc>안 보일 때만 화면 중앙: 비디오 재생 시 플레이어의 일부가 화면에 보이지 않는 경우, 플레이어가 화면 중앙에 위치하도록 자동 스크롤 합니다.</optdesc><optdesc>항상 화면 중앙: 비디오가 재생될 때 플레이어가 화면 중앙에 위치하도록 무조건 자동 스크롤 합니다.</optdesc><br />* 플레이어 높이가 화면 전체 높이보다 큰 경우 플레이어의 가장 위를 화면에 맞춥니다.",
         options:{
             "0":{title:"사용 안 함"},
             "1":{title:"안 보일 때만 가장 가깝게"},
@@ -607,15 +618,17 @@ const _settings = {
         title:"본문(컨텐츠) 가로 사이즈(px)",
         desc:"영화관 모드 시 카페 컨텐츠의 가로 사이즈를 결정합니다.<br />(Default: 1100, Range: 400~10000, 권장: 700~1400)"
     },
-    under_dev : { category:"advanced", category_name:"🧪 고급", category_desc: "", depth:1, type: "checkbox", value: false, title:"숨겨진 고급 기능 설정", desc:"숨겨진 고급 기능과 🧪실험실 기능을 직접 설정할 수 있습니다. 실험실 기능은 정상 동작하지 않을 수 있으며 소리소문 없이 사라질 수 있습니다." },
-    showUpdateMessage : {
+    under_dev : {
         category:"advanced",
-        depth: 1,
+        category_name:"🧪 고급",
+        category_desc: "",
+        depth:1,
         type: "checkbox",
-        value: true,
-        title:"업데이트 알림 표시",
-        desc:"스크립트 버전 업데이트 시 화면 좌측 하단에 스크립트가 업데이트 되었다는 알림을 띄웁니다."
+        value: false,
+        title:"숨겨진 고급 기능 설정",
+        desc:"숨겨진 고급 기능과 🧪실험실 기능을 직접 설정할 수 있습니다. 실험실 기능은 정상 동작하지 않을 수 있으며 소리소문 없이 사라질 수 있습니다." 
     },
+
 };
 GM_addStyle(`
 body #GM_setting {min-width:800px;}
@@ -716,5 +729,5 @@ var GM_MIGRATION = function(prevConfig, config, oriSettings) {
 };
 
 export default async function GM_SETTINGS_INIT(){
-    await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false, "TABS":true, "MIGRATION":GM_MIGRATION, "feedbackLink":"https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues/new/choose"});
+    await GM_setting.init("GM_SETTINGS", {"DEBUG":DEBUG, "SETTINGS":_settings, "CONSOLE_MSG":NOMO_DEBUG, "MULTILANG":false, "TABS":true, "MIGRATION":GM_MIGRATION, "feedbackLink":"https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues/new/choose", "packageJsonLink":"https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/main/package.json"});
 }

@@ -52,7 +52,7 @@ window.NOMO_ERROR = NOMO_ERROR;
 export const Arrive = function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbindEvent),l.addMethod(t,n,e.unbindEventWithSelectorOrCallback),l.addMethod(t,n,e.unbindEventWithSelectorAndCallback);}function i(e){e.arrive=f.bindEvent,r(f,e,"unbindArrive"),e.leave=d.bindEvent,r(d,e,"unbindLeave");}if(e.MutationObserver&&"undefined"!=typeof HTMLElement){var o=0,l=function(){var t=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;return{matchesSelector:function(e,n){return e instanceof HTMLElement&&t.call(e,n);},addMethod:function(e,t,r){var i=e[t];e[t]=function(){return r.length==arguments.length?r.apply(this,arguments):"function"==typeof i?i.apply(this,arguments):n;};},callCallbacks:function(e,t){t&&t.options.onceOnly&&1==t.firedElems.length&&(e=[e[0]]);for(var n,r=0;n=e[r];r++)n&&n.callback&&n.callback.call(n.elem,n.elem);t&&t.options.onceOnly&&1==t.firedElems.length&&t.me.unbindEventWithSelectorAndCallback.call(t.target,t.selector,t.callback);},checkChildNodesRecursively:function(e,t,n,r){for(var i,o=0;i=e[o];o++)n(i,t,r)&&r.push({callback:t.callback,elem:i}),i.childNodes.length>0&&l.checkChildNodesRecursively(i.childNodes,t,n,r);},mergeArrays:function(e,t){var n,r={};for(n in e)e.hasOwnProperty(n)&&(r[n]=e[n]);for(n in t)t.hasOwnProperty(n)&&(r[n]=t[n]);return r;},toElementsArray:function(t){return n===t||"number"==typeof t.length&&t!==e||(t=[t]),t;}};}(),c=function(){var e=function(){this._eventsBucket=[],this._beforeAdding=null,this._beforeRemoving=null;};return e.prototype.addEvent=function(e,t,n,r){var i={target:e,selector:t,options:n,callback:r,firedElems:[]};return this._beforeAdding&&this._beforeAdding(i),this._eventsBucket.push(i),i;},e.prototype.removeEvent=function(e){for(var t,n=this._eventsBucket.length-1;t=this._eventsBucket[n];n--)if(e(t)){this._beforeRemoving&&this._beforeRemoving(t);var r=this._eventsBucket.splice(n,1);r&&r.length&&(r[0].callback=null);}},e.prototype.beforeAdding=function(e){this._beforeAdding=e;},e.prototype.beforeRemoving=function(e){this._beforeRemoving=e;},e;}(),a=function(t,r){var i=new c,o=this,a={fireOnAttributesModification:!1};return i.beforeAdding(function(n){var i,l=n.target;(l===e.document||l===e)&&(l=document.getElementsByTagName("html")[0]),i=new MutationObserver(function(e){r.call(this,e,n);});var c=t(n.options);i.observe(l,c),n.observer=i,n.me=o;}),i.beforeRemoving(function(e){e.observer.disconnect();}),this.bindEvent=function(e,t,n){t=l.mergeArrays(a,t);for(var r=l.toElementsArray(this),o=0;o<r.length;o++)i.addEvent(r[o],e,t,n);},this.unbindEvent=function(){var e=l.toElementsArray(this);i.removeEvent(function(t){for(var r=0;r<e.length;r++)if(this===n||t.target===e[r])return!0;return!1;});},this.unbindEventWithSelectorOrCallback=function(e){var t,r=l.toElementsArray(this),o=e;t="function"==typeof e?function(e){for(var t=0;t<r.length;t++)if((this===n||e.target===r[t])&&e.callback===o)return!0;return!1;}:function(t){for(var i=0;i<r.length;i++)if((this===n||t.target===r[i])&&t.selector===e)return!0;return!1;},i.removeEvent(t);},this.unbindEventWithSelectorAndCallback=function(e,t){var r=l.toElementsArray(this);i.removeEvent(function(i){for(var o=0;o<r.length;o++)if((this===n||i.target===r[o])&&i.selector===e&&i.callback===t)return!0;return!1;});},this;},s=function(){function e(e){var t={attributes:!1,childList:!0,subtree:!0};return e.fireOnAttributesModification&&(t.attributes=!0),t;}function t(e,t){e.forEach(function(e){var n=e.addedNodes,i=e.target,o=[];null!==n&&n.length>0?l.checkChildNodesRecursively(n,t,r,o):"attributes"===e.type&&r(i,t,o)&&o.push({callback:t.callback,elem:i}),l.callCallbacks(o,t);});}function r(e,t){return l.matchesSelector(e,t.selector)&&(e._id===n&&(e._id=o++),-1==t.firedElems.indexOf(e._id))?(t.firedElems.push(e._id),!0):!1;}var i={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};f=new a(e,t);var c=f.bindEvent;return f.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t);var o=l.toElementsArray(this);if(t.existing){for(var a=[],s=0;s<o.length;s++)for(var u=o[s].querySelectorAll(e),f=0;f<u.length;f++)a.push({callback:r,elem:u[f]});if(t.onceOnly&&a.length)return r.call(a[0].elem,a[0].elem);setTimeout(l.callCallbacks,1,a);}c.call(this,e,t,r);},f;},u=function(){function e(){var e={childList:!0,subtree:!0};return e;}function t(e,t){e.forEach(function(e){var n=e.removedNodes,i=[];null!==n&&n.length>0&&l.checkChildNodesRecursively(n,t,r,i),l.callCallbacks(i,t);});}function r(e,t){return l.matchesSelector(e,t.selector);}var i={};d=new a(e,t);var o=d.bindEvent;return d.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t),o.call(this,e,t,r);},d;},f=new s,d=new u;t&&i(t.fn),i(HTMLElement.prototype),i(NodeList.prototype),i(HTMLCollection.prototype),i(HTMLDocument.prototype),i(Window.prototype);var h={};return r(f,h,"unbindAllArrive"),r(d,h,"unbindAllLeave"),h;}}(window,"undefined"==typeof jQuery?null:jQuery,void 0);
 
 /* GM_setting.js
-* Version: Aug. 27, 2023
+* Version: Sep. 6, 2023
 * MIT licensed
 * https://github.com/nomomo/
 * nomotg@gmail.com
@@ -60,9 +60,10 @@ export const Arrive = function(e,t,n){"use strict";function r(e,t,n){l.addMethod
 */
 // eslint-disable-next-line
 export var GM_setting = (function ($, global, document) { //
-    var version = "23.7.6";
+    var version = "23.9.6";
 
     var feedbackLink = "";
+    var packageJsonLink = "";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // local vars
@@ -241,6 +242,9 @@ export var GM_setting = (function ($, global, document) { //
             if(usInput.feedbackLink){
                 feedbackLink = usInput.feedbackLink;
             }
+            if(usInput.packageJsonLink){
+                packageJsonLink = usInput.packageJsonLink;
+            }
         }
         else{
             // error
@@ -350,6 +354,24 @@ export var GM_setting = (function ($, global, document) { //
     var loadConfig_ = async function() {
         config = await GM.getValue(name_+"_CONFIG");
         CONSOLE_MSG("loadConfig_", config);
+
+        // config 존재하지 않는 경우
+        if(!config){
+            CONSOLE_MSG("NO CONFIG, CREATE NEW DARA");
+            let currentVersion = GM.info.script.version;
+            let cvary = currentVersion.split(".");
+            for(let i=0;i<cvary.length;i++){
+                cvary[i] = Number(cvary[i]);
+            }
+            config = {
+                latestVersionAry:cvary,
+                latestVersion:currentVersion,
+                lastVersionCheckDate:undefined,
+                lastCheckedVersion:undefined
+            };
+            await saveConfig_();
+        }
+
         return config;
     };
     var saveConfig_ = async function() {
@@ -358,30 +380,47 @@ export var GM_setting = (function ($, global, document) { //
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
+    var versionCheck_ = async function(url, callbackSuccess, callbackFail) {
+        try {
+            NOMO_DEBUG("versionCheck_", url);
+            const response = await fetch(url);
+        
+            if (!response.ok) {
+                NOMO_DEBUG("check version error, response is not ok.", response);
+                //throw new Error(`Network response was not ok (${response.status})`);
+                callbackFail();
+                return;
+            }
+
+            NOMO_DEBUG("response", response);
+
+            const jsonData = await response.json();
+
+            NOMO_DEBUG("jsonData", jsonData);
+
+            if(callbackSuccess !== undefined && jsonData && jsonData.version){
+                await loadConfig_();
+                config.lastVersionCheckDate = Number(new Date());
+                config.lastCheckedVersion = jsonData.version;
+                await saveConfig_();
+                NOMO_DEBUG("version check", config);
+                callbackSuccess(jsonData.version);
+                return;
+            }
+        } catch (error) {
+            NOMO_DEBUG("check version error.", error);
+            if(callbackFail !== undefined){
+                callbackFail();
+                return;
+            }
+        }
+    };
+
     var checkIsUpdated_ = async function () {
         await loadConfig_();
         let currentVersion = GM.info.script.version;
         
-        // config 존재하지 않는 경우
-        if(!config){
-            CONSOLE_MSG("NO CONFIG, CREATE NEW DARA");
-            let cvary = currentVersion.split(".");
-            for(let i=0;i<cvary.length;i++){
-                cvary[i] = Number(cvary[i]);
-            }
-            config = {
-                latestVersionAry:cvary,
-                latestVersion:currentVersion
-            };
-            await saveConfig_();
-
-            // set dummy prevConfig version
-            prevConfig.latestVersionAry = cvary;
-            prevConfig.latestVersion = currentVersion;
-        }
-        else{
-            prevConfig = deepCopy_(config);  // 불러온 config 백업
-        }
+        prevConfig = deepCopy_(config);  // 불러온 config 백업
 
         // check updated version
         if(config.latestVersion !== currentVersion){
@@ -577,17 +616,27 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 #GM_setting .GM_setting_title{display:block;font-size:13px;color:#000;}
 #GM_setting .GM_setting_desc{display:block;font-size:12px;color:#666;}
 
-#GM_setting .GM_setting_input_container {box-sizing:border-box;padding:0 0 0 30px;vertical-align:top;flex:1 1 0;min-width:200px;}
+#GM_setting .form-select, #GM_setting .GM_setting_input_container{font-size:12px;}
+#GM_setting .form-select{width:auto;max-width:95%;cursor:pointer;}
+#GM_setting .form-check{min-height:unset;}
+
+#GM_setting .GM_setting_input_container {box-sizing:border-box;padding:0 0 0 30px;vertical-align:top;flex:1 1 0;min-width:200px; position:relative;text-align:-webkit-right;}
+#GM_setting .GM_setting_input_container .form-check-input {margin-top:0px; cursor:pointer;}
+#GM_setting .GM_setting_input_container.form-switch .form-check-input {margin-left:0px;position:absolute;top:3px;right:3px;transform: scale(1.4);}
 #GM_setting .GM_setting_input_container span{vertical-align:top;}
 #GM_setting .GM_setting_input_container span.btn{margin:0 0 0 10px;}
-#GM_setting input{display:inline}
+#GM_setting .form-check .form-check-input{margin-left:0px;transform: scale(1.2);}
+#GM_setting .radio-inline{display:inline-block;padding-left:15px; padding-right:0px; margin:0 0 3px 0; cursor:pointer; line-height: 100%; min-height:1.2rem;}
+#GM_setting .radio-inline .form-check-label{padding-left:5px;}
+
+#GM_setting .form-check-input:disabled{opacity:0.3;filter:grayscale(1) brightness(1.5);}
+
+#GM_setting .form-check-input:checked{background-color: #0d6efd; border-color: #0d6efd;}
+
 #GM_setting input[type="text"]{ width: 100px; height: 30px; padding: 5px 5px; font-size:12px; }
 #GM_setting textarea{ width: 250px; height: 30px; padding: 5px 5px; font-size:12px; }
-#GM_setting input[type="checkbox"] { display:none; width: 20px;height:20px; padding: 0; margin:0; }
-#GM_setting input[type="radio"] {width: 20px;height:20px; padding: 0; margin:0; }
-
-#GM_setting .radio-inline{ font-size:12px; padding-left:0; padding-right:10px; margin:0 0 3px 0; cursor:pointer;}
-#GM_setting .radio-inline input{ margin:0 5px 0 0; cursor:pointer; }
+/*#GM_setting .radio-inline{ font-size:12px; padding-left:0; padding-right:10px; margin:0 0 3px 0; cursor:pointer;}
+#GM_setting .radio-inline input{ margin:0 5px 0 0; cursor:pointer; }*/
 
 #GM_setting table {margin:0; width:100%;}
 #GM_setting th, #GM_setting td {height: 24px;}
@@ -617,7 +666,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 
 #GM_setting .cp {cursor:pointer}
 
-#GM_setting .form-group {margin-bottom:0px;text-align:-webkit-right;}
+#GM_setting .GM_setting_list_desc {margin-bottom:0px;}
 #GM_setting .form-control {width:auto;}
 
 #GM_setting optdesc {
@@ -640,10 +689,6 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
     margin-right:20px;
     border-right:1px solid #ccc;
     border-top: 2px solid #999;
-}
-
-#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container:first-child {
-    border-top: 1px solid #eee;
 }
 
 #GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container {
@@ -686,6 +731,22 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
     margin-top: 0px !important;
 }
 
+#GM_setting .GM_setting_version_reflesh .v_download,
+#GM_setting .GM_setting_version_reflesh .v_checked,
+#GM_setting .GM_setting_version_reflesh .v_fail,
+#GM_setting .GM_setting_version_reflesh .v_loading {
+    display:none;
+}
+
+#GM_setting .availableVersion {
+    padding-left:5px;
+    margin-left:3px;
+    border-left:1px solid #eee;
+}
+#GM_setting .bg_lightgreen {
+    background: #ddffdd;
+}
+
 `);
     };
 
@@ -705,29 +766,30 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
         var title = getTextFromObjectbyLang(userSettings[key].title);
         var desc = getTextFromObjectbyLang(userSettings[key].desc);
 
-        var $inputContainer = $("<div class='GM_setting_input_container form-group'></div>");
+        var $inputContainer = $("<div class='GM_setting_input_container'></div>");
         var isTextarea = $.inArray(type, ["tag","textarea","object"]) !== -1;
         var $input;
 
         switch (type){
         case "radio":
             var radioObj = userSettings[key].radio;
-            $input = $("<div GM_setting_type='radio'></div>");
+            $input = $("<div class='' GM_setting_type='radio'></div>");
             for (var radiokey in radioObj) {
-                var $label = $("<label class='radio-inline'>" + getTextFromObjectbyLang(radioObj[radiokey].title) + "</label>");
-                var $temp_input = $("<input name='GM_setting_" + key + "' class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' onfocus='this.blur()' />").attr({
+                var $temp_div = $("<div class='form-check radio-inline'></div>");
+                var $label = $("<label class='form-check-label'>" + getTextFromObjectbyLang(radioObj[radiokey].title) + "</label>");
+                var $temp_input = $("<input name='GM_setting_" + key + "' class='form-check-input' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' onfocus='this.blur()' />").attr({
                     "GM_setting_key": key,
                     "value": radioObj[radiokey].value,
                     "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type))
                 });
-                $temp_input.prependTo($label);
-                $input.append($label);
+                $temp_div.append($temp_input).append($label);
+                $input.append($temp_div);
             }
             break;
         
         case "combobox":
             var comboboxObj = userSettings[key].options;
-            $input = $(`<select name="GM_setting_${key}" class='form-control input-sm select-inline'></select>`).attr({
+            $input = $(`<select name="GM_setting_${key}" class='form-select form-select-sm'></select>`).attr({
                 "GM_setting_type": type,
                 "GM_setting_key": key,
                 "GM_setting_category": (category === undefined ? "default" : category),
@@ -751,9 +813,17 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
             $theadtr.append(`<th class="table_btn_container"> </th>`);
             $theadtr.append(`<th class="table_btn_container"> </th>`);
             break;
+
+        case "text":
+            $input = $(`<input class='form-control form-control-sm' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' />")}`)
+                .attr({
+                    "type": "text",
+                    "GM_setting_key": key
+                });
+            break;
         
         default:
-            $input = $(`<${(isTextarea ? "textarea " : "input ")} class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' ${(type === "checkbox" ? "onfocus='this.blur()'" : "")}${(isTextarea ? "></textarea>" : " />")}`)
+            $input = $(`<${(isTextarea ? "textarea " : "input ")} class='form-check-input' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' ${(type === "checkbox" ? "onfocus='this.blur()'" : "")}${(isTextarea ? "></textarea>" : " />")}`)
                 .attr({
                     "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type)),
                     "GM_setting_key": key
@@ -780,8 +850,11 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
         $head.append($title).append($desc);
 
         if (type === "checkbox") {
-            var $label_container = $(`<label class="btn btn-default btn-xxs"><span class="glyphicon glyphicon-ok"></span></label>`);
-            $label_container.prepend($input).appendTo($inputContainer);
+            //var $label_container = $(`<label class="btn btn-default btn-xxs"><span class="glyphicon glyphicon-ok"></span></label>`);
+            //$label_container.prepend($input).appendTo($inputContainer);
+            $inputContainer.append($input);
+            $inputContainer.addClass("form-check form-switch");
+            $input.attr("role", "switch");
 
             $input.on("change", function () {
                 if ($(this).is(":checked")) {
@@ -825,11 +898,25 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
         GUI.$ul = $("<ul></ul>");
         GUI.$GM_setting_head = $("<div id='GM_setting_head'></div>");
 
+        // 버전 출력해야 하는지 확인
+        let currentVersion = "";
+        let versionUpdateUrl = undefined;
+        try{
+            versionUpdateUrl = (GM.info.script.updateURL || GM.info.script.downloadURL);
+            currentVersion = GM.info.script.version;
+        }
+        catch(e){
+            versionUpdateUrl = undefined;
+            currentVersion = "알 수 없음";
+        }
+        NOMO_DEBUG("versionUpdateUrl", versionUpdateUrl);
+
         // tab 관련 설정
         if(useTabs){
             GUI.$tabs = $("<div id='GM_tabs'></div>");
             GUI.$tabs_item_container = $(`<div id='GM_tabs_item_container'></div>`);
             GUI.$tabs_item_container.append(`<div class="GM_tab_item on" gm_setting_key="all">전체 보기</div>`);
+            GUI.$tabs_item_container.append(`<div class="GM_tab_item" gm_setting_key="version">버전</div>`);
             for (let key in userTabs) {
                 GUI.$tabs_item_container.append(`<div class="GM_tab_item" gm_setting_key="${key}">${userTabs[key].title}</div>`);
             }
@@ -1097,6 +1184,176 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
             validateAndSave_($(this), $g_elem, $inputs);
         });
 
+        //////////////////////////////////////////////////////////
+        // 버전 버튼 추가
+        if(packageJsonLink && versionUpdateUrl){
+            GUI.$version = $( /*html*/ `<li class="GM_setting_category GM_setting_depth1" gm_setting_category="version">
+            <div class="GM_setting_category_name">버전</div>
+            <div class="GM_setting_category_desc"></div>
+            <div class="GM_setting_list_sub">
+                <div class="GM_setting_list_head">
+                    <span class="GM_setting_title">
+                    <span class="currentVersion">현재 버전: ${currentVersion}</span>
+                    <span class="availableVersion">${config.lastCheckedVersion ? "마지막으로 확인된 버전: " + config.lastCheckedVersion : ""}</span>
+                    </span>
+                    <span class="GM_setting_desc">
+                        <div class="lastVersionCheckedDate"></div>
+                        <div class="v_download" style="display:none;margin-top:5px;">
+                            <a href="${versionUpdateUrl}" style="color:#fff;text-decoration:none;" target="_blank">
+                                <button type="button" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                    </svg>
+                                    <span class="GM_setting_version_check_text">지금 설치!</span>
+                                </button>
+                            </a>
+                        </div>
+                    </span>
+                </div>
+                <div class="GM_setting_input_container">
+                    <div class="GM_setting_version_reflesh_btn GM_setting_version_reflesh">
+                        <div class="GM_btn_sub_vv v_reflesh">
+                            <button type="button" class="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                                </svg>
+                                <span class="GM_setting_version_check_text">버전 확인하기</span>
+                            </button>
+                        </div>
+                        <div class="GM_btn_sub_vv v_loading" style="display:none;">
+                            <button type="button" class="btn btn-primary">
+                                <span class="GM_setting_version_check_text">확인 중...</span>
+                            </button>
+                        </div>
+                        <div class="GM_btn_sub_vv v_checked" style="display:none;">
+                            <button type="button" class="btn btn-primary" style="cursor:default;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                <span class="GM_setting_version_check_text">이미 최신 버전입니다!</span>
+                            </button>
+                        </div>
+                        <div class="GM_btn_sub_vv v_updateAvailable" style="display:none;">
+                            <a href="${versionUpdateUrl}" style="color:#fff;text-decoration:none;" target="_blank">
+                                <button type="button" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                    </svg>
+                                    <span class="GM_setting_version_check_text">업데이트 가능</span>
+                                </button>
+                            </a>
+                        </div>
+                        <div class="GM_btn_sub_vv v_fail" style="display:none;">
+                            <button type="button" class="btn btn-primary" style="cursor:default;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                                </svg>
+                                <span class="GM_setting_version_check_text">확인 실패</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </li>
+            `);
+
+            GUI.$ul.prepend(GUI.$version);
+
+            let updateVersionText = function(type){
+                if(config.lastCheckedVersion){
+                    let currentVersion = GM.info.script.version;
+                    let cvary = currentVersion.split(".");
+                    let isUpdateAvailable = false;
+
+                    let lcvary = config.lastCheckedVersion.split(".");
+                    for(let i=0;i<cvary.length;i++){
+                        if(Number(lcvary[i]) > Number(cvary[i])){
+                            isUpdateAvailable = true;
+                            break;
+                        }
+                        else if(Number(lcvary[i]) < Number(cvary[i])){
+                            isUpdateAvailable = false;
+                            break;
+                        }
+                    }
+
+                    GUI.$version.find(".GM_setting_list_sub").removeClass("bg_lightgreen");
+                    if(type == 2){
+                        GUI.$version.find(".GM_btn_sub_vv").hide();
+                    }
+                    if(isUpdateAvailable){
+                        GUI.$version.find(".v_download").show();
+                        if(type == 2){
+                            GUI.$version.find(".v_updateAvailable").show();
+                        }
+                        GUI.$version.find(".GM_setting_list_sub").addClass("bg_lightgreen");
+                        GUI.$version.find(".availableVersion").html(`<svg style="vertical-align: baseline;color: mediumseagreen;margin: 0 2px 0 0;" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                      </svg><strong>업데이트를 설치할 준비가 완료됨: ${config.lastCheckedVersion}</string>`);
+                    }
+                    else{
+                        if(type == 1){
+                            GUI.$version.find(".v_reflesh").show();
+                        }
+                        else if(type == 2){
+                            GUI.$version.find(".v_checked").show();
+                        }
+                    }
+                }
+                else{
+                    if(type == 2){
+                        GUI.$version.find(".GM_btn_sub_vv").hide();
+                    }
+                    GUI.$version.find(".v_reflesh").show();
+                }
+
+                // Get the current date
+                let formattedDate = "";
+                if(config.lastVersionCheckDate){
+                    const currentDate = new Date(config.lastVersionCheckDate);
+
+                    // Specify options for formatting based on the current locale
+                    const options = {
+                        weekday: 'long', // full day of the week (e.g., "Monday")
+                        year: 'numeric', // full numeric year (e.g., "2023")
+                        month: 'long', // full month name (e.g., "September")
+                        day: 'numeric', // day of the month (e.g., "05")
+                        hour: 'numeric', // hour (e.g., "02" or "14")
+                        minute: 'numeric', // minute (e.g., "09")
+                        second: 'numeric' // second (e.g., "37")
+                    };
+
+                    // Create a formatter based on the current locale
+                    const dateFormatter = new Intl.DateTimeFormat(undefined, options);
+
+                    // Format the date according to the locale
+                    formattedDate = dateFormatter.format(currentDate);
+                }
+                GUI.$version.find(".lastVersionCheckedDate").text(`마지막으로 확인한 날짜: ${config.lastVersionCheckDate ? formattedDate : "없음"}`);
+            };
+            updateVersionText(1);
+
+            GUI.$container.on("click", ".GM_setting_version_reflesh", async function(e){
+                let $that = $(this);
+                $(this).removeClass("GM_setting_version_reflesh");
+                GUI.$version.find(".GM_btn_sub_vv").hide();
+                GUI.$version.find(".v_download").hide();
+                GUI.$version.find(".v_loading").show();
+                $(this).css("cursor","default");
+                versionCheck_(packageJsonLink,
+                    function(){
+                        updateVersionText(2);
+                    },
+                    function(){
+
+                    }
+                );
+            });
+        }
+        //////////////////////////////////////////////////////////
+
         // 리셋 버튼 추가
         GUI.$ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1" gm_setting_category="advanced">
             <div class="GM_setting_category_name">${getSystemTextbyLang("title_reset")}</div>
@@ -1109,7 +1366,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
                     </span>
                     <span class="GM_setting_desc"></span>
                 </div>
-                <div class="GM_setting_input_container form-group">
+                <div class="GM_setting_input_container">
                 </div>
             </div>
         </li>`);
