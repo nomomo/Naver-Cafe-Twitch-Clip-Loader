@@ -63,8 +63,78 @@ export default function PAGE_YOUTUBE_EMBED(){
 
     /* 다음에서 보기: YouTube */
     .ytp-impression-link {display:none !important; }
+
     `);
+
     
+    if(GM_SETTINGS.topBottomShadowOpacity != 1.0){
+        GM_addStyle(`
+        .ytp-gradient-top,
+        .ytp-gradient-bottom {
+            opacity:${GM_SETTINGS.topBottomShadowOpacity} !important;
+        }
+        `);
+    }
+
+    if(GM_SETTINGS.bottomShadowButton){
+        GM_addStyle(`
+            div.ytp-left-controls, div.ytp-right-controls { filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, .9)) }
+            div.ytp-chrome-top  { filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, .7)) }
+        `);
+    }
+
+    // $$$ TEST $$$
+    // $(document).on("click", function(){
+    //     NOMO_DEBUG("embed youtube document clicked");
+    // });
+
+    // unsafeWindow._addEventListener = unsafeWindow.addEventListener;
+    // unsafeWindow.addEventListener = function(a,b,c){
+    //     if(a === "wheel" || a === "mousewheel" || a === "DOMMouseScroll" || a == "scroll" || a == "touchmove"){
+    //         NOMO_DEBUG("window 의 scroll 이벤트 무력화", a, b, c);
+    //         return;
+    //     }
+
+    //     if(c==undefined)
+    //         c=false;
+    //     unsafeWindow._addEventListener(a,b,c);
+    // };
+    // unsafeWindow.document._addEventListener = unsafeWindow.document.addEventListener;
+    // unsafeWindow.document.addEventListener = function(a,b,c){
+    //     if(a === "wheel" || a === "mousewheel" || a === "DOMMouseScroll" || a == "scroll" || a == "touchmove"){
+    //         NOMO_DEBUG("document 의 scroll 이벤트 무력화", a, b, c);
+    //         return;
+    //     }
+
+    //     if(c==undefined)
+    //         c=false;
+    //     unsafeWindow.document._addEventListener(a,b,c);
+    // };
+    
+    // Element.prototype._addEventListener = Element.prototype.addEventListener;
+    // Element.prototype.addEventListener = function(a,b,c){
+    //     if(a === "wheel" || a === "mousewheel" || a === "DOMMouseScroll" || a == "scroll" || a == "touchmove"){
+    //         NOMO_DEBUG("Element 의 scroll 이벤트 무력화", a, b, c);
+    //         return;
+    //     }
+
+    //     if(c==undefined)
+    //         c=false;
+    //     this._addEventListener(a,b,c);
+    // };
+
+    
+    if(GM_SETTINGS.youtubeFixClickAfterScrolling) {
+        GM_addStyle(`
+        video, .ytp-iv-video-content {pointer-events: none;}
+        `);
+        $(document).on("wheel", function(e){
+            NOMO_DEBUG("iframe youtube embed wheel event", e);
+            NOMO_DEBUG("send postMessage (embed -> naver), scroll event");
+            window.parent.postMessage({"scrollEvent":true}, "https://cafe.naver.com");
+        });
+    }
+
     // youtubeSetQuality
     useSetQuality = GM_SETTINGS.youtubeSetQuality !== "default" && YOUTUBE_EMBED_SET_QUALITY_CHECK_QUALITY();
     if(useSetQuality){
@@ -145,7 +215,7 @@ export default function PAGE_YOUTUBE_EMBED(){
             // shortsAutoResize
             let $video = $(video);
             try{
-                if(GM_SETTINGS.shortsAutoResize && ($video.width() + 1.0 < $video.height()) ){
+                if(GM_SETTINGS.shortsAutoResizeType !== "0" && ($video.width() + 1.0 < $video.height()) ){
                     GM_addStyle(`
                     /* Youtube Shorts .ytp-shorts-mode */
                     .html5-video-player { background: radial-gradient(ellipse at center, rgb(0 0 0 / 0%) 0%,rgb(16 16 16) 70%,rgba(0,0,0,1) 100%) !important; }

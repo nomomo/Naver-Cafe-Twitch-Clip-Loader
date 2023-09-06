@@ -3,7 +3,7 @@ import { sanitizeUrl } from "js/lib/sanitizeurl.ts";
 import {VideoBase} from "js/video/video_common.js";
 import { escapeHtml } from "../lib/lib.js";
 
-const YTlogo = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 461.001 461.001" style="enable-background:new 0 0 461.001 461.001;" xml:space="preserve">
+export const YTlogo = `<svg style="vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 461.001 461.001" style="enable-background:new 0 0 461.001 461.001;" xml:space="preserve">
 <g>
     <path style="fill:#F61C0D;" d="M365.257,67.393H95.744C42.866,67.393,0,110.259,0,163.137v134.728c0,52.878,42.866,95.744,95.744,95.744h269.513c52.878,0,95.744-42.866,95.744-95.744V163.137C461.001,110.259,418.135,67.393,365.257,67.393z M300.506,237.056l-126.06,60.123c-3.359,1.602-7.239-0.847-7.239-4.568V168.607c0-3.774,3.982-6.22,7.348-4.514l126.06,63.881C304.363,229.873,304.298,235.248,300.506,237.056z"/>
 </g>
@@ -12,6 +12,9 @@ const YTShortsLogo = `<svg style="vertical-align: middle;" fill="none" height="1
 
 
 export class VideoYoutube extends VideoBase {
+    static nytvideos = 0;
+    static ytvideo = [];
+
     static playlistAvailable = {};
     static playlistAvailableParsingQueue = {};
 
@@ -67,6 +70,12 @@ export class VideoYoutube extends VideoBase {
         
         // cafe 가 dark 모드인지 여부
         this.darkMode = (options.darkMode ? options.darkMode : false);
+
+        // youtubeFixClickAfterScrolling
+        this.$scrollOveray = undefined;
+
+        VideoYoutube.nytvideos += 1;
+        VideoYoutube.ytvideo.push(this);
     }
 
     static init(){try{
@@ -131,11 +140,11 @@ export class VideoYoutube extends VideoBase {
         // shortsAutoResize
         let isVertical = (this.originalHeight > this.originalWidth && (/#shorts/i.test(this.title) || /shorts/i.test(this.originalUrl)));
         NOMO_DEBUG("isVertical", this.id, isVertical);
-        if(isVertical && GM_SETTINGS.shortsAutoResize){
+        if(isVertical && GM_SETTINGS.shortsAutoResizeType !== "0"){
             this.$logoSVG.replaceWith(YTShortsLogo);
-            this.$container.attr("NCCL_vertical",this.id);      // add special attr to set style
+            //this.$outermostContainer = this.$iframeContainer;
             this.$iframeContainer.attr("NCCL_vertical",this.id); // add special attr to set style
-            if(GM_SETTINGS.shortsAutoResize){
+            if(GM_SETTINGS.shortsAutoResizeType !== "0"){
                 const {newWidth, newHeight, newRatio, newPaddingTop} = this.getNewWidth();
                 // add style
                 GM_addStyle(`
@@ -201,7 +210,42 @@ export class VideoYoutube extends VideoBase {
         NOMO_DEBUG("CREATE YTPlayer", this.id, YTOptions, this.YTPlayer);
 
         this.$iframe = this.$iframeContainer.find(".NCCL_iframe");
-        setTimeout(function(){that.$iframe.attr("title", "");},1000);
+        setTimeout(function(){
+            that.$iframe.attr("title", "");
+        },1000);
+
+        // youtubeFixClickAfterScrolling
+        if(GM_SETTINGS.youtubeFixClickAfterScrolling) {
+            let overlayDebug = false;
+            this.$iframeContainer.css('position','relative');
+            let topOffsetText = "";
+            if(GM_SETTINGS.hideTopOverlay){
+                topOffsetText = "0px";
+            }
+            else{
+                topOffsetText = "55px";
+            }
+            this.$scrollOveray = $(`<div class="NCCL_scrolloveray" style="position:absolute;width:100%;height: calc(100% - ${topOffsetText} - 50px);top:${topOffsetText};left:0px;z-index:1000;${overlayDebug?"background:red;":""}"></div>`);
+            this.$scrollOveray.on("click", function(e){
+                NOMO_DEBUG("clicked.");
+                if(!that.$iframe || typeof that.YTPlayer.getPlayerState !== "function") {
+                    return;
+                }
+                let playerState = that.YTPlayer.getPlayerState();
+
+                if(playerState == -1 || playerState == 0 || playerState == 2 || playerState == 5){
+                    NOMO_DEBUG("NCCL_scrolloveray clicked. Play video.");
+                    that.play();
+                }
+                else if(playerState == 1){
+                    NOMO_DEBUG("NCCL_scrolloveray clicked. Pause video.");
+                    that.pause();
+                }
+            });
+            that.$iframeContainer.append(that.$scrollOveray);
+            that.$scrollOveray.hide();
+        }
+
     }
     catch(e){
         NOMO_DEBUG("Error from createYTIframe", e);

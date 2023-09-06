@@ -301,20 +301,49 @@ html
     border-color:var(--NCCL-border-color);
 }
 
-.skin-1080 #nomo_settings
-,.skin-1080 #nomo_settings li
-,.skin-1080 #nomo_settings #GM_setting li[GM_setting_key="set_volume_when_stream_starts"]
-,.skin-1080 #GM_setting_footer
-,.skin-1080 #neighbor-cafe .comm-btn-top a
+.skin-1080 #neighbor-cafe .comm-btn-top a
 ,.skin-1080 .ModalLayer .layer_seller_contact .contact_box
 ,.skin-1080 #gnb .gnb_my_li .gnb_my_community a,.skin-1080  .gnb_notice_li .gnb_notice_all,.skin-1080  a.gnb_service_all, .gnb_svc_more .svc_btns
 ,.skin-1080 #naver-gnb #gnb-menu .gnb_txt
 ,.skin-1080 .LowLevelAccessGuide .cafe_level_info
+,.skin-1080 #GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item.on
 {
     color:var(--NCCL-font-color);
     background-color:var(--NCCL-background-color-lightest) !important;
     border-color:var(--NCCL-border-color) !important;
 }
+
+
+.skin-1080 #nomo_settings
+,.skin-1080 #nomo_settings li
+,.skin-1080 #GM_setting_footer
+{
+    color:var(--NCCL-font-color);
+    background-color:var(--NCCL-background-color) !important;
+    border-color:var(--NCCL-border-color);
+}
+
+.skin-1080 #nomo_settings #GM_setting .GM_setting_list_sub
+,.skin-1080 #nomo_settings #GM_setting .GM_setting_title
+,.skin-1080 #nomo_settings #GM_setting .GM_setting_desc
+,.skin-1080 #GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item:hover
+{
+    color:var(--NCCL-font-color);
+    background-color:var(--NCCL-background-color-lightest) !important;
+    border-color:var(--NCCL-border-color) !important;
+}
+
+.skin-1080 #nomo_settings #GM_setting #GM_setting_content.useTabs #GM_tabs
+,.skin-1080 #nomo_settings #GM_setting ul
+,.skin-1080 #GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container:first-child
+{
+    border-color:var(--NCCL-border-color) !important;
+}
+
+.skin-1080 #nomo_settings #GM_setting .GM_setting_under_dev .GM_setting_title{
+    color:#c9adff;
+}
+
 .skin-1080 #nomo_settings #GM_setting input
 ,.skin-1080 #nomo_settings #GM_setting .btn-default
 ,.skin-1080 #nomo_settings #GM_setting .btn-primary

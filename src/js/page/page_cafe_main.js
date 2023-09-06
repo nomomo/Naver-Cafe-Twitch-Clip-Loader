@@ -26,6 +26,43 @@ export async function PAGE_CAFE_MAIN(){
         <link rel="preconnect" href="https://production.assets.clips.twitchcdn.net/">
     `);
     
+    // youtubeFixClickAfterScrolling
+    if(GM_SETTINGS.youtubeFixClickAfterScrolling){
+        let setTimeoutScrollOveray;
+        let controlScrollOveray = function(){
+            for(let i=0;i<VideoYoutube.ytvideo.length;i++){
+                if(VideoYoutube.ytvideo[i].$scrollOveray !== undefined){
+                    VideoYoutube.ytvideo[i].$scrollOveray.show();
+                }
+            }
+
+            clearTimeout(setTimeoutScrollOveray);
+            setTimeoutScrollOveray = setTimeout(function(){
+                for(let i=0;i<VideoYoutube.ytvideo.length;i++){
+                    if(VideoYoutube.ytvideo[i].$scrollOveray !== undefined){
+                        VideoYoutube.ytvideo[i].$scrollOveray.hide();
+                    }
+                }
+            },1000);
+        };
+
+        unsafeWindow.parentScrollEvent = function(e){
+            NOMO_DEBUG("parent scroll event.", e);
+            controlScrollOveray();
+        };
+        $(document).on("wheel", function(e){
+            NOMO_DEBUG("iframe wheel event", e);
+            controlScrollOveray();
+        });
+        
+        window.addEventListener("message", function(e){
+            if(e.data.scrollEvent){
+                NOMO_DEBUG("got postmessage from youtube embed", e.data);
+                controlScrollOveray();
+            }
+        });
+    }
+
     // topUrlUpdateFromIframe
     if(GM_SETTINGS.topUrlUpdateFromIframe){
         var _wr = function(type) {
@@ -138,10 +175,6 @@ export async function PAGE_CAFE_MAIN(){
             if(GLOBAL.isDarkMode || (typeof(htmlDark === "boolean") && htmlDark) ){
                 isDarkMode = true;
             }
-        }
-        // shortsAutoResize
-        if(GM_SETTINGS.shortsAutoResize){
-            //
         }
 
         // let $seComponent = $elem.closest(".se-component");
@@ -695,15 +728,30 @@ export async function PAGE_CAFE_MAIN(){
     var lastScrollY = parentHtml.scrollTop;
     var checkIsFullScreen = function(){ return document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen; };
     try{
-        if(GM_SETTINGS.fixFullScreenScrollChange && window.self !== window.top){
+        if(window.self !== window.top){
             $(document).on ('mozfullscreenchange webkitfullscreenchange fullscreenchange',function(){
                 var isFullScreen = checkIsFullScreen();
                 NOMO_DEBUG("FullScreen", isFullScreen);
-                if(!isFullScreen){
-                    if(parentHtml.scrollTop !== lastScrollY){
-                        NOMO_DEBUG("parentHtml.scrollTop = ", parentHtml.scrollTop, "lastScrollY = ", lastScrollY);
+                if(isFullScreen){
+                    // $$$ TEST $$$
+                    // const fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+                    // if(fullscreenElement){
+                    //     NOMO_DEBUG("Currently fullscreen:", fullscreenElement);
+                    //     let $fullscreenElement = $(fullscreenElement);
+                    //     let $video = $fullscreenElement.find("video");
+                    //     NOMO_DEBUG("$video", $video);
+                    //     if($video.length !== 0){
+                    //         $video.get(0).play();
+                    //     }
+                    // }
+                }
+                else{
+                    if(GM_SETTINGS.fixFullScreenScrollChange){
+                        if(parentHtml.scrollTop !== lastScrollY){
+                            NOMO_DEBUG("parentHtml.scrollTop = ", parentHtml.scrollTop, "lastScrollY = ", lastScrollY);
+                        }
+                        parentHtml.scrollTop = lastScrollY;
                     }
-                    parentHtml.scrollTop = lastScrollY;
                 }
             });
 
@@ -711,8 +759,10 @@ export async function PAGE_CAFE_MAIN(){
                 var isFullScreen = checkIsFullScreen();
                 //NOMO_DEBUG("parent document html scrolltop", parentHtml.scrollTop, "isFullScreen", isFullScreen);
                 if(!isFullScreen){
-                    //lastScrollY = parent.window.scrollY;
-                    lastScrollY = parentHtml.scrollTop;
+                    if(GM_SETTINGS.fixFullScreenScrollChange){
+                        //lastScrollY = parent.window.scrollY;
+                        lastScrollY = parentHtml.scrollTop;
+                    }
                 }
             });
         }

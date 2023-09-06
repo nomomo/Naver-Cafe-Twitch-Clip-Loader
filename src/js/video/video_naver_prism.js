@@ -2,7 +2,7 @@ import { NOMO_DEBUG, isNumeric, escapeHtml } from "js/lib/lib.js";
 import { VideoNaver } from "js/video/video_naver.js";
 import { VideoBase } from "js/video/video_common.js";
 
-const Naverlogo = `<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;user-select: none;" viewBox="0 0 96 96" height="18px" width="18px"><g id="g10" inkscape:label="Image" inkscape:groupmode="layer"><rect y="5e-07" x="5e-07" height="96" width="96" id="rect865" style="fill:#1dc800;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" /><path style="fill:#ffffff;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 22.810019,26.075075 h 18.03984 l 16.57371,24.254979 V 26.106948 H 75.367786 V 74.106947 H 57.391689 L 40.881729,50.075074 v 24.095618 h -18.16733 z" id="path40" /></g></svg>`;
+export const Naverlogo = `<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:8px;user-select: none;" viewBox="0 0 96 96" height="18px" width="18px"><g id="g10" inkscape:label="Image" inkscape:groupmode="layer"><rect y="5e-07" x="5e-07" height="96" width="96" id="rect865" style="fill:#1dc800;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none" /><path style="fill:#ffffff;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="m 22.810019,26.075075 h 18.03984 l 16.57371,24.254979 V 26.106948 H 75.367786 V 74.106947 H 57.391689 L 40.881729,50.075074 v 24.095618 h -18.16733 z" id="path40" /></g></svg>`;
 
 export class VideoNaverPrism extends VideoBase {
     constructor(options) {
@@ -109,6 +109,21 @@ export class VideoNaverPrism extends VideoBase {
             GM_addStyle(`
             .pzp.pzp-pc .pzp-pc__volume-control > .pzp-pc__volume-slider, .pzp.pzp-pc--active-volume-control .pzp-pc__volume-slider { overflow: visible; width: 80px; }
             .pzp-pc--active-volume-control .pzp-pc__volume-slider, .pzp-pc .pzp-pc__volume-control>.pzp-pc__volume-slider { overflow: visible; width: 80px; }
+            `);
+        }
+
+        if(GM_SETTINGS.topBottomShadowOpacity != 1.0){
+            GM_addStyle(`
+            .NCCL_prism_container .pzp.pzp-pc.pzp-pc--controls .pzp-pc-header__top-shadow,
+            .NCCL_prism_container .pzp.pzp-pc.pzp-pc--controls .pzp-pc__bottom-shadow {
+                opacity:${GM_SETTINGS.topBottomShadowOpacity} !important;
+            }
+            `);
+        }
+
+        if(GM_SETTINGS.bottomShadowButton){
+            GM_addStyle(`
+                div.pzp-pc__bottom-buttons { filter:drop-shadow(0px 0px 1px rgba(0, 0, 0, .9)) drop-shadow(0px 0px 1.5px rgba(0, 0, 0, .5))};
             `);
         }
 
@@ -226,6 +241,10 @@ export class VideoNaverPrism extends VideoBase {
                 },100);
             }
         }
+
+        if(this.autoPlay && !this.firstPlayed){
+            this.play();
+        }
     }
     onTimeupdate(e){
         let currentTime = e.target.currentTime;
@@ -319,6 +338,7 @@ export class VideoNaverPrism extends VideoBase {
         let that = this;
 
         this.$seComponent = $oriElem;
+        this.$outermostContainer = this.$seComponent;
         this.$seComponent.addClass("NCCL_prism_container");
 
         //NOMO_DEBUG(this.$seComponent.html());
@@ -331,9 +351,8 @@ export class VideoNaverPrism extends VideoBase {
 
         /////////////////////////////////////////////////////////////////////////////
         // shortsAutoResize
-        //if(isVertical && GM_SETTINGS.shortsAutoResize){
         this.$seComponent.attr("NCCL_vertical",this.id); // add special attr to set style
-        if(GM_SETTINGS.shortsAutoResize){
+        if(GM_SETTINGS.shortsAutoResizeType !== "0"){
             const {newWidth, newHeight, newRatio, newPaddingTop} = this.getNewWidth();
             // add style
             GM_addStyle(`
