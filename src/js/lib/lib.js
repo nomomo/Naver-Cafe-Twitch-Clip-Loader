@@ -739,9 +739,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 }
 
 #GM_setting .availableVersion {
-    padding-left:5px;
-    margin-left:3px;
-    border-left:1px solid #eee;
+
 }
 #GM_setting .bg_lightgreen {
     background: #ddffdd;
@@ -1194,7 +1192,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
                 <div class="GM_setting_list_head">
                     <span class="GM_setting_title">
                     <span class="currentVersion">현재 버전: ${currentVersion}</span>
-                    <span class="availableVersion">${config.lastCheckedVersion ? "마지막으로 확인된 버전: " + config.lastCheckedVersion : ""}</span>
+                    <span class="availableVersion">${config.lastCheckedVersion ? "<span style='color:#ddd;user-select:none;'> | </span>마지막으로 확인된 버전: " + config.lastCheckedVersion : ""}</span>
                     </span>
                     <span class="GM_setting_desc">
                         <div class="lastVersionCheckedDate"></div>
