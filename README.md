@@ -65,6 +65,12 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.3.1 - Oct. 4, 2023
+
+- 버그 수정
+  - "게시판 글 기본 표시 개수 설정"이 기본값이 아닐 때 인기글이 보이지 않는 문제를 고쳤어요.
+  - 인기글에서 영화관 모드가 동작하지 않는 문제를 고쳤어요.
+
 ### 1.3.0 - Sep. 6, 2023
 
 - 새로운 기능

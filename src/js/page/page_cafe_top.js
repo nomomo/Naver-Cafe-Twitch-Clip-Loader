@@ -60,8 +60,7 @@ function openSettingsMenu(){
             <style id='GM_Setting_css_temp' rel='stylesheet' type='text/css'>ul, ol{margin:0; padding:0 !important;}
             #nomo_settings::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
             #nomo_settings::-webkit-scrollbar-thumb { background: #ccc; }
-            html{overflow-y:hidden;}
-            body{overflow-y:scroll;height:100dvh;}
+            body{overflow-y:hidden;}
             body #GM_setting .GM_setting_list_head {vertical-align:bottom;}
             body #GM_setting .form-check-input:checked{background-color: #2DB400; border-color: #2DB400;}
             body #GM_setting .btn.btn-primary {filter: hue-rotate(280deg);}
@@ -135,7 +134,7 @@ export default function PAGE_CAFE_TOP(){
                         setTimeout(function(){
                             let $a = $(v);
                             let oriHref = $a.attr("href");
-                            if(oriHref.indexOf("userDisplay") === -1){
+                            if(oriHref.indexOf("userDisplay") === -1 && !/\/popular$/.test(oriHref)){
                                 $a.attr("href", `${oriHref}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
                             }
                         }, 1);
@@ -147,7 +146,7 @@ export default function PAGE_CAFE_TOP(){
                     setTimeout(function(){
                         let $a = $(v);
                         let oriHref = $a.attr("href");
-                        if(oriHref.indexOf("userDisplay") === -1){
+                        if(oriHref.indexOf("userDisplay") === -1 && !/\/popular$/.test(oriHref)){
                             $a.attr("href", `${oriHref}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
                         }
                     }, 1);
