@@ -65,6 +65,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.3.2 - Dec. 10, 2023
+
+- 네이버 동영상 재생 전 & 재생이 끝난 상황에서 재생 버튼을 클릭하지 않아도 대충 배경화면을 클릭하면 동영상이 재생되도록 했어요. ("네이버 비디오 화면 클릭 동작 개선" 기능이 켜진 경우)
+
 ### 1.3.1 - Oct. 4, 2023
 
 - 버그 수정

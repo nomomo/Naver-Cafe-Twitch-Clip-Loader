@@ -534,6 +534,20 @@ export class VideoNaverPrism extends VideoBase {
         else{
             this.$seSectionVideo.append(this.$container);
         }
+
+        
+        // beforeplay & ended 시 -> 배경 클릭 시 재생
+        if(GM_SETTINGS.NaverVideoEnhancedClick){
+            this.$seComponent.on("click", ".pzp-ui-dimmed", function(e){
+                let $target = $(e.target);
+                // filter to prevent unintended actions
+                // .pzp.pzp-pc--beforeplay .pzp-pc__dimmed, .pzp.pzp-pc--ended .pzp-pc__dimmed
+                if($target.parent(".pzp.pzp-pc--beforeplay").length !== 0 || $target.parent(".pzp.pzp-pc--ended").length !== 0) {
+                    NOMO_DEBUG("Play this video by clicking video background");
+                    that.play();
+                }
+            });
+        }
     }
     
     async parseNewInkeyAndReloadPlayerPrism(beginTime){
