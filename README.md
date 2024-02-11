@@ -65,6 +65,13 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.3.4 - Feb. 12, 2024
+
+- 버그 수정
+  - "동영상 시청 종료 후 표시되는 메뉴를 숨김" 기능이 켜져있을 때, Afreeca tv 클립 재생이 종료된 후 배경 화면을 클릭하여 리플레이 하는 기능이 제대로 동작하지 않는 문제를 고쳤어요.
+- 기능 개선
+  - "동영상 시청 종료 후 표시되는 메뉴를 숨김" 기능이 꺼져있을 때에도 다음 클립을 자동으로 재생하지 않도록 했어요.
+
 ### 1.3.3 - Feb. 12, 2024
 
 - 버그 수정

@@ -179,7 +179,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"동영상 시청 종료 후 표시되는 메뉴를 숨김",
-        desc:"동영상 시청 종료 후 표시되는 추천 영상 메뉴 등의 오버레이를 숨기고, Youtube 의 경우 동영상 종료 후 화면을 클릭하여 리플레이 할 수 있도록 합니다."
+        desc:"동영상 시청 종료 후 표시되는 추천 영상 메뉴 등의 오버레이를 숨깁니다. Youtube 와 Afreeca TV 의 경우 동영상 종료 후 화면을 클릭하여 리플레이 할 수 있도록 합니다."
     },
     hideDescription: {
         category:"personal",
@@ -410,6 +410,15 @@ const _settings = {
         value: true,
         title:"Afreecatv 플레이어를 더욱 보기 좋게 만듦",
         desc:""
+    },
+    aftvDisablePlayNextClipAfterEnd: {
+        category:"aftv",
+        under_dev: true,
+        depth: 2,
+        type: "checkbox",
+        value: true,
+        title:"재생 종료 후 다음 클립을 자동으로 재생하는 것을 방지",
+        desc:"참고: '동영상 시청 종료 후 표시되는 메뉴를 숨김' 기능이 켜진 경우 이 설정은 항상 활성화 됩니다. Afreeca TV 클립 시청 종료 후 알 수 없는 문제가 생기는 경우 이 옵션이나 '동영상 시청 종료 후 표시되는 메뉴를 숨김' 옵션을 꺼보세요."
     },
 
     

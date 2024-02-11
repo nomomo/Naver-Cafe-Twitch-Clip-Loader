@@ -52,22 +52,49 @@ export class PageAFTV extends PageBase {
         }
         
         // hideEndOverlay
-        if(GM_SETTINGS.hideEndOverlay){
+        if(GM_SETTINGS.hideEndOverlay || GM_SETTINGS.aftvDisablePlayNextClipAfterEnd){
             $(document).arrive("#after_recommend button.cancel", { onlyOnce: true, existing: true }, function (elem) {
                 var $elem = $(elem);
                 if(!$elem.is(':visible')) return;
         
+                // click cancel button
                 NOMO_DEBUG("CANCEL after recommend");
                 $(elem).trigger("click");
-                $("#after_recommend").remove();
-            });
-            GM_addStyle(`.recommend_broadcast{opacity:0;}`);
-            $(document).on("click", ".recommend_broadcast", function(){
-                NOMO_DEBUG(".recommend_broadcast clicked");
-                var $btn_refresh = $("button.btn_refresh");
-                if($btn_refresh.length !== 0 && that.video.paused && that.video.ended){
-                    $btn_refresh.trigger("click");
+
+                if(GM_SETTINGS.hideEndOverlay){
+                    // remove overlay and show replay icon
+                    $("#after_recommend")
+                        .empty()
+                        .css({
+                            "width": "100%",
+                            "height": "100%",
+                            "opacity": 0.5,
+                            "cursor": "pointer",
+                            "background": `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='150px' height='150px' viewBox='0 0 25 25' fill='none'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.83 6.884a.5.5 0 0 0 0 .848l3.992 2.495a.5.5 0 0 0 .765-.424V8.109A4.893 4.893 0 0 1 12.5 17.77a4.891 4.891 0 0 1-4.892-4.891 1.087 1.087 0 0 0-2.173 0 7.065 7.065 0 1 0 8.152-6.982V4.814a.5.5 0 0 0-.765-.424L8.83 6.884z' fill='%23fff' fill-opacity='.8'/%3e%3c/svg%3e") 50% 50% no-repeat`
+                        });
                 }
+                else{
+                    // add background opacity
+                    $("#after_recommend")
+                        .css({
+                            "background-color": "rgba(0,0,0,0.9)",
+                            "cursor": "pointer"
+                        });
+                }
+
+                // click on the background to replay
+                $("#after_recommend")
+                    .on("click", function(e){
+                        if(!$(e.target).is("#after_recommend") && $(e.target).closest("#after_recommend").length > 0){
+                            NOMO_DEBUG("inner element in #after_recommend is clicked", e.target);
+                            return;
+                        }
+                        NOMO_DEBUG("#after_recommend clicked", e.target);
+                        var $btn_refresh = $("button.btn_refresh");
+                        if($btn_refresh.length !== 0 && $btn_refresh.is(":visible") && that.video.paused){
+                            $btn_refresh.trigger("click");
+                        }                    
+                    });
             });
         }
 
@@ -196,7 +223,7 @@ export class PageAFTV extends PageBase {
             //     $(elem).trigger("click");
             // });
             
-            // from 1.4.0
+            // from 1.3.3
             document.cookie = "CurrentQuality=original; expires=" + new Date(new Date().getTime() + (365 * 24 * 60 * 60 * 1000)).toGMTString() + "; path=/; SameSite=None; Secure";
         }
 
