@@ -65,6 +65,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.3.6 - Feb. 12, 2024
+
+- 버그 수정
+  - "볼륨 컨트롤바를 항상 표시" 기능이 Afreecatv 에 대해 동작하지 않는 문제를 고쳤어요.
+
 ### 1.3.5 - Feb. 12, 2024
 
 - 기능 개선

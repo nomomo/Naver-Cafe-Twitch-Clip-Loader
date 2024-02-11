@@ -137,7 +137,7 @@ const _settings = {
         type: "checkbox",
         value: false,
         title:"볼륨 컨트롤바를 항상 표시",
-        desc:"Youtube, Twitch, Naver Video 에서 플레이어의 볼륨 컨트롤바를 항상 표시합니다."
+        desc:"Youtube, Twitch, Afreecatv, Naver Video 에서 플레이어의 볼륨 컨트롤바를 항상 표시합니다."
     },
     videoWidth : {
         category:"personal",
@@ -418,7 +418,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"재생 종료 후 다음 클립을 자동으로 재생하는 것을 방지",
-        desc:"참고: '동영상 시청 종료 후 표시되는 메뉴를 숨김' 기능이 켜진 경우 이 설정은 항상 활성화 됩니다. Afreeca TV 클립 시청 종료 후 알 수 없는 문제가 생기는 경우 이 옵션이나 '동영상 시청 종료 후 표시되는 메뉴를 숨김' 옵션을 꺼보세요."
+        desc:"참고: '동영상 시청 종료 후 표시되는 메뉴를 숨김' 기능이 켜진 경우 이 설정은 항상 활성화 됩니다. Afreecatv 클립 시청 종료 후 알 수 없는 문제가 생기는 경우 이 옵션이나 '동영상 시청 종료 후 표시되는 메뉴를 숨김' 옵션을 꺼보세요."
     },
 
     

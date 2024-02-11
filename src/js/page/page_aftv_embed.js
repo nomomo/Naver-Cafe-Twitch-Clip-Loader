@@ -219,11 +219,16 @@ export class PageAFTV extends PageBase {
         // alwaysShowVolumeController
         if(GM_SETTINGS.alwaysShowVolumeController){
             GM_addStyle(`
-            body #afreecatv_player .player_ctrlBox .volume_slider_wrap .volume_slider {
-                margin-left: 0px;
-                opacity: 1;
-                -moz-opacity: 1;
-                filter: alpha(opacity=100);
+            #afreecatv_player .player_ctrlBox .volume {
+                overflow: visible !important; }
+            #afreecatv_player .player_ctrlBox .volume .sound {
+                margin-right: 8px !important; }
+            #afreecatv_player .player_ctrlBox .volume .volume_slider_wrap {
+                overflow: visible !important; }
+            #afreecatv_player .player_ctrlBox .volume .volume_slider {
+                margin-left: 0px !important;
+                opacity: 1 !important;
+                width: 70px !important;
             }
             `);
         }
