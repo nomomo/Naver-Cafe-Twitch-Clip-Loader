@@ -188,13 +188,16 @@ export class PageAFTV extends PageBase {
 
         // aftvAutoMaxQuality
         if(GM_SETTINGS.aftvAutoMaxQuality){
-            $(document).arrive("button[data-qualityname='original']", { onlyOnce: true, existing: true }, function (elem) {
-                var $elem = $(elem);
-                if($elem.hasClass("on")) return;
+            // $(document).arrive("button[data-qualityname='original']", { onlyOnce: true, existing: true }, function (elem) {
+            //     var $elem = $(elem);
+            //     if($elem.hasClass("on")) return;
 
-                NOMO_DEBUG("SET AFTV VIDEO SOURCE QUALITY");
-                $(elem).trigger("click");
-            });
+            //     NOMO_DEBUG("SET AFTV VIDEO SOURCE QUALITY");
+            //     $(elem).trigger("click");
+            // });
+            
+            // from 1.4.0
+            document.cookie = "CurrentQuality=original; expires=" + new Date(new Date().getTime() + (365 * 24 * 60 * 60 * 1000)).toGMTString() + "; path=/; SameSite=None; Secure";
         }
 
     }
