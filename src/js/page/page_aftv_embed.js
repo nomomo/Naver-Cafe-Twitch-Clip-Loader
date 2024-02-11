@@ -119,11 +119,7 @@ export class PageAFTV extends PageBase {
 
         // aftvBeautifier
         if(GM_SETTINGS.aftvBeautifier){
-            GM_addStyle(`/*play and pause 시 하단바가 움직이는 것을 개선한다*/
-            #afreecatv_player .player_ctrlBox .play{
-                margin-bottom:0px !important;
-            }
-        
+            GM_addStyle(`
             /*플레이어 상단 메뉴를 조금 더 투명하고 컴팩트하게 만든다*/
             #player_info .title h1 a{
                 font-size:18px !important;
