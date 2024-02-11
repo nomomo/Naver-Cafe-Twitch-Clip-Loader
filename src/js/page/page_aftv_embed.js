@@ -93,7 +93,19 @@ export class PageAFTV extends PageBase {
                         var $btn_refresh = $("button.btn_refresh");
                         if($btn_refresh.length !== 0 && $btn_refresh.is(":visible") && that.video.paused){
                             $btn_refresh.trigger("click");
-                        }                    
+                        }
+                        
+                        // some clips require the user to click the replay btn and press the play btn again
+                        setTimeout(function(){  // async
+                            let $nextVideoBtn = $("#afreecatv_player .nextvideo .bg");
+                            if($nextVideoBtn.length == 1 && $nextVideoBtn.is(':visible') && that.video.paused){
+                                NOMO_DEBUG("Wait to click #afreecatv_player .nextvideo .bg");
+                                $nextVideoBtn.trigger("click");
+                            }
+                            else{
+                                NOMO_DEBUG("There is no #afreecatv_player .nextvideo .bg");
+                            }
+                        },10);
                     });
             });
         }

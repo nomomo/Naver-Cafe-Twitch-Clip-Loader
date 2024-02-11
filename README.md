@@ -65,6 +65,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.3.5 - Feb. 12, 2024
+
+- 기능 개선
+  - Afreeca tv 클립 재생이 종료된 후 배경 화면을 클릭하여 리플레이 할 때의 동작을 더욱 개선했어요.
+
 ### 1.3.4 - Feb. 12, 2024
 
 - 버그 수정
