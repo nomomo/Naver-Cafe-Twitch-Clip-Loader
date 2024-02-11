@@ -44,6 +44,13 @@ export class PageAFTV extends PageBase {
             -moz-opacity: 1;
             filter: alpha(opacity=100)
         }
+
+        .NCCLaftvReplayBtn {
+            opacity:0.6;
+        }
+        #afreecatv_player.mouseover .NCCLaftvReplayBtn{
+            opacity:0.9;
+        }
         `);
 
         // hidePauseOverlay
@@ -69,9 +76,9 @@ export class PageAFTV extends PageBase {
                             "width": "100%",
                             "height": "100%",
                             "opacity": 0.5,
-                            "cursor": "pointer",
-                            "background": `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='150px' height='150px' viewBox='0 0 25 25' fill='none'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.83 6.884a.5.5 0 0 0 0 .848l3.992 2.495a.5.5 0 0 0 .765-.424V8.109A4.893 4.893 0 0 1 12.5 17.77a4.891 4.891 0 0 1-4.892-4.891 1.087 1.087 0 0 0-2.173 0 7.065 7.065 0 1 0 8.152-6.982V4.814a.5.5 0 0 0-.765-.424L8.83 6.884z' fill='%23fff' fill-opacity='.8'/%3e%3c/svg%3e") 50% 50% no-repeat`
-                        });
+                            "cursor": "pointer"
+                        })
+                        .html(`<svg class="NCCLaftvReplayBtn" xmlns='http://www.w3.org/2000/svg' width='150px' height='150px' viewBox='0 0 25 25' fill='none'><path fill-rule='evenodd' clip-rule='evenodd' d='M8.83 6.884a.5.5 0 0 0 0 .848l3.992 2.495a.5.5 0 0 0 .765-.424V8.109A4.893 4.893 0 0 1 12.5 17.77a4.891 4.891 0 0 1-4.892-4.891 1.087 1.087 0 0 0-2.173 0 7.065 7.065 0 1 0 8.152-6.982V4.814a.5.5 0 0 0-.765-.424L8.83 6.884z' fill='#fff'/></svg>`);
                 }
                 else{
                     // add background opacity
@@ -85,7 +92,7 @@ export class PageAFTV extends PageBase {
                 // click on the background to replay
                 $("#after_recommend")
                     .on("click", function(e){
-                        if(!$(e.target).is("#after_recommend") && $(e.target).closest("#after_recommend").length > 0){
+                        if(!$(e.target).is(".NCCLaftvReplayBtn") && !$(e.target).is("#after_recommend") && $(e.target).closest("#after_recommend").length > 0){
                             NOMO_DEBUG("inner element in #after_recommend is clicked", e.target);
                             return;
                         }
