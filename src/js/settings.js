@@ -112,6 +112,15 @@ const _settings = {
             "2":{title:"적당히"}
         }
     },
+    shortsAutoResizeAftv : {
+        category:"videoCommon",
+        under_dev:true,
+        depth: 2,
+        type: "checkbox",
+        value: false,
+        title:"🧪 Afreecatv 세로 비디오 크기 자동 조절",
+        desc:"Afreecatv 비디오의 세로 해상도가 가로 해상도보다 큰 경우, 플레이어의 크기를 보기 좋은 사이즈로 자동 조절합니다. Afreecatv 비디오 재생에 문제가 생길 경우 본 기능을 끄세요."
+    },
     autoScrollByVideoVisibility: {
         category: "videoCommon",
         depth: 1,
@@ -419,6 +428,15 @@ const _settings = {
         value: true,
         title:"재생 종료 후 다음 클립을 자동으로 재생하는 것을 방지",
         desc:"참고: '동영상 시청 종료 후 표시되는 메뉴를 숨김' 기능이 켜진 경우 이 설정은 항상 활성화 됩니다. Afreecatv 클립 시청 종료 후 알 수 없는 문제가 생기는 경우 이 옵션이나 '동영상 시청 종료 후 표시되는 메뉴를 숨김' 옵션을 꺼보세요."
+    },
+    aftvHideLiveAlert: {
+        category:"aftv",
+        under_dev: true,
+        depth: 2,
+        type: "checkbox",
+        value: false,
+        title:"🧪 \"지금 생방송을 진행 중입니다.\" 를 표시하지 않음",
+        desc:""
     },
 
     

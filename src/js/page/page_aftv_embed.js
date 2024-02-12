@@ -27,11 +27,9 @@ export default function PAGE_AFTV_EMBED(){
 export class PageAFTV extends PageBase {
     constructor(options){
         options.typeName = "AFTV_VOD";
+        options.videoSelector = "video#video.af_video";
         super(options);
         NOMO_DEBUG("new PageNaver", options);
-
-        this.elemBtnPlay = "#btnPlayPause";
-        this.elemBtnPause = "#btnPlayPause";
 
         this.mouseleaveSetTimeout = undefined;  // 레이아웃 빠르게 숨기기용
 
@@ -50,6 +48,10 @@ export class PageAFTV extends PageBase {
         }
         #afreecatv_player.mouseover .NCCLaftvReplayBtn{
             opacity:0.9;
+        }
+
+        .NCCL_Vertical #afreecatv_player .nextvideo{
+            background-size: cover !important;
         }
         `);
 
@@ -173,6 +175,14 @@ export class PageAFTV extends PageBase {
                     $(".mouseover").removeClass("mouseover");
                 },100);
             });
+
+            // 라이브 알림을 끄면 바로 숨긴다
+            $(document).arrive("div.live_alert.on button", { onlyOnce: true, existing: true }, function (elem) {
+                $(elem).on("click", function(e){
+                    NOMO_DEBUG("hide live_alert");
+                    $(e.target).closest("div.live_alert").hide();
+                });
+            });
         }
 
         // something special
@@ -235,31 +245,83 @@ export class PageAFTV extends PageBase {
 
         // aftvAutoMaxQuality
         if(GM_SETTINGS.aftvAutoMaxQuality){
-            // $(document).arrive("button[data-qualityname='original']", { onlyOnce: true, existing: true }, function (elem) {
-            //     var $elem = $(elem);
-            //     if($elem.hasClass("on")) return;
+            try{
+                document.cookie = "CurrentQuality=original; expires=" + new Date(new Date().getTime() + (365 * 24 * 60 * 60 * 1000)).toGMTString() + "; path=/; SameSite=None; Secure";
+            }
+            catch(e){
+                NOMO_DEBUG("error from aftvAutoMaxQuality", e);
+            }
+        }
 
-            //     NOMO_DEBUG("SET AFTV VIDEO SOURCE QUALITY");
-            //     $(elem).trigger("click");
-            // });
+        if(GM_SETTINGS.aftvHideLiveAlert){
+            GM_addStyle(`
+               div.live_alert {display:none !important} 
+            `);
+        }
+
+        // shortsAutoResizeAftv
+        if(GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv){
+            try {
+                let OriginalXMLHttpRequest = XMLHttpRequest;
+                let CustomXMLHttpRequest = function() {
+                    let xhr = new OriginalXMLHttpRequest();
+
+                    // new send()
+                    xhr.send = function(data) {
+                        let onReadyStateChangeCallback = xhr.onreadystatechange;
+
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState !== XMLHttpRequest.DONE) {
+                                return;
+                            }
+
+                            try {
+                                //NOMO_DEBUG("xhr", xhr);
+                                if(xhr.responseURL.indexOf("afreecatv.com/station/video/a/view") !== -1){
+
+                                    let responseData = xhr.responseText;
+                                    let parsedData = JSON.parse(responseData);
+                                    if (parsedData && parsedData.data && parsedData.data.file_resolution) {
+                                        let resolution = parsedData.data.file_resolution.split("x");
+                                        let width = parseInt(resolution[0]);
+                                        let height = parseInt(resolution[1]);
+                
+                                        //NOMO_DEBUG("responseText", xhr.responseText);
+                                        NOMO_DEBUG("parsedData", parsedData);
+                                        if (width < height) {
+                                            NOMO_DEBUG("SHORTS 감지됨", width, height);
+                                            $("body").addClass("NCCL_Vertical");
+                                            that.sendPostMessage({"type":"NCCL", "event":"shorts", "width":width, "height":height});
+                                        }
+                                    } else {
+                                        NOMO_DEBUG("Unexpected data structure from CustomXMLHttpRequest");
+                                    }
+                                }
             
-            // from 1.3.3
-            document.cookie = "CurrentQuality=original; expires=" + new Date(new Date().getTime() + (365 * 24 * 60 * 60 * 1000)).toGMTString() + "; path=/; SameSite=None; Secure";
+                                // call original callback
+                                if (onReadyStateChangeCallback) {
+                                    onReadyStateChangeCallback.apply(xhr);
+                                }
+                            } catch (error) {
+                                NOMO_DEBUG("error from CustomXMLHttpRequest", error);
+                            }
+                        };
+
+                        // call original send
+                        xhr.__proto__.send.apply(xhr, arguments);
+                    };
+
+                    return xhr;
+                };
+                unsafeWindow.XMLHttpRequest = CustomXMLHttpRequest;
+            }
+            catch(e){
+                NOMO_DEBUG("error from shortsAutoResizeAftv", e);
+            }
         }
 
     }
     
-    // play(){
-    //     if(this.video && this.video.paused){
-    //         $("#btnPlayPause").trigger("click");
-    //     }
-    // }
-    // pause(){
-    //     if(this.video && !this.video.paused){
-    //         $("#btnPlayPause").trigger("click");
-    //     }
-    // }
-
     onFirstPlay(){
         super.onFirstPlay();
         

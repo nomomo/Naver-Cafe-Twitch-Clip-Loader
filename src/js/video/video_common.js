@@ -90,14 +90,32 @@ export class VideoBase {
                 NOMO_DEBUG("received postMessage (embed -> naver)", e.data);
                 NOMO_DEBUG("VideoBase.videos", VideoBase.videos);
                 if(e.data.seq === undefined || e.data.seq === "") return;
+                let that = VideoBase.videos[e.data.seq];
                 switch(e.data.event){
                 default:
                     break;
                 case "play":
-                    VideoBase.videos[e.data.seq].autoPlayPauseOthers("play");
+                    that.autoPlayPauseOthers("play");
                     break;
                 case "ended":
-                    VideoBase.videos[e.data.seq].autoPlayPauseOthers("ended");
+                    that.autoPlayPauseOthers("ended");
+                    break;
+                case "shorts":
+                    NOMO_DEBUG("Update shorts size", e.data.width, e.data.height);
+                    if(GM_SETTINGS.shortsAutoResizeType !== "0"){
+                        that.originalWidth = e.data.width;
+                        that.originalHeight = e.data.height;
+                        that.$iframeContainer.attr("NCCL_vertical",that.id); // add special attr to set style
+                        if(GM_SETTINGS.shortsAutoResizeType !== "0"){
+                            const {newWidth, newHeight, newRatio, newPaddingTop} = that.getNewWidth();
+                            // add style
+                            GM_addStyle(`
+                                .NCCL_container[NCCL_vertical='${that.id}'] {box-shadow:0px 0px 1px 1px rgb(0 0 0 / 4%);}
+                                .NCCL_iframe_container[NCCL_vertical='${that.id}'] {aspect-ratio:${newRatio} !important;}
+                                `
+                            );
+                        }
+                    }
                     break;
                 }
             }

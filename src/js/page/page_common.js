@@ -15,6 +15,7 @@ export class PageBase {
         this.muted = options.muted;
 
         this.firstPlayed = false;
+        this.videoSelector = (options.videoSelector ? options.videoSelector : "video");
         this.videoReady = false;
         this.videoFound = false;
         this.video = undefined;
@@ -29,7 +30,7 @@ export class PageBase {
         this.isExitFullscreenAfterEnd = false;  // 동영상 재생 완료 후 이미 전체화면 해제되었는지 여부
 
         // bind event;
-        $(document).arrive("video", { existing: true }, function (elem) {
+        $(document).arrive(this.videoSelector, { existing: true }, function (elem) {
             that.video = elem;
             that.videoFound = true;
 
@@ -165,6 +166,9 @@ export class PageBase {
         //     obj.date = currentDate;
         //     window.parent.postMessage(obj, "https://cafe.naver.com");
         // }
+        if(obj.seq === undefined && this.seq) {
+            obj.seq = this.seq;
+        }
         NOMO_DEBUG("send postMessage (embed -> naver)", "id=", this.id, "seq=", this.seq, obj);
         window.parent.postMessage(obj, "https://cafe.naver.com");
     }
