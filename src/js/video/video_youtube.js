@@ -115,7 +115,7 @@ export class VideoYoutube extends VideoBase {
     }
     createIframe(){try{
         let that = this;
-        if(YT === undefined || !YT.loading) {
+        if(typeof YT === "undefined" || !YT.loading) {
             if(!this.recur) this.recur = 0;
             this.recur += 1;
             NOMO_DEBUG("[createIframe] There is no youtube iframe api yet, reload", this.id, this.recur);

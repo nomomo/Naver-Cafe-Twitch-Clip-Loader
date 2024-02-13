@@ -65,6 +65,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.3.8 - Feb. 14, 2024
+
+- 버그 수정
+  - 네트워크 상태가 좋지 않거나, Youtube Embed API 로딩에 문제가 생긴 경우 Youtube 비디오가 "YT is not defined" 라는 메시지와 함께 로드되지 않는 오류를 고쳤어요.
+
 ### 1.3.7 - Feb. 13, 2024
 
 - 새로운 실험실 기능
