@@ -11,8 +11,7 @@
     - 카페 글에 삽입된 치지직 클립 링크를 비디오로 바꿔줘요. 예시) https://chzzk.naver.com/embed/clip/12341234
     - 네이버 카페에서 치지직 클립을 정식으로 지원하기 전 임시로 치지직 클립을 지원하기 위해 개발했어요.
     - 클립 제목을 파싱하기 위해 chzzk.naver.com 에 접근해야해요. 이를 위해 스크립트 메타 태그에 `@connect chzzk.naver.com`을 추가했어요. 스크립트 업데이트 시 확인 창이 뜰 수 있습니다.
-
-![v1.4.0](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/240509_v140.png)
+    - ![v1.4.0](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/240509_v140.png)
 
 ## 1.3.8 - Feb. 14, 2024
 

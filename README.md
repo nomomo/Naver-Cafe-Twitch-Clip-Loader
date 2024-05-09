@@ -1,7 +1,7 @@
 # Naver-Cafe-Clip-Loader
 
 - 본 UserScript 는 네이버 카페 글에서 자체 지원되지 않는 외부 동영상 링크를 재생 가능한 비디오로 변환해줍니다.
-- Twitch Clip & VOD, Youtube Clip, Streamable, Afreecatv Clip & VOD, Chzzk Clip, Twip VOD & Clip, Kakao TV, Dailymotion, gfycat, Tiktok 링크를 Cafe 에서 바로 볼 수 있도록 비디오로 변환합니다.
+- Youtube Clip, Afreecatv, Chzzk, Twitch, Streamable, Twip, Kakao TV, Dailymotion, gfycat, Tiktok 링크를 Cafe 에서 바로 볼 수 있도록 비디오로 변환합니다.
 - 네이버 카페에서 전체화면 후 해제 시 스크롤이 이상한 위치로 이동하는 문제를 해결해줍니다.
 - Naver 비디오를 최대 품질로 자동 재생합니다.
 - 영화관 모드 (클립 등 비디오 감상에 적합하도록 본문을 더 넓게 표시)
@@ -73,8 +73,7 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
   - "Chzzk 클립 링크를 비디오로 변환" 기능 추가
     - 카페 글에 삽입된 치지직 클립 링크를 비디오로 바꿔줘요. 예시) https://chzzk.naver.com/embed/clip/12341234
     - 네이버 카페에서 치지직 클립을 정식으로 지원하기 전 임시로 치지직 클립을 지원하기 위해 개발했어요.
-
-![v1.4.0](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/240509_v140.png)
+    - ![v1.4.0](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/240509_v140.png)
 
 ### 1.3.8 - Feb. 14, 2024
 
