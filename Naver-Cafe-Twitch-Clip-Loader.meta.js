@@ -43,4 +43,5 @@
 // @connect     tv.kakao.com
 // @connect     tv.naver.com
 // @connect     vlive.tv
+// @connect     chzzk.naver.com
 // ==/UserScript==
