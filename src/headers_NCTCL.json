@@ -2,7 +2,7 @@
   "name": "Naver-Cafe-Clip-Loader",
   "namespace": "Naver-Cafe-Clip-Loader",
   "author": "Nomo",
-  "description": "Naver Cafe 에서 Youtube Clip, Streamable, Afreecatv VOD, Clippy, Twitch(해외) 등의 외부 VOD 시청을 도와주는 유저스크립트 확장",
+  "description": "Naver Cafe 에서 Youtube Clip, Afreecatv, Chzzk, Streamable, Twip, Twitch(해외) 등의 외부 Clip & VOD 시청을 도와주는 유저스크립트 확장",
   "match": [
     "https://cafe.naver.com/*",
     "https://clips.twitch.tv/*parent=cafe.naver.com*",
