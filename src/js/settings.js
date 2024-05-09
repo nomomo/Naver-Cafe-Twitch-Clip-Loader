@@ -3,6 +3,7 @@ import {messageCafeTop} from "js/page/page_cafe_top.js";
 import {Naverlogo} from "js/video/video_naver_prism";
 import {AFTVLogo} from "js/video/video_aftv";
 import {YTlogo} from "js/video/video_youtube";
+import {ChzzkLogo} from "js/video/video_chzzk_embed";
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Settings
@@ -282,6 +283,18 @@ const _settings = {
         value: true,
         title:"네이버 비디오 화면 클릭 동작 개선",
         desc:"네이버 비디오 화면 위에서 클릭 후 살짝 마우스를 움직일 때 클릭이 씹히는 것을 개선합니다. 더블클릭으로 전체화면 모드를 활성화 합니다. 동영상 재생 전 & 재생이 끝난 후 배경화면을 클릭하여 동영상을 재생할 수 있습니다."
+    },
+
+    // Chzzk
+    useChzzk : {
+        category:"chzzk",
+        category_name:ChzzkLogo+"Chzzk",
+        category_desc: "",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"Chzzk 클립 링크를 비디오로 변환",
+        desc:"<span style='color:#999'>예시) https://chzzk.naver.com/embed/clip/12341234</span><br />네이버 카페에서 치지직 클립을 정식으로 지원하기 전, 임시로 치지직 클립을 지원하기 위해 개발한 기능이에요. 치지직 클립 관련 문제가 발생하면 본 기능을 끄세요.",
     },
 
     // Youtube

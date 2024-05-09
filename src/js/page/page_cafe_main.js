@@ -12,6 +12,7 @@ import { VideoKakao } from "js/video/video_kakao.js";
 import { VideoGfycat } from "js/video/video_gfycat.js";
 import { VideoTiktok } from "js/video/video_tiktok.js";
 import { VideoTwip } from "js/video/video_twip.js";
+import { VideoChzzkEmbed } from "js/video/video_chzzk_embed.js";
 
 export async function PAGE_CAFE_MAIN(){
     // add dns-prefetch and preconnect header
@@ -156,6 +157,9 @@ export async function PAGE_CAFE_MAIN(){
     }
     if(GM_SETTINGS.useTiktok){
         regexs[GLOBAL.TIKTOK] = /https:\/\/www\.tiktok.com\/[-A-Z0-9+&@#/%=~_|^ㄱ-ㅎㅏ-ㅣ가-힣]+\/video\/(\d+)/i;
+    }
+    if(GM_SETTINGS.useChzzk){
+        regexs[GLOBAL.CHZZK_EMBED] = /^https:\/\/chzzk.naver.com\/embed\/(?:vod|clip)\/([a-zA-Z0-9-_]+)/i;
     }
 
     // 다크모드인지 체크하기 위한 변수
@@ -484,6 +488,23 @@ export async function PAGE_CAFE_MAIN(){
 
             case GLOBAL.TIKTOK:{
                 let vid = new VideoTiktok({
+                    id:match[1],
+                    originalUrl:src,
+                    url:src,
+                    title:title,
+                    desc:desc,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: thumbnailUrl,
+                    autoPlay:autoPlay,
+                    muted:muted
+                });
+                vid.createIframeContainer($seComponent);
+                break;
+            }
+
+            case GLOBAL.CHZZK_EMBED:{
+                let vid = new VideoChzzkEmbed({
                     id:match[1],
                     originalUrl:src,
                     url:src,

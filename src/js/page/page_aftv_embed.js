@@ -218,7 +218,7 @@ export class PageAFTV extends PageBase {
                 localStorage.setItem('volume', GM_SETTINGS.target_start_volume);
         
                 if(GM_SETTINGS.target_start_volume !== 0){
-                    localStorage.setItem('muted', {default:Number(false)});
+                    localStorage.setItem('muted', `{"default":0}`);
                 }
             }
             catch(e){

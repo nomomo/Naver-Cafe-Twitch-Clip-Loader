@@ -11,6 +11,7 @@ import PAGE_YOUTUBE_EMBED from "./js/page/page_youtube_embed";
 import PAGE_AFTV_EMBED from "./js/page/page_aftv_embed";
 import PAGE_STREAMABLE_EMBED from "./js/page/page_streamable_embed";
 import PAGE_TWIP_EMBED from "./js/page/page_twip_embed";
+import PAGE_CHZZK_EMBED from "./js/page/page_chzzk_embed";
 import {applyTheaterMode} from "./js/theater";
 import { PageBase } from "js/page/page_common.js";
 import css_common from "css/common.css";
@@ -103,6 +104,12 @@ import css_common from "css/common.css";
     else if (GLOBAL.isTwipEmbed){
         if(GM_SETTINGS.useTwip){
             PAGE_TWIP_EMBED();
+        }
+    }
+
+    else if (GLOBAL.isChzzkEmbed){
+        if(GM_SETTINGS.useChzzk){
+            PAGE_CHZZK_EMBED();
         }
     }
 

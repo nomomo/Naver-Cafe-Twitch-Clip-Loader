@@ -20,6 +20,7 @@ export default function GLOBAL_INIT(){
     GLOBAL.VLIVE__1 = 17;
     GLOBAL.VLIVE__2 = 18;
     GLOBAL.TIKTOK = 19;
+    GLOBAL.CHZZK_EMBED = 20;
     GLOBAL.scriptName = escapeHtml(GM.info.script.name || GM_info.script.name);
     GLOBAL.version = escapeHtml(GM.info.script.version || GM_info.script.version);
     GLOBAL.isTopWindow = window.self === window.top;
@@ -42,6 +43,7 @@ export default function GLOBAL_INIT(){
     GLOBAL.isStreamableEmbed = /^https?:\/\/streamable\.com\/e\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isAftvEmbed = /^https?:\/\/vod\.afreecatv\.com\/player\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isTwipEmbed = /^https?:\/\/vod.twip.kr\/(?:vod|clip)\/[a-zA-Z0-9-_]+\/embed/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isChzzkEmbed = /^https:\/\/chzzk.naver.com\/embed\/(?:vod|clip)\/[a-zA-Z0-9-_]+/.test(GLOBAL.initLocationUrl);
     GLOBAL.isKakaotvEmbed = false;
     GLOBAL.isDailymotionEmbed = false;
     GLOBAL.isGfycat = false;

@@ -65,6 +65,17 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.4.0 - May 9, 2024
+
+**스크립트 작동 대상 웹사이트 추가(chzzk.naver.com)로 인하여 수동 업데이트 화면이 나타날 수 있습니다. "업그레이드" 버튼을 눌러주세요. 업그레이드를 원치 않는 경우 FAQ 를 참고하여 자동 업데이트를 해제하세요.**
+
+- 새로운 기능
+  - "Chzzk 클립 링크를 비디오로 변환" 기능 추가
+    - 카페 글에 삽입된 치지직 클립 링크를 비디오로 바꿔줘요. 예시) https://chzzk.naver.com/embed/clip/12341234
+    - 네이버 카페에서 치지직 클립을 정식으로 지원하기 전 임시로 치지직 클립을 지원하기 위해 개발했어요.
+
+![v1.4.0](https://raw.githubusercontent.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/master/images/240509_v140.png)
+
 ### 1.3.8 - Feb. 14, 2024
 
 - 버그 수정

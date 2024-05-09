@@ -57,6 +57,9 @@ export class PageBase {
             that.video.addEventListener('timeupdate', (e) => {
                 that.onTimeupdate(e);
             });
+            that.video.addEventListener('canplaythrough', (e) => {
+                that.onCanplaythrough(e);
+            });
 
             that.onPlayerReady();
         });
@@ -139,6 +142,9 @@ export class PageBase {
         //
     }
     onTimeupdate(e){
+        //
+    }
+    onCanplaythrough(e){
         //
     }
     onFirstPlay(){
