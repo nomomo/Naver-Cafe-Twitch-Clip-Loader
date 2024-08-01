@@ -10,6 +10,16 @@ export default function PAGE_CHZZK_EMBED(){
     let muted = urlParam.get("muted") === "true";
     let autoPlay = urlParam.get("autoPlay") === "true";
 
+    // alwaysShowVolumeController
+    if(GM_SETTINGS.alwaysShowVolumeController){
+        GM_addStyle(`
+        .pzp-pc .pzp-pc__volume-control>.pzp-pc__volume-slider,.pzp-pc--active-volume-control .pzp-pc__volume-slider {
+            overflow: visible;
+            width: 80px
+        }
+        `);
+    }
+
     // set_volume_when_stream_starts
     try{
         if(GM_SETTINGS.set_volume_when_stream_starts){

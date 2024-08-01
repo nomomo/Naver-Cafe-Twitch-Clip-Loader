@@ -105,10 +105,11 @@ export class VideoNaverPrism extends VideoBase {
             }
         `);
 
+        // .pzp.pzp-pc .pzp-pc__volume-control:hover > .pzp-pc__volume-slider, .pzp.pzp-pc--active-volume-control .pzp-pc__volume-slider
         if(GM_SETTINGS.alwaysShowVolumeController){
             GM_addStyle(`
-            .pzp.pzp-pc .pzp-pc__volume-control > .pzp-pc__volume-slider, .pzp.pzp-pc--active-volume-control .pzp-pc__volume-slider { overflow: visible; width: 80px; }
-            .pzp-pc--active-volume-control .pzp-pc__volume-slider, .pzp-pc .pzp-pc__volume-control>.pzp-pc__volume-slider { overflow: visible; width: 80px; }
+            .pzp.pzp-pc .pzp-pc__volume-control > .pzp-pc__volume-slider, .pzp.pzp-pc--active-volume-control .pzp-pc__volume-slider { overflow: visible; width: 72px; margin-right: 13px; }
+            .pzp-pc--active-volume-control .pzp-pc__volume-slider, .pzp-pc .pzp-pc__volume-control>.pzp-pc__volume-slider { overflow: visible; width: 72px; margin-right: 13px; }
             `);
         }
 
@@ -206,7 +207,9 @@ export class VideoNaverPrism extends VideoBase {
         super.eventPlay();
         this.autoPlayPauseOthers("play");
         if(this.$NCCL_pzp_qset && this.$NCCL_pzp_qset.length !== 0){
-            this.$NCCL_pzp_qset.fadeOut(300);
+            setTimeout(function(){
+                this.$NCCL_pzp_qset.fadeOut(300);
+            },1000);
         }
     }
     eventPause(){
@@ -255,7 +258,7 @@ export class VideoNaverPrism extends VideoBase {
     setMaxQuality(){
         if(!GM_SETTINGS.naverVideoAutoMaxQuality) return;
         let that = this;
-        this.$seComponent.arrive(".pzp-pc-ui-setting-quality-item", { onlyOnce: true, existing: true }, function (subElem) {
+        this.$seComponent.arrive(".pzp-ui-setting-quality-item", { onlyOnce: true, existing: true }, function (subElem) {
             if(that.isSetMaxQuality) return;
             let $subElem = $(subElem);
             let $ul = $subElem.closest("ul");
@@ -268,9 +271,21 @@ export class VideoNaverPrism extends VideoBase {
                     $qlis[1].click();
 
                     that.insertQsetDisplay();
-                    let text = $(liElem).find(".pzp-pc-ui-setting-intro-panel__value").text();
+
+                    // get quality text
+                    let text = "";
+                    try{
+                        text = $($qlis[1]).find(".pzp-ui-setting-quality-item__prefix").text().replace(/\s/g,"");
+                    }
+                    catch(e)
+                    {
+                        text = "";
+                    }
                     that.latestVideoQuality = text;
-                    that.$NCCL_pzp_qset.html(`<span class="NCCL_pzp_qset_tooltip">NCCL에 의해 최고 품질로 자동 설정됨</span>` + text + `<span> (최고 품질)<span>`);    // color:#03C75A;
+                    // that.$NCCL_pzp_qset.html(`<span class="NCCL_pzp_qset_tooltip">NCCL에 의해 최고 품질로 자동 설정됨</span>` + text + `<span>최고 품질 (${text})<span>`);    // color:#03C75A;
+                    if(text != ""){
+                        that.$NCCL_pzp_qset.html(`<span>${text}<span>`);    // color:#03C75A;
+                    }
 
                     // BANJJAK
                     setTimeout(function(){

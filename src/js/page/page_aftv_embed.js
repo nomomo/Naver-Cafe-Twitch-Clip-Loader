@@ -1,4 +1,4 @@
-import { NOMO_DEBUG } from "../lib/lib";
+import { NOMO_DEBUG, isDEBUG } from "../lib/lib";
 import { PageBase } from "js/page/page_common.js";
 
 export default function PAGE_AFTV_EMBED(){
@@ -185,33 +185,6 @@ export class PageAFTV extends PageBase {
             });
         }
 
-        // something special
-        let ss = true;
-        if(ss){
-            try{
-                $(document).ready(function(){
-                    if(unsafeWindow.$ === undefined){
-                        return;
-                    }
-                    unsafeWindow.oriAjax = unsafeWindow.$.ajax;
-                    unsafeWindow.$.ajax = function(){
-                        //NOMO_DEBUG("arguments", arguments);
-                        if(arguments[0].url.indexOf("https://reqde.afreecatv.com") === -1){
-                            unsafeWindow.oriAjax.apply(this, arguments);
-                        }
-                        else{
-                            //arguments[0].success(JSON.stringify({"type":"no-ad","exist":false}));
-                            arguments[0].error({status:1},"","");
-                        }
-                        
-                    };
-                });
-            }
-            catch(e){
-                NOMO_DEBUG("error from monga...monga...", e);
-            }
-        }
-
         // set_volume_when_stream_starts
         if(GM_SETTINGS.set_volume_when_stream_starts){
             try{
@@ -259,25 +232,62 @@ export class PageAFTV extends PageBase {
             `);
         }
 
+        // something special when debug mode is on
+        let ss = isDEBUG();
+
         // shortsAutoResizeAftv
-        if(GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv){
+        // TODO: Resolve callback hell
+        if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) || ss){
             try {
                 let OriginalXMLHttpRequest = XMLHttpRequest;
                 let CustomXMLHttpRequest = function() {
                     let xhr = new OriginalXMLHttpRequest();
 
+                    xhr.open = function(method, url, async, user, password) {
+                        this._url = url;  // Save the URL to check it later
+                        // call original send
+                        xhr.__proto__.open.apply(xhr, arguments);
+                    };
+
                     // new send()
                     xhr.send = function(data) {
+                        if (this._url && (this._url.includes("deapi.afreecatv.com") || this._url.includes("/get_ad.php") )) {
+
+                            console.log("Blocked request to: " + this._url);
+                            // Set readyState to DONE (4)
+                            this.readyState = 4;
+                            // Call onreadystatechange if it is defined
+                            if (typeof this.onreadystatechange === 'function') {
+                                this.onreadystatechange();
+                            }
+                            // Call onload if it is defined
+                            if (typeof this.onload === 'function') {
+                                this.onload();
+                            }
+                            return;  // Prevent the request from being sent
+                        }
+
                         let onReadyStateChangeCallback = xhr.onreadystatechange;
 
                         xhr.onreadystatechange = function() {
+                            // // ???????????????????????
+                            // try{
+                            //     if(ss && (xhr.responseURL.indexOf("https://reqde.afreecatv.com") !== -1 || xhr.responseURL.indexOf("deapi.afreecatv.com") !== -1)){
+                            //         // skip send
+                            //         NOMO_DEBUG("MONGA HAPPEN", xhr.responseURL);
+                            //         return;
+                            //     }
+                            // }
+                            // catch (error) {
+                            //     NOMO_DEBUG("error from CustomXMLHttpRequest", error);
+                            // }
+
+                            // shortsAutoResizeAftv
                             if (xhr.readyState !== XMLHttpRequest.DONE) {
                                 return;
                             }
-
                             try {
-                                //NOMO_DEBUG("xhr", xhr);
-                                if(xhr.responseURL.indexOf("afreecatv.com/station/video/a/view") !== -1){
+                                if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) && xhr.responseURL.indexOf("afreecatv.com/station/video/a/view") !== -1){
 
                                     let responseData = xhr.responseText;
                                     let parsedData = JSON.parse(responseData);

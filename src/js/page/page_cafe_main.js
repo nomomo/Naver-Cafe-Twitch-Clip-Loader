@@ -139,9 +139,9 @@ export async function PAGE_CAFE_MAIN(){
     if(GM_SETTINGS.useAftv){
         regexs[GLOBAL.AFTV_VOD] = /^https?:\/\/vod\.afreecatv.com\/player\/(\d+)\??(change_second=\d+)?/i;
     }
-    if(GM_SETTINGS.useTwip){
-        regexs[GLOBAL.TWIP] = /^https?:\/\/vod\.twip\.kr\/(clip|vod)\/([a-zA-Z0-9-_]+)/i;
-    }
+    // if(GM_SETTINGS.useTwip){
+    //     regexs[GLOBAL.TWIP] = /^https?:\/\/vod\.twip\.kr\/(clip|vod)\/([a-zA-Z0-9-_]+)/i;
+    // }
     if(GM_SETTINGS.useKakao){
         regexs[GLOBAL.KAKAO_VID] = /^https?:\/\/tv\.kakao\.com\/v\/(\d+)/i;
     }
