@@ -159,7 +159,7 @@ export async function PAGE_CAFE_MAIN(){
         regexs[GLOBAL.TIKTOK] = /https:\/\/www\.tiktok.com\/[-A-Z0-9+&@#/%=~_|^ㄱ-ㅎㅏ-ㅣ가-힣]+\/video\/(\d+)/i;
     }
     if(GM_SETTINGS.useChzzk){
-        regexs[GLOBAL.CHZZK_EMBED] = /^https:\/\/chzzk.naver.com\/embed\/(?:vod|clip)\/([a-zA-Z0-9-_]+)/i;
+        regexs[GLOBAL.CHZZK_EMBED] = /^https:\/\/chzzk.naver.com\/(?:embed\/vod|embed\/clip|clips)\/([a-zA-Z0-9-_]+)/i;
     }
 
     // 다크모드인지 체크하기 위한 변수

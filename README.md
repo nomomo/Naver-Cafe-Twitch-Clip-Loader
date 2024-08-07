@@ -65,6 +65,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.4.2 - Aug 7, 2024
+
+- "Chzzk 클립 링크를 비디오로 변환" 기능에서 지원하는 링크 형태가 추가되었어요. 예시) https://chzzk.naver.com/clips/ABCD1234
+  - 기존 링크 형태도 여전히 지원해요. 예시) https://chzzk.naver.com/embed/clip/12341234
+
 ### 1.4.1 - Aug 1, 2024
 
 - 버그 수정

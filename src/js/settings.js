@@ -294,7 +294,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"Chzzk 클립 링크를 비디오로 변환",
-        desc:"<span style='color:#999'>예시) https://chzzk.naver.com/embed/clip/12341234</span><br />네이버 카페에서 치지직 클립을 정식으로 지원하기 전, 임시로 치지직 클립을 지원하기 위해 개발한 기능이에요. 치지직 클립 관련 문제가 발생하면 본 기능을 끄세요.",
+        desc:"<span style='color:#999'>예시1) https://chzzk.naver.com/embed/clip/12341234</span><br /><span style='color:#999'>예시2) https://chzzk.naver.com/clips/ABCD1234</span><br />네이버 카페에서 치지직 클립을 정식으로 지원하기 전, 임시로 치지직 클립을 지원하기 위해 개발한 기능이에요. 치지직 클립 관련 문제가 발생하면 본 기능을 끄세요.",
     },
 
     // Youtube
