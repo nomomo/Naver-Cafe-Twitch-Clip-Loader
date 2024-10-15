@@ -6,13 +6,14 @@ import { VideoYoutube } from "js/video/video_youtube.js";
 import { VideoNaver } from "js/video/video_naver.js";
 import { VideoNaverPrism } from "js/video/video_naver_prism.js";
 import { VideoStreamable } from "js/video/video_streamable.js";
-import { VideoAFTV } from "js/video/video_aftv.js";
+import { VideoSoop } from "js/video/video_sooplive.js";
 import { VideoTwitch } from "js/video/video_Twitch.js";
 import { VideoKakao } from "js/video/video_kakao.js";
 import { VideoGfycat } from "js/video/video_gfycat.js";
 import { VideoTiktok } from "js/video/video_tiktok.js";
 import { VideoTwip } from "js/video/video_twip.js";
 import { VideoChzzkEmbed } from "js/video/video_chzzk_embed.js";
+import { VideoSoopGlobal } from "js/video/video_sooplive_global.js";
 
 export async function PAGE_CAFE_MAIN(){
     // add dns-prefetch and preconnect header
@@ -137,7 +138,8 @@ export async function PAGE_CAFE_MAIN(){
         regexs[GLOBAL.STREAMABLE] = /^https?:\/\/streamable\.com\/(?:e\/)?([a-zA-Z0-9-_]+)/i;
     }
     if(GM_SETTINGS.useAftv){
-        regexs[GLOBAL.AFTV_VOD] = /^https?:\/\/vod\.afreecatv.com\/player\/(\d+)\??(change_second=\d+)?/i;
+        regexs[GLOBAL.AFTV_VOD] = /^https?:\/\/vod\.afreecatv\.com\/player\/(\d+)\??(change_second=\d+)?/i;
+        regexs[GLOBAL.SOOP] = /^https?:\/\/vod\.sooplive.co\.kr\/player\/(\d+)\??(change_second=\d+)?/i;
     }
     // if(GM_SETTINGS.useTwip){
     //     regexs[GLOBAL.TWIP] = /^https?:\/\/vod\.twip\.kr\/(clip|vod)\/([a-zA-Z0-9-_]+)/i;
@@ -160,6 +162,9 @@ export async function PAGE_CAFE_MAIN(){
     }
     if(GM_SETTINGS.useChzzk){
         regexs[GLOBAL.CHZZK_EMBED] = /^https:\/\/chzzk.naver.com\/(?:embed\/vod|embed\/clip|clips)\/([a-zA-Z0-9-_]+)/i;
+    }
+    if(GM_SETTINGS.useSoopGlobal){
+        regexs[GLOBAL.SOOP_GLOBAL] = /^https:\/\/www\.sooplive\.com\/video\/([0-9]+)/i;
     }
 
     // 다크모드인지 체크하기 위한 변수
@@ -382,15 +387,17 @@ export async function PAGE_CAFE_MAIN(){
                 break;
             }
 
-            case GLOBAL.AFTV_VOD:{
+            case GLOBAL.AFTV_VOD:
+            case GLOBAL.SOOP:
+                {
                 let id = match[1];
                 let start = 0;
-                let vodurl = `https://vod.afreecatv.com/player/${id}`;
+                let vodurl = `https://vod.sooplive.co.kr/player/${id}`;
                 if(match[2] !== undefined){
                     start = Number(match[2].replace("change_second=",""));
                     vodurl += "?" + match[2];
                 }
-                let vid = new VideoAFTV({
+                let vid = new VideoSoop({
                     id:match[1],
                     originalUrl:src,
                     url:vodurl,
@@ -505,6 +512,48 @@ export async function PAGE_CAFE_MAIN(){
 
             case GLOBAL.CHZZK_EMBED:{
                 let vid = new VideoChzzkEmbed({
+                    id:match[1],
+                    originalUrl:src,
+                    url:src,
+                    title:title,
+                    desc:desc,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: thumbnailUrl,
+                    autoPlay:autoPlay,
+                    muted:muted
+                });
+                vid.createIframeContainer($seComponent);
+                break;
+            }
+
+            case GLOBAL.SOOPLIVE:{
+                let id = match[1];
+                let start = 0;
+                let vodurl = `https://vod.sooplive.co.kr/player/${id}`;
+                if(match[2] !== undefined){
+                    start = Number(match[2].replace("change_second=",""));
+                    vodurl += "?" + match[2];
+                }
+                let vid = new VideoSooplive({
+                    id:match[1],
+                    originalUrl:src,
+                    url:vodurl,
+                    title:title,
+                    desc:desc,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: thumbnailUrl,
+                    autoPlay:autoPlay,
+                    muted:muted,
+                    start:start
+                });
+                vid.createIframeContainer($seComponent);
+                break;
+            }
+
+            case GLOBAL.SOOP_GLOBAL:{
+                let vid = new VideoSoopGlobal({
                     id:match[1],
                     originalUrl:src,
                     url:src,

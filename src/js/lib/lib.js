@@ -573,7 +573,8 @@ export var GM_setting = (function ($, global, document) { //
 #GM_setting li[GM_setting_key='version_check'] {margin-top:0px !important}
 
 #GM_setting .GM_setting_category_name{display:block;box-sizing:border-box;font-weight:700;vertical-align:top;flex:0 0 100px;font-size:16px;}
-#GM_setting .GM_setting_category_name svg{
+#GM_setting .GM_setting_category_name svg,
+#GM_setting .GM_setting_category_name image{
     width:16px !important;
     height:16px !important;
     vertical-align:middle !important;
@@ -696,7 +697,8 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
     top:20px;
 }
 
-#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container svg{
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container svg,
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container image{
     width:13px !important;
     height:13px !important;
     vertical-align:middle !important;

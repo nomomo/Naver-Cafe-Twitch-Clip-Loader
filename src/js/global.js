@@ -21,6 +21,8 @@ export default function GLOBAL_INIT(){
     GLOBAL.VLIVE__2 = 18;
     GLOBAL.TIKTOK = 19;
     GLOBAL.CHZZK_EMBED = 20;
+    GLOBAL.SOOP = 21;
+    GLOBAL.SOOP_GLOBAL = 22;
     GLOBAL.scriptName = escapeHtml(GM.info.script.name || GM_info.script.name);
     GLOBAL.version = escapeHtml(GM.info.script.version || GM_info.script.version);
     GLOBAL.isTopWindow = window.self === window.top;
@@ -42,8 +44,9 @@ export default function GLOBAL_INIT(){
     GLOBAL.isCafeManageMenu = /^https:\/\/cafe\.naver\.com\/ManageMenu\.nhn/.test(GLOBAL.initLocationUrl);
     GLOBAL.isStreamableEmbed = /^https?:\/\/streamable\.com\/e\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isAftvEmbed = /^https?:\/\/vod\.afreecatv\.com\/player\//.test(GLOBAL.initLocationUrl);
-    GLOBAL.isTwipEmbed = /^https?:\/\/vod.twip.kr\/(?:vod|clip)\/[a-zA-Z0-9-_]+\/embed/.test(GLOBAL.initLocationUrl);
-    GLOBAL.isChzzkEmbed = /^https:\/\/chzzk.naver.com\/embed\/(?:vod|clip)\/[a-zA-Z0-9-_]+/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isChzzkEmbed = /^https:\/\/chzzk\.naver\.com\/embed\/(?:vod|clip)\/[a-zA-Z0-9-_]+/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isSoopEmbed = /^https:\/\/vod\.sooplive\.co\.kr\/player\//.test(GLOBAL.initLocationUrl);
+    GLOBAL.isSoopGlobalEmbed = /^https:\/\/www\.sooplive\.com\/player\/embed\/video\/[0-9]+/.test(GLOBAL.initLocationUrl);
     GLOBAL.isKakaotvEmbed = false;
     GLOBAL.isDailymotionEmbed = false;
     GLOBAL.isGfycat = false;

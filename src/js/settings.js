@@ -1,7 +1,7 @@
 import {DEBUG, NOMO_DEBUG, GM_setting} from "js/lib/lib";
 import {messageCafeTop} from "js/page/page_cafe_top.js";
 import {Naverlogo} from "js/video/video_naver_prism";
-import {AFTVLogo} from "js/video/video_aftv";
+import {SoopLogo} from "js/video/video_sooplive";
 import {YTlogo} from "js/video/video_youtube";
 import {ChzzkLogo} from "js/video/video_chzzk_embed";
 
@@ -119,8 +119,8 @@ const _settings = {
         depth: 2,
         type: "checkbox",
         value: false,
-        title:"🧪 Afreecatv 세로 비디오 크기 자동 조절",
-        desc:"Afreecatv 비디오의 세로 해상도가 가로 해상도보다 큰 경우, 플레이어의 크기를 보기 좋은 사이즈로 자동 조절합니다. Afreecatv 비디오 재생에 문제가 생길 경우 본 기능을 끄세요."
+        title:"🧪 SOOP 세로 비디오 크기 자동 조절",
+        desc:"SOOP 비디오의 세로 해상도가 가로 해상도보다 큰 경우, 플레이어의 크기를 보기 좋은 사이즈로 자동 조절합니다. SOOP 비디오 재생에 문제가 생길 경우 본 기능을 끄세요."
     },
     autoScrollByVideoVisibility: {
         category: "videoCommon",
@@ -147,7 +147,7 @@ const _settings = {
         type: "checkbox",
         value: false,
         title:"볼륨 컨트롤바를 항상 표시",
-        desc:"Youtube, Twitch, Afreecatv, Naver Video 에서 플레이어의 볼륨 컨트롤바를 항상 표시합니다."
+        desc:"Youtube, Twitch, SOOP, Naver Video 에서 플레이어의 볼륨 컨트롤바를 항상 표시합니다."
     },
     videoWidth : {
         category:"personal",
@@ -189,7 +189,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"동영상 시청 종료 후 표시되는 메뉴를 숨김",
-        desc:"동영상 시청 종료 후 표시되는 추천 영상 메뉴 등의 오버레이를 숨깁니다. Youtube 와 Afreeca TV 의 경우 동영상 종료 후 화면을 클릭하여 리플레이 할 수 있도록 합니다."
+        desc:"동영상 시청 종료 후 표시되는 추천 영상 메뉴 등의 오버레이를 숨깁니다. Youtube 와 SOOP 의 경우 동영상 종료 후 화면을 클릭하여 리플레이 할 수 있도록 합니다."
     },
     hideDescription: {
         category:"personal",
@@ -397,27 +397,27 @@ const _settings = {
     //     desc:"(가능한 경우) 16:9 비율이 아닌 Youtube 영상을 너무 크지도 작지도 않고 화면에 적당히 꽉차게 사이즈를 조정합니다.",
     // },
 
-    // Afreecatv
+    // SOOP or Afreecatv
     useAftv : {
-        category:"aftv",
-        category_name:AFTVLogo+"Afreecatv",
+        category:"soop",
+        category_name:SoopLogo+"SOOP",
         category_desc: "",
         depth: 1,
         type: "checkbox",
         value: true,
-        title:"Afreecatv VOD 링크를 비디오로 변환 ",
-        desc:"<span style='color:#999'>예시) https://vod.afreecatv.com/player/11111111</span><br />하위 기능은 스크립트 설정에 따라 적용되지 않을 수도 있습니다.",
+        title:"SOOP 링크를 비디오로 변환",
+        desc:"<span style='color:#999'>예시) https://vod.sooplive.co.kr/player/11111111</span><br />하위 기능은 스크립트 설정에 따라 적용되지 않을 수도 있습니다.",
     },
     aftvAutoMaxQuality: {
-        category:"aftv",
+        category:"soop",
         depth: 2,
         type: "checkbox",
         value: true,
-        title:"Afreecatv 비디오를 항상 최고 품질로 시작",
+        title:"SOOP 비디오를 항상 최고 품질로 시작",
         desc:""
     },
     aftvShowChat: {
-        category:"aftv",
+        category:"soop",
         depth: 2,
         type: "checkbox",
         value: false,
@@ -425,31 +425,38 @@ const _settings = {
         desc:""
     },
     aftvBeautifier: {
-        category:"aftv",
+        category:"soop",
         under_dev: true,
         depth: 2,
         type: "checkbox",
         value: true,
-        title:"Afreecatv 플레이어를 더욱 보기 좋게 만듦",
+        title:"SOOP 플레이어를 더욱 보기 좋게 만듦",
         desc:""
     },
     aftvDisablePlayNextClipAfterEnd: {
-        category:"aftv",
+        category:"soop",
         under_dev: true,
         depth: 2,
         type: "checkbox",
         value: true,
         title:"재생 종료 후 다음 클립을 자동으로 재생하는 것을 방지",
-        desc:"참고: '동영상 시청 종료 후 표시되는 메뉴를 숨김' 기능이 켜진 경우 이 설정은 항상 활성화 됩니다. Afreecatv 클립 시청 종료 후 알 수 없는 문제가 생기는 경우 이 옵션이나 '동영상 시청 종료 후 표시되는 메뉴를 숨김' 옵션을 꺼보세요."
+        desc:"참고: '동영상 시청 종료 후 표시되는 메뉴를 숨김' 기능이 켜진 경우 이 설정은 항상 활성화 됩니다. SOOP 클립 시청 종료 후 알 수 없는 문제가 생기는 경우 이 옵션이나 '동영상 시청 종료 후 표시되는 메뉴를 숨김' 옵션을 꺼보세요."
     },
     aftvHideLiveAlert: {
-        category:"aftv",
-        under_dev: true,
+        category:"soop",
         depth: 2,
         type: "checkbox",
         value: false,
-        title:"🧪 \"지금 생방송을 진행 중입니다.\" 를 표시하지 않음",
+        title:"\"지금 생방송을 진행 중입니다.\" 를 표시하지 않음",
         desc:""
+    },
+    aftvNeugeuBlock: {
+        category:"soop",
+        depth: 2,
+        type: "checkbox",
+        value: false,
+        title:"🧪 긴 재생 시간을 가진 Clip 을 재생할 때 뜨는 무언가를 차단 🚫",
+        desc:"SOOP 클립 재생 시 알 수 없는 오류가 발생하면 이 기능을 끄세요."
     },
 
     
@@ -457,7 +464,7 @@ const _settings = {
     useTwitch : {
         category:"others",
         category_name:"🌐 그 외 플랫폼",
-        category_desc: "Naver, Youtube, Afreecatv 외 다른 비디오 플랫폼을 설정합니다.",
+        category_desc: "Naver, Youtube, SOOP 외 다른 비디오 플랫폼을 설정합니다.",
         depth: 1,
         type: "checkbox",
         value: false,
@@ -545,6 +552,15 @@ const _settings = {
         value: true,
         title:"Tiktok 링크를 비디오로 변환",
         desc:"<span style='color:#999'>예시) https://www.tiktok.com/@xxxxxxx/video/111111111</span>",
+    },
+
+    useSoopGlobal :{
+        category:"others",
+        depth: 1,
+        type: "checkbox",
+        value: true,
+        title:"SOOP Global 링크를 비디오로 변환",
+        desc:"<span style='color:#999'>예시) https://www.sooplive.com/video/12345</span>",
     },
 
     // // Vimeo

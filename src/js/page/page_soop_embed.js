@@ -1,11 +1,11 @@
 import { NOMO_DEBUG, isDEBUG } from "../lib/lib";
 import { PageBase } from "js/page/page_common.js";
 
-export default function PAGE_AFTV_EMBED(){
-    NOMO_DEBUG("== PAGE_AFTV_EMBED ==");
+export default function PAGE_SOOP_EMBED(){
+    NOMO_DEBUG("== PAGE_SOOP_EMBED ==");
 
     // get info
-    var match = document.location.href.match(/^https?:\/\/vod\.afreecatv.com\/player\/(\d+)\??(change_second=\d+)?/);
+    var match = document.location.href.match(/^https?:\/\/vod\.sooplive\.co\.kr\/player\/(\d+)\??(change_second=\d+)?/);
     if(match === null) return;
     let id = match[1];
     let start = 0;
@@ -16,41 +16,35 @@ export default function PAGE_AFTV_EMBED(){
     let url = new URL(document.location.href);
     let urlParam = new URLSearchParams(url.search);
 
-    let page = new PageAFTV({
-        type: GLOBAL.AFTV_VOD,
+    let page = new PageSoop({
+        type: GLOBAL.SOOP,
         id:id,
         start:start,
         seq:urlParam.get("seq")
     });
 }
 
-export class PageAFTV extends PageBase {
+export class PageSoop extends PageBase {
     constructor(options){
-        options.typeName = "AFTV_VOD";
+        options.typeName = "Soop";
         options.videoSelector = "video#video.af_video";
         super(options);
-        NOMO_DEBUG("new PageNaver", options);
+        NOMO_DEBUG("new PageSoop", options);
 
         this.mouseleaveSetTimeout = undefined;  // 레이아웃 빠르게 숨기기용
 
         let that = this;
 
         // add style
-        GM_addStyle(`#afreecatv_player .player_ctrlBox .volume.bar_show_always .volume_slider {
-            margin-left: 0px;
-            opacity: 1;
-            -moz-opacity: 1;
-            filter: alpha(opacity=100)
-        }
-
+        GM_addStyle(`
         .NCCLaftvReplayBtn {
             opacity:0.6;
         }
-        #afreecatv_player.mouseover .NCCLaftvReplayBtn{
+        #player.mouseover .NCCLaftvReplayBtn{
             opacity:0.9;
         }
 
-        .NCCL_Vertical #afreecatv_player .nextvideo{
+        .NCCL_Vertical #player .nextvideo{
             background-size: cover !important;
         }
         `);
@@ -106,13 +100,13 @@ export class PageAFTV extends PageBase {
                         
                         // some clips require the user to click the replay btn and press the play btn again
                         setTimeout(function(){  // async
-                            let $nextVideoBtn = $("#afreecatv_player .nextvideo .bg");
+                            let $nextVideoBtn = $("#player .nextvideo .bg");
                             if($nextVideoBtn.length == 1 && $nextVideoBtn.is(':visible') && that.video.paused){
-                                NOMO_DEBUG("Wait to click #afreecatv_player .nextvideo .bg");
+                                NOMO_DEBUG("Wait to click #player .nextvideo .bg");
                                 $nextVideoBtn.trigger("click");
                             }
                             else{
-                                NOMO_DEBUG("There is no #afreecatv_player .nextvideo .bg");
+                                NOMO_DEBUG("There is no #player .nextvideo .bg");
                             }
                         },10);
                     });
@@ -122,45 +116,6 @@ export class PageAFTV extends PageBase {
         // aftvBeautifier
         if(GM_SETTINGS.aftvBeautifier){
             GM_addStyle(`
-            /*플레이어 상단 메뉴를 조금 더 투명하고 컴팩트하게 만든다*/
-            #player_info .title h1 a{
-                font-size:18px !important;
-            }
-            #player_info{
-                min-height: 60px !important;
-                linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.4), rgba(0,0,0,0.1), transparent) !important;
-            }
-            #player_info .bj_thumbnail, #player_info .bj_thumbnail img{
-                width:40px !important;
-                height:40px !important;
-            }
-        
-            /*재생바 투명도*/
-            #afreecatv_player .progress{
-                padding:7px 0 !important; /* mouse on 시 재생바 커지는 것 방지 */
-            }
-            #afreecatv_player .progress .progress_track{
-                height:3px !important; /* mouse on 시 재생바 커지는 것 방지 */
-            }
-            #afreecatv_player .progress .progress_track .watched{
-                background-color: rgba(44, 198, 255, 0.7) !important;
-            }
-            #afreecatv_player .progress .progress_track .handler{
-                opacity:0.7 !important;
-            }
-            #afreecatv_player .progress .progress_track{
-                background-color: rgba(0.6, 0.6, 0.6, 0.3) !important;
-            }
-        
-            /*volume slider 투명도*/
-            .volume_slider_wrap{
-                opacity:0.9;
-            }
-        
-            /*모두가 afreeca clip 인 것을 알기 때문에 숨긴다.*/
-            /*#btn_afreecatv_link {
-                display:none !important;
-            }*/
             .watermark {
                 display:none !important;
             }
@@ -202,16 +157,18 @@ export class PageAFTV extends PageBase {
         // alwaysShowVolumeController
         if(GM_SETTINGS.alwaysShowVolumeController){
             GM_addStyle(`
-            #afreecatv_player .player_ctrlBox .volume {
-                overflow: visible !important; }
-            #afreecatv_player .player_ctrlBox .volume .sound {
-                margin-right: 8px !important; }
-            #afreecatv_player .player_ctrlBox .volume .volume_slider_wrap {
-                overflow: visible !important; }
-            #afreecatv_player .player_ctrlBox .volume .volume_slider {
-                margin-left: 0px !important;
+            #player .player_ctrlBox .volume {
+                overflow: visible !important;
+                position: relative !important;
+                z-index: 10 !important;
+            }
+            #player .player_ctrlBox .volume .volume_slider_wrap {
+                overflow: visible !important;
+                margin: 6px 5px !important;
+            }
+            #player .player_ctrlBox .volume .volume_slider {
                 opacity: 1 !important;
-                width: 70px !important;
+                width: 50px !important;
             }
             `);
         }
@@ -237,7 +194,7 @@ export class PageAFTV extends PageBase {
 
         // shortsAutoResizeAftv
         // TODO: Resolve callback hell
-        if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) || ss){
+        if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) || ss || GM_SETTINGS.aftvNeugeuBlock){
             try {
                 let OriginalXMLHttpRequest = XMLHttpRequest;
                 let CustomXMLHttpRequest = function() {
@@ -251,9 +208,9 @@ export class PageAFTV extends PageBase {
 
                     // new send()
                     xhr.send = function(data) {
-                        if (this._url && (this._url.includes("deapi.afreecatv.com") || this._url.includes("/get_ad.php") )) {
+                        if (this._url && (this._url.includes("deapi.sooplive.co.kr") || this._url.includes("/get_ad.php") )) {
 
-                            console.log("Blocked request to: " + this._url);
+                            NOMO_DEBUG("Blocked request to: " + this._url);
                             // Set readyState to DONE (4)
                             this.readyState = 4;
                             // Call onreadystatechange if it is defined
@@ -287,7 +244,7 @@ export class PageAFTV extends PageBase {
                                 return;
                             }
                             try {
-                                if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) && xhr.responseURL.indexOf("afreecatv.com/station/video/a/view") !== -1){
+                                if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) && xhr.responseURL.indexOf("sooplive.co.kr/station/video/a/view") !== -1){
 
                                     let responseData = xhr.responseText;
                                     let parsedData = JSON.parse(responseData);

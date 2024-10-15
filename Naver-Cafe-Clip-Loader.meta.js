@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Naver-Cafe-Clip-Loader
-// @version     1.4.2
+// @version     1.5.0
 // @author      Nomo
-// @description Naver Cafe 에서 Youtube Clip, Afreecatv, Chzzk, Streamable, Twip, Twitch(해외) 등의 외부 Clip & VOD 시청을 도와주는 유저스크립트 확장
+// @description Naver Cafe 에서 Youtube Clip, SOOP(숲), Chzzk, Streamable, Twip, Twitch(해외) 등의 외부 Clip & VOD 시청을 도와주는 유저스크립트 확장
 // @supportURL  https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues
 // @match       https://cafe.naver.com/*
 // @match       https://clips.twitch.tv/*parent=cafe.naver.com*
