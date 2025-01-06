@@ -29,8 +29,9 @@ export default function GLOBAL_INIT(){
     GLOBAL.initLocationUrl = document.location.href;
     GLOBAL.isDarkMode = false;
     GLOBAL.isNaverCafe = /(^https:\/\/cafe\.naver\.com\/)/.test(GLOBAL.initLocationUrl);
-    GLOBAL.isNaverCafeMain = (GLOBAL.isNaverCafe && !GLOBAL.isTopWindow);
-    GLOBAL.isNaverCafeTop = (GLOBAL.isNaverCafe && GLOBAL.isTopWindow);
+    GLOBAL.isNaverCafeArticle = /(^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/articles\/\d+)/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isNaverCafeMain = ((GLOBAL.isNaverCafe && !GLOBAL.isTopWindow) || (GLOBAL.isNaverCafeArticle));
+    GLOBAL.isNaverCafeTop = (GLOBAL.isNaverCafe && GLOBAL.isTopWindow && !GLOBAL.isNaverCafeArticle);
     GLOBAL.isNaverCafeMobile = /(^https:\/\/m\.cafe\.naver\.com\/)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isTwitchClip = /(^https:\/\/clips\.twitch\.tv\/)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isTwitchVod = /(^https:\/\/player\.twitch\.tv\/)/.test(GLOBAL.initLocationUrl);
@@ -45,7 +46,7 @@ export default function GLOBAL_INIT(){
     GLOBAL.isStreamableEmbed = /^https?:\/\/streamable\.com\/e\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isAftvEmbed = /^https?:\/\/vod\.afreecatv\.com\/player\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isChzzkEmbed = /^https:\/\/chzzk\.naver\.com\/embed\/(?:vod|clip)\/[a-zA-Z0-9-_]+/.test(GLOBAL.initLocationUrl);
-    GLOBAL.isSoopEmbed = /^https:\/\/vod\.sooplive\.co\.kr\/player\//.test(GLOBAL.initLocationUrl);
+    GLOBAL.isSoopEmbed = /^https:\/\/vod\.sooplive\.co\.kr\/(?:player|ST)\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isSoopGlobalEmbed = /^https:\/\/www\.sooplive\.com\/player\/embed\/video\/[0-9]+/.test(GLOBAL.initLocationUrl);
     GLOBAL.isKakaotvEmbed = false;
     GLOBAL.isDailymotionEmbed = false;

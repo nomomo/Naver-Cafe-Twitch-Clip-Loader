@@ -16,6 +16,8 @@ import { VideoChzzkEmbed } from "js/video/video_chzzk_embed.js";
 import { VideoSoopGlobal } from "js/video/video_sooplive_global.js";
 
 export async function PAGE_CAFE_MAIN(){
+    NOMO_DEBUG("== PAGE_CAFE_MAIN ==");
+
     // add dns-prefetch and preconnect header
     $("head").append(`
         <link rel="dns-prefetch" href="https://gql.twitch.tv/">
@@ -139,7 +141,7 @@ export async function PAGE_CAFE_MAIN(){
     }
     if(GM_SETTINGS.useAftv){
         regexs[GLOBAL.AFTV_VOD] = /^https?:\/\/vod\.afreecatv\.com\/player\/(\d+)\??(change_second=\d+)?/i;
-        regexs[GLOBAL.SOOP] = /^https?:\/\/vod\.sooplive.co\.kr\/player\/(\d+)\??(change_second=\d+)?/i;
+        regexs[GLOBAL.SOOP] = /^https?:\/\/(?:vod\.sooplive.co\.kr|v\.afree\.ca)\/(?:player|ST)\/(\d+)\??(change_second=\d+)?/i;
     }
     // if(GM_SETTINGS.useTwip){
     //     regexs[GLOBAL.TWIP] = /^https?:\/\/vod\.twip\.kr\/(clip|vod)\/([a-zA-Z0-9-_]+)/i;
@@ -388,11 +390,36 @@ export async function PAGE_CAFE_MAIN(){
             }
 
             case GLOBAL.AFTV_VOD:
-            case GLOBAL.SOOP:
                 {
                 let id = match[1];
                 let start = 0;
                 let vodurl = `https://vod.sooplive.co.kr/player/${id}`;
+                if(match[2] !== undefined){
+                    start = Number(match[2].replace("change_second=",""));
+                    vodurl += "?" + match[2];
+                }
+                let vid = new VideoSoop({
+                    id:match[1],
+                    originalUrl:src,
+                    url:vodurl,
+                    title:title,
+                    desc:desc,
+                    view:null,
+                    origin:document.location.origin,
+                    thumbnailUrl: thumbnailUrl,
+                    autoPlay:autoPlay,
+                    muted:muted,
+                    start:start
+                });
+                vid.createIframeContainer($seComponent);
+                break;
+            }
+
+            case GLOBAL.SOOP:
+                {
+                let id = match[1];
+                let start = 0;
+                let vodurl = src;
                 if(match[2] !== undefined){
                     start = Number(match[2].replace("change_second=",""));
                     vodurl += "?" + match[2];

@@ -79,6 +79,8 @@ function openSettingsMenu(){
 }
     
 export default function PAGE_CAFE_TOP(){
+    NOMO_DEBUG("== PAGE_CAFE_TOP ==");
+
     initializeCafeTopMessage();
 
     if(typeof GM.registerMenuCommand === "function"){

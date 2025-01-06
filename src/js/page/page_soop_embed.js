@@ -5,7 +5,7 @@ export default function PAGE_SOOP_EMBED(){
     NOMO_DEBUG("== PAGE_SOOP_EMBED ==");
 
     // get info
-    var match = document.location.href.match(/^https?:\/\/vod\.sooplive\.co\.kr\/player\/(\d+)\??(change_second=\d+)?/);
+    var match = document.location.href.match(/^https?:\/\/vod\.sooplive\.co\.kr\/(?:player|ST)\/(\d+)\??(change_second=\d+)?/);
     if(match === null) return;
     let id = match[1];
     let start = 0;
