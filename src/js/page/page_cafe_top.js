@@ -105,6 +105,14 @@ export default function PAGE_CAFE_TOP(){
                 if($favoriteMenuGroupBtn.length !== 0 && $favoriteMenuGroupBtn.hasClass("down-btn")){
                     toggleFavoriteMenuGroup();
                 }
+                else{
+                    document.arrive('[class*="Sidebar_type_bookmark__"]', { onceOnly: true }, function (elem) {
+                        const button = elem.querySelector('button');
+                        if (button) {
+                          button.click();
+                        }
+                      });
+                }
             }
         }
         catch(e){

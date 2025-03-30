@@ -30,6 +30,7 @@ export default function GLOBAL_INIT(){
     GLOBAL.isDarkMode = false;
     GLOBAL.isNaverCafe = /(^https:\/\/cafe\.naver\.com\/)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isNaverCafeArticle = /(^https:\/\/cafe\.naver\.com\/ca-fe\/cafes\/\d+\/articles\/\d+)/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isNaverCafePopular = /(^https:\/\/cafe\.naver\.com\/f-e\/cafes\/[a-zA-Z0-9]+\/popular)/.test(GLOBAL.initLocationUrl);
     GLOBAL.isNaverCafeMain = ((GLOBAL.isNaverCafe && !GLOBAL.isTopWindow) || (GLOBAL.isNaverCafeArticle));
     GLOBAL.isNaverCafeTop = (GLOBAL.isNaverCafe && GLOBAL.isTopWindow && !GLOBAL.isNaverCafeArticle);
     GLOBAL.isNaverCafeMobile = /(^https:\/\/m\.cafe\.naver\.com\/)/.test(GLOBAL.initLocationUrl);

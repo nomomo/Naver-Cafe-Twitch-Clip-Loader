@@ -92,6 +92,11 @@ h1,h2,h3,h4,h5,h6
 ,.skin-1080 .LowLevelAccessGuide .list_explanation .explanation
 ,.skin-1080 .LowLevelAccessGuide .list_explanation li
 ,.skin-1080 .LowLevelAccessGuide .list_level .desc
+
+
+,.skin-1080 .article-board [class^="ArticleListThead_wrap__"] [class^="ArticleListThead_btnSort__"]
+,.skin-1080 .article-board .td_normal
+,.skin-1080 .BaseButton--skinGreen
 {
     color:var(--NCCL-font-color) !important;
 }
@@ -141,6 +146,16 @@ h1,h2,h3,h4,h5,h6
 ,.skin-1080 .cafe_list .lst_mycafe li .cafe_name .second
 ,.skin-1080 .list_sub_tab .link
 ,.skin-1080 .LowLevelAccessGuide .txt_level .level
+
+,.skin-1080 [class^="Sidebar_aside_info__"] [class^="Sidebar_info_area__"] [class^="Sidebar_link__"]
+,.skin-1080 [class^="Sidebar_tab_menu__"] [class^="Sidebar_item__"] [class^="Sidebar_btn_tab__"]
+,.skin-1080 [class^="Layout_footer___"] [class^="Layout_cafe_name__"]
+,.skin-1080 [class^="Layout_footer___"] [class^="Layout_cafe_link__"]
+,.skin-1080 .FormInputCheck .label
+,.skin-1080 [class^="ToggleSwitchLayout_wrap__"]
+,.skin-1080 .Pagination .btn.number
+,.skin-1080 .SearchBoxLayout .FormSelectBox.period .select_option li button
+,.skin-1080 .SearchBoxLayout .FormSelectBox.period .option_box .text
 {
     color:var(--NCCL-font-color-lighter) !important;
 }
@@ -151,6 +166,8 @@ h1,h2,h3,h4,h5,h6
 ,.footer .cafe_link:before
 ,.RelatedArticlesTabContainer__tab button[aria-pressed=true]:after
 ,.skin-1080 .prev-next .pgR:before
+,.skin-1080 .cafe-search.aside_search
+,.skin-1080 .LayoutSearch
 {
     background-color:var(--NCCL-border-color) !important;
 }
@@ -207,16 +224,29 @@ html
 ,.skin-1080 .list-search
 ,.NCCL_container .NCCL_description
 ,.NCCL_container .NCCL_description .NCCL_title
+
+,.skin-1080 .ArticleBoard thead th
+,.skin-1080 .ArticleBoard tbody td
+,.skin-1080 .ArticleBoardWriterInfo .nickname
+,.skin-1080 .paginate_area
+,.skin-1080 .paginate_area .btn.type_next
+,.skin-1080 .paginate_area .btn.type_end
+,.skin-1080 .TabButton .tab_btn:not([aria-selected="true"])
+,.skin-1080 #cafe_content
+,.skin-1080 .SearchBoxLayout
+,.skin-1080 .Pagination
+,.skin-1080 .Pagination .btn.type_next
 {
     color:var(--NCCL-font-color);
     background-color:var(--NCCL-background-color);
     border-color:var(--NCCL-border-color);
 }
 
-.skin-1080 .search_result .search_input{
+.skin-1080 .search_result .search_input
+,.skin-1080 [class^="Sidebar_aside_info__"] [class^="Sidebar_aside_info_tab__"]
+{
     border:1px solid var(--NCCL-border-color);
 }
-
 
 /* lighter */
 .skin-1080 #cafe-info-action
@@ -295,6 +325,39 @@ html
 ,.skin-1080 .cafe_list_control
 ,.skin-1080 .LowLevelAccessGuide .guide_box
 ,.skin-1080 .select_component2 .select_list
+,.skin-1080 [class^="Sidebar_aside_menu__"]
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_group__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_btn_tab__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_item__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_aside_info_cafe_profile__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_aside_info_cafe_data__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_link__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_emblem__"]
+,.skin-1080 [class^="Layout_aside__"] div[class^="Sidebar_profile_box__"] div[class^="Sidebar_manager__"] a[class^="Sidebar_nickname__"]
+
+
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"]
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] li
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] li a
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] h1
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] h2
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] h3
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] h4
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] h5
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_aside_menu_list__"] h6
+,.skin-1080 [class^="Sidebar_aside_menu__"] [class^="Sidebar_group_name__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_widget_secede__"]
+,.skin-1080 .LayoutSearch
+,.skin-1080 .LayoutSearch .search_box
+,.skin-1080 .search_box input
+,.skin-1080 .FormSelectButton .button.type_skin
+,.skin-1080 .FormSelectButton .button.type_skin:hover
+,.skin-1080 .SearchBoxLayout .FormSelectBox.period .option_box
+,.skin-1080 .SearchBoxLayout .FormSelectBox.period .select_option
+,.skin-1080 .SearchBoxLayout .FormSelectBox.period .select_option li
+,.skin-1080 .SearchBoxLayout .FormSelectBox.period .option_box .calendar_option .input_text
+,.skin-1080 .SearchBoxLayout .FormSelectBox.period .option_box .calendar_option .BaseButton--skinGray
+,.skin-1080 .SearchBoxLayout.type_bottom .search_input_area .input_text
 {
     color:var(--NCCL-font-color);
     background-color:var(--NCCL-background-color-lighter);
@@ -307,6 +370,9 @@ html
 ,.skin-1080 #naver-gnb #gnb-menu .gnb_txt
 ,.skin-1080 .LowLevelAccessGuide .cafe_level_info
 ,.skin-1080 #GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item.on
+
+,.skin-1080 .search_box .btn
+,.skin-1080 .FormSelectBox .select_option .option:hover
 {
     color:var(--NCCL-font-color);
     background-color:var(--NCCL-background-color-lightest) !important;
@@ -353,6 +419,21 @@ html
     background-color:var(--NCCL-background-color-lighter);
     border-color:var(--NCCL-border-color);
 }
+
+
+.skin-1080 .CommentCleanBot.cleanbot
+{
+    background-color:var(--NCCL-background-color);
+    border-color:var(--NCCL-border-color) !important;
+    border: 1px solid;
+}
+
+.skin-1080 .CommentCleanBot.cleanbot .msg
+{
+    color:var(--NCCL-font-color-lighter) !important;
+}
+
+
 .skin-1080 #nomo_settings a
 ,.skin-1080 #nomo_settings a:hover
 ,.skin-1080 #nomo_settings a:focus{
@@ -391,6 +472,13 @@ html
 ,.skin-1080 #cafe-menu .cafe-menu-tit.frst h3
 ,.skin-1080 #cafe-menu .cafe-menu-tit.frst a
 ,.skin-1080 .input_search_area .btn-search-green
+
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_btn_talk__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_btn__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_aside_menu__"] [class*="Sidebar_type_bookmark__"]
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_aside_menu__"] [class*="Sidebar_type_bookmark__"] button
+,.skin-1080 [class^="Layout_aside__"] [class^="Sidebar_aside_menu__"] [class*="Sidebar_type_bookmark__"] strong
+,.skin-1080 .SearchBoxLayout .Pagination .btn.number[aria-pressed=true]
 {
     color:var(--NCCL-font-color);
     background-color:var(--NCCL-background-color-lightest);
@@ -426,6 +514,8 @@ html
 ,.left_area .BaseButton.size_default:not(.BaseButton--skinGreen) svg.svg-icon
 ,.right_area .BaseButton.size_default:not(.BaseButton--skinGreen) svg.svg-icon
 ,.se-viewer .se-video .se-media-meta-toggle-button
+
+,.skin-1080 [class^="Layout_footer___"] [class^="Layout_naver_cafe__"]
 {
     filter:invert(1)
 }
@@ -460,12 +550,15 @@ html
 ,.skin-1080 .board-notice.type_required .cmt, .skin-1080 .board-notice.type_main .cmt
 ,.skin-1080 .article-board .board-list .cmt
 ,.skin-1080 #naver-gnb #gnb-menu .chatting-cafe .count
+,.skin-1080 .BoardTopOption .sort_area .sort_view button[aria-selected="true"]
 {
     filter:grayscale(0.4);
 }
 
 .BaseButton--skinGreen
 ,.skin-1080 #cafe-menu .cafe-menu-tit .ico-bookmark
+,.skin-1080 .svg-icon.aside-menu-group-bookmark
+,.skin-1080 .SearchBoxLayout .search_input_area .btn_search
 {
     filter:grayscale(1.0);
 }
@@ -481,7 +574,10 @@ html
 .naver-splugin-c svg,
 .button_sticker,
 .button_file,
-.btn_type1.post_write:before{
+.btn_type1.post_write:before
+,.skin-1080 .BaseButton .svg-icon.icon-solid-writing
+,.skin-1080 .BaseButtonLink .svg-icon.icon-solid-writing
+{
     filter:brightness(10);
 }
 

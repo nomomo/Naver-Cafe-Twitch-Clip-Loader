@@ -65,6 +65,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.5.2 - Mar 30, 2025
+
+- 인기글이나 특정 게시판에서 다크 모드가 제대로 동작하지 않는 문제를 수정했어요.
+
 ### 1.5.1 - Jan 6, 2025
 
 - 이제 네이버 카페 인기글 페이지에서도 스크립트가 동작해요. 예시) https://cafe.naver.com/ca-fe/cafes/12345678/articles/12345678
