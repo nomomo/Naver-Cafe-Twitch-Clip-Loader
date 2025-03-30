@@ -151,16 +151,60 @@ export default function PAGE_CAFE_TOP(){
                     });
                 };
 
-                let $as = $("#cafe-menu").find(".cafe-menu-list a[target='cafe_main']");
-                $as.each(function(i,v){
-                    setTimeout(function(){
+
+
+                let $as = $("#cafe-menu").find("a").filter(function () {
+                    const $a = $(this);
+                    const href = $a.attr("href") || "";
+                
+                    // 1. target="cafe_main" 이거나
+                    // 2. ArticleList.nhn 형태의 패턴일 경우 true
+                    return (
+                        $a.attr("target") === "cafe_main" ||
+                        /^\/ArticleList\.nhn\?search\.clubid=\d+&search\.menuid=\d+/.test(href)
+                    );
+                });
+                
+                $as.each(function (i, v) {
+                    setTimeout(function () {
                         let $a = $(v);
                         let oriHref = $a.attr("href");
-                        if(oriHref.indexOf("userDisplay") === -1 && !/\/popular$/.test(oriHref)){
-                            $a.attr("href", `${oriHref}&userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
+                
+                        if (
+                            oriHref.indexOf("userDisplay") === -1 &&
+                            !/\/popular$/.test(oriHref)
+                        ) {
+                            const sep = oriHref.includes("?") ? "&" : "?";
+                            $a.attr("href", `${oriHref}${sep}userDisplay=${GM_SETTINGS.naverBoardDefaultArticleCount}`);
                         }
                     }, 1);
                 });
+                
+
+                // from 2025, replace pageSize directly
+                const originalFetch = unsafeWindow.fetch;
+                unsafeWindow.fetch = function (input, init) {
+                    try {
+                        let url = typeof input === 'string' ? input : input.url;
+                        const apiPattern = /^https:\/\/apis\.naver\.com\/cafe-web\/cafe-boardlist-api\/v1\/cafes\/\d+\/menus\/\d+\/articles/;
+
+                        if (apiPattern.test(url)) {
+                        const count = Number(GM_SETTINGS.naverBoardDefaultArticleCount);
+                        const validCount = Number.isFinite(count) && count > 0 ? count : 15;
+
+                        const u = new URL(url);
+                        u.searchParams.set('pageSize', String(validCount));
+                        input = typeof input === 'string' ? u.toString() : new Request(u.toString(), input);
+                        }
+
+                        return originalFetch.call(this, input, init);
+                    } catch (e) {
+                        console.warn('[userscript] fetch hook failed, falling back to original fetch:', e);
+                        return originalFetch.call(this, input, init);
+                    }
+                };
+
+
             }
         }
         catch(e){
@@ -182,23 +226,43 @@ export default function PAGE_CAFE_TOP(){
         };
     }
 
+
     // youtubeFixClickAfterScrolling
-    if(GM_SETTINGS.youtubeFixClickAfterScrolling){
+    if (GM_SETTINGS.youtubeFixClickAfterScrolling) {
         let $cafe_main = undefined;
-        $(document).on("wheel", function(e){
+        let errorShown = false; // 에러 메시지 한 번만 출력용 플래그
+
+        $(document).on("wheel", function (e) {
             NOMO_DEBUG("wheel event", e);
-            if(!$cafe_main){
+
+            if (!$cafe_main) {
                 $cafe_main = $("iframe#cafe_main");
             }
 
-            if($cafe_main.length == 0){
+            if ($cafe_main.length === 0) {
                 $cafe_main = undefined;
                 return;
             }
 
-            $cafe_main[0].contentWindow.parentScrollEvent(e);
+            const contentWindow = $cafe_main[0].contentWindow;
+
+            try {
+                if (contentWindow && typeof contentWindow.parentScrollEvent === 'function') {
+                    contentWindow.parentScrollEvent(e);
+                } else if (!errorShown) {
+                    NOMO_DEBUG("[youtubeFixClickAfterScrolling] parentScrollEvent is not available.");
+                    errorShown = true;
+                }
+            } catch (err) {
+                if (!errorShown) {
+                    NOMO_DEBUG("[youtubeFixClickAfterScrolling] Failed to call parentScrollEvent:", err);
+                    errorShown = true;
+                }
+            }
         });
     }
+
+
 }
 
 
