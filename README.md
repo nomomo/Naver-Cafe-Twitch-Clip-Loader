@@ -65,6 +65,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.5.4 - Apr 10, 2025
+
+- 어두운 모드일 때 공지글을 좀 더 구분 가능하도록 변경했어요.
+
 ### 1.5.3 - Mar 30, 2025
 
 - "게시판 글 기본 표시 개수 설정" 기능이 제대로 동작하지 않는 문제를 수정했어요.

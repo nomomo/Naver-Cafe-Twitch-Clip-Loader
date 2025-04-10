@@ -487,11 +487,16 @@ html
 
 /* 공지 */
 .skin-1080 .board-notice.type_menu .board-tag-txt
-,.skin-1080 .board-notice.type_required .board-tag-txt
+{
+    background: #3b3333;
+    border-color: #573334;
+    color: #eb767c;
+}
+.skin-1080 .board-notice.type_required .board-tag-txt
 ,.skin-1080 .board-notice.type_main .board-tag-txt
 {
-    background: #303030;
-    border-color: #404040;
+    background: #573334;
+    border-color: #6e4748;
     color: #fff;
 }
 
@@ -586,3 +591,11 @@ html
     background-color:var(--NCCL-background-color) !important;
 }
 */
+
+/* 공지 글 */
+.skin-1080 .board-notice.type_menu .article
+,.skin-1080 .board-notice.type_required .article
+,.skin-1080 .board-notice.type_main .article
+{
+    color: #eb767d !important;
+}
