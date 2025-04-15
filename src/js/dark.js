@@ -33,9 +33,18 @@ export async function DARKMODE_INIT(){
     
     $(document).ready(function(){
         if(GM_SETTINGS.showDarkModeBtn){
-            var $gnbmenu = $("#gnb-menu");
+            let $gnbmenu = $("#gnb-menu");
             if($gnbmenu.length !== 0 && $("#darkModeBtn").length === 0){
                 $gnbmenu.prepend($darkModeBtn);
+                return;
+            }
+
+            $gnbmenu = $(".gnb_menu");
+            if($gnbmenu.length !== 0 && $("#darkModeBtn").length === 0){
+                setTimeout(function(){
+                    $gnbmenu.prepend($darkModeBtn);
+                    $darkModeBtn.addClass("gnb_item").css("margin-top", "0px");
+                },1000);
             }
         }
     });

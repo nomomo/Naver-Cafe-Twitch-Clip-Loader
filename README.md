@@ -65,6 +65,13 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.5.5 - Apr 16, 2025
+
+- 인기글 메뉴를 클릭한 후 일부 기능이 동작하지 않는 문제를 수정했어요.
+    - 영화관 모드 / 어두운 모드 버튼이 표시되지 않는 증상
+    - 영화관 모드가 제대로 동작하지 않는 증상
+    - "글 목록에서 읽은 글의 제목을 흐릿하게 표시" 기능이 동작하지 않는 증상
+
 ### 1.5.4 - Apr 10, 2025
 
 - 어두운 모드일 때 공지글을 좀 더 구분 가능하도록 변경했어요.

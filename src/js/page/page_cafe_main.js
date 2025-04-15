@@ -895,20 +895,21 @@ export async function PAGE_CAFE_MAIN(){
         NOMO_ERROR("Error from FasterNoticeHide", e);
     }
 
-
     if(GM_SETTINGS.visitedArticleStyle){
         GM_addStyle(`
         .skin-1080 .article-board .board-list div.inner_list a:visited,
-        .skin-1080 .article-board .board-list div.inner_list div.inner_list a:visited *
+        .skin-1080 .article-board .board-list div.inner_list div.inner_list a:visited *,
         div.inner_list a:visited,
         div.inner_list a:visited *
         {
             color:#ddd !important;
         }
         html[data-theme='dark'] body .skin-1080 .article-board .board-list div.inner_list a:visited,
-        html[data-theme='dark'] body .skin-1080 .article-board .board-list div.inner_list a:visited *
+        html[data-theme='dark'] body .skin-1080 .article-board .board-list div.inner_list a:visited *,
         html[data-theme='dark'] body div.inner_list a:visited,
-        html[data-theme='dark'] body div.inner_list a:visited *
+        html[data-theme='dark'] body div.inner_list a:visited *,
+        html[data-theme='dark'] body .article-board .board-list div.inner_list a:visited,
+        html[data-theme='dark'] body .article-board .board-list div.inner_list a:visited *
         {
             color:#454545 !important;
         }

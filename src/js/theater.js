@@ -16,16 +16,16 @@ var $theaterModeBtn = $(`<span title="[NCCL] 클릭 시 영화관 모드를 ${is
 
 function CREATE_THEATER_MODE_BTN(){
     if(GM_SETTINGS.useTheaterMode){
-        var $gnbmenu = $("#gnb-menu");
-        if($gnbmenu.length !== 0 && $("#theaterModeBtn").length === 0){
-            $gnbmenu.prepend($theaterModeBtn);
-        }
-
-        var $frontImage = $("#front-cafe a img");
+        var src = '';
+        var $frontImage = $("#front-cafe a img, [class^='Header_title_img__'] img").eq(0);
         if($frontImage.length !== 0){
-            var src = $frontImage.attr("src");
+            src = $frontImage.attr("src");
+        }
+        
+        if(src !== ''){
             GM_addStyle(`
-            html.theaterMode #front-cafe::before{
+            html.theaterMode #front-cafe::before,
+            html.theaterMode [class^="Header_title_img__"]::before {
                 content:'-';
                 width:100%;
                 height:100%;
@@ -39,13 +39,37 @@ function CREATE_THEATER_MODE_BTN(){
                 transform:scale(1.1);
             }
 
-            html.theaterMode #front-cafe img{
+            html.theaterMode [class^="Header_title_img__"]
+            {
+                overflow:hidden;
+            }
+            html.theaterMode [class^="Header_title_img__"] a {
+                text-align:center;
+            }
+
+            html.theaterMode #front-cafe img,
+            html.theaterMode [class^="Header_title_img__"] img {
                 position:relative;
                 top:0;
                 left:0;
                 z-index:2;
+                width:auto !important;
             }
             `);
+        }
+
+        var $gnbmenu = $("#gnb-menu");
+        if($gnbmenu.length !== 0 && $("#theaterModeBtn").length === 0){
+            $gnbmenu.prepend($theaterModeBtn);
+            return;
+        }
+        
+        $gnbmenu = $(".gnb_menu");
+        if($gnbmenu.length !== 0 && $("#darkModeBtn").length === 0){
+            setTimeout(function(){
+                $gnbmenu.prepend($theaterModeBtn);
+                $theaterModeBtn.addClass("gnb_item").css("margin-top", "0px");
+            },1000);
         }
     }
 }
@@ -96,18 +120,20 @@ export async function applyTheaterMode(){
             // 본문 정렬
             if(!GM_SETTINGS.theaterModeAlignCenter){
                 theaterModeCSSText += `
-                #cafe-body, #content-area, #front-cafe, #front-img, .footer, html.theaterMode #special-menu {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
-                #cafe_main, .Article, .Article .article_wrap, #content-area #main-area ,html.theaterMode div.MemberProfile.layout_content, html.theaterMode #app .layout_content {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                [class^="Layout_wrap__"], [class^="Layout_footer___"], #cafe-body, #content-area, #front-cafe, #front-img, .footer, html.theaterMode #special-menu {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 220px + 60px) !important}
+                [class^="Layout_content__"], #cafe_main, .Article, .Article .article_wrap, #content-area #main-area ,html.theaterMode div.MemberProfile.layout_content, html.theaterMode #app .layout_content {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
                 `;
             }
             else{
                 theaterModeCSSText += `
-                #cafe-body, #content-area, #front-cafe, #front-img, .footer, html.theaterMode #special-menu {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
-                #cafe_main, .Article, .Article .article_wrap, #content-area #main-area ,html.theaterMode div.MemberProfile.layout_content, html.theaterMode #app .layout_content {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                [class^="Layout_wrap__"], [class^="Layout_footer___"], #cafe-body, #content-area, #front-cafe, #front-img, .footer, html.theaterMode #special-menu {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
+                [class^="Layout_content__"], #cafe_main, .Article, .Article .article_wrap, #content-area #main-area ,html.theaterMode div.MemberProfile.layout_content, html.theaterMode #app .layout_content {width:calc(${GM_SETTINGS.useTheaterModeContentWidth}px + 60px) !important}
 
                 #group-area {position:absolute;top:0;left:-230px}
                 /*#main-area {position:absolute;top:0;left:0;}*/
                 .footer {display:none;}
+
+                [class^="Layout_container__"] { margin-left:-230px }
                 `;
             }
 //html.theaterMode .CafeViewer .se-viewer .se-caption,
