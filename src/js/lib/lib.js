@@ -1780,7 +1780,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 
         // 숫자의 경우
         if (userSettings[key].valid === "number") {
-            valid = $.isNumeric(val);
+            valid = Number.isFinite(Number(val))
             if (val === "") {
                 // "반드시 값이 입력되어야 합니다."
                 message += getSystemTextbyLang("err_val_req");
@@ -1801,7 +1801,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
         }
         // array_string - ID 태그
         else if (val !== "" && userSettings[key].valid === "array_string") {
-            val_array = $.map(val.split(","), $.trim);
+            val_array = $.map(val.split(","), v => v.trim());
             var match = val.match(regex_array_string);
             //CONSOLE_MSG(match);
             if (match === null || match.length === 0) {
@@ -1838,7 +1838,7 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
         }
         // array_word - 금지단어
         else if (val !== "" && userSettings[key].valid === "array_word") {
-            val_array = $.map(val.split(","), $.trim);
+            val_array = $.map(val.split(","), v => v.trim());
             if ($.inArray("", val_array) !== -1) {
                 valid = false;
                 // "공백 값 등 값이 존재하지 않는 항목이 존재합니다."

@@ -1,18 +1,7 @@
 import {NOMO_DEBUG} from "js/lib/lib";
 
 var isTheaterMode = false;
-var $theaterModeBtn = $(`<span title="[NCCL] 클릭 시 영화관 모드를 ${isTheaterMode ? "비활성화" : "활성화"} 합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다." id="theaterModeBtn">영화관 모드 ${isTheaterMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
-    .on("click", async () => {
-        NOMO_DEBUG("isTheaterMode", isTheaterMode, " -> ", !isTheaterMode);
-        isTheaterMode = !isTheaterMode;
-        await GM.setValue("theaterMode", isTheaterMode);
-        if (typeof GM.addValueChangeListener === "function"){
-            applyTheaterMode();
-        }
-        else{
-            location.reload();
-        }
-    });
+var $theaterModeBtn;
 
 function CREATE_THEATER_MODE_BTN(){
     if(GM_SETTINGS.useTheaterMode){
@@ -76,6 +65,19 @@ function CREATE_THEATER_MODE_BTN(){
 
 export async function THEATER_INIT(){
     NOMO_DEBUG("THEATER_INIT");
+    $theaterModeBtn = $(`<span title="[NCCL] 클릭 시 영화관 모드를 ${isTheaterMode ? "비활성화" : "활성화"} 합니다. 영화관 모드에서는 카페 글을 더 넓게 표시하고, 네이버, 유투브, 트위치 동영상을 더 크게 표시합니다." id="theaterModeBtn">영화관 모드 ${isTheaterMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
+    .on("click", async () => {
+        NOMO_DEBUG("isTheaterMode", isTheaterMode, " -> ", !isTheaterMode);
+        isTheaterMode = !isTheaterMode;
+        await GM.setValue("theaterMode", isTheaterMode);
+        if (typeof GM.addValueChangeListener === "function"){
+            applyTheaterMode();
+        }
+        else{
+            location.reload();
+        }
+    });
+
     isTheaterMode = await GM.getValue("theaterMode", false);
     if (typeof GM.addValueChangeListener === "function"){
         GM.addValueChangeListener("theaterMode", async function (val_name, old_value, new_value, remote) {

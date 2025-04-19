@@ -19,7 +19,7 @@
   "run-at": "document-start",
   "require": [
     "https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js",
-    "https://code.jquery.com/jquery-3.6.0.min.js"
+    "https://code.jquery.com/jquery-4.0.0-beta.2.min.js"
   ],
   "grant": [
     "GM.addStyle",

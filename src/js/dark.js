@@ -3,7 +3,9 @@ import theme_dark from "css/theme_dark.css";
 
 var isDarkModeInitialized = false;
 var isDarkMode = false;
-var $darkModeBtn = $(`<span title="[NCCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다." id="darkModeBtn">어두운 모드 ${isDarkMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
+var $darkModeBtn;
+export async function DARKMODE_INIT(){
+    $darkModeBtn = $(`<span title="[NCCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다." id="darkModeBtn">어두운 모드 ${isDarkMode ? "켜짐" : "꺼짐"}<img src="https://cafe.pstatic.net/cafe4/ico-blank.gif" width="1" height="10" alt="" class="tcol-c"></span>`)
     .on("click", async () => {
         NOMO_DEBUG("어두운 모드", isDarkMode , "->", !isDarkMode);
         isDarkMode = !isDarkMode;
@@ -21,7 +23,7 @@ var $darkModeBtn = $(`<span title="[NCCL] 클릭 시 다크 모드를 ${isDarkMo
             location.reload();
         }
     });
-export async function DARKMODE_INIT(){
+
     isDarkMode = await GM.getValue("darkMode", false);
     if (typeof GM.addValueChangeListener === "function"){
         GM.addValueChangeListener("darkMode", async function (val_name, old_value, new_value, remote) {
@@ -67,11 +69,14 @@ async function applyDarkMode(){
         $darkModeBtn.attr("title", `[NCCL] 클릭 시 다크 모드를 ${isDarkMode ? "비활성화" : "활성화"} 합니다.`);
         if(themeCSSElem !== undefined) $(themeCSSElem).remove();
         if(isDarkMode){
-            isDarkModeInitialized = true;
             themeCSSElem = GM_addStyle(theme_dark.toString().replace(/(\.skin-1080)/g, "html[data-theme='dark'] body"));
         
-            adjustAllText($(".content"), 0.9, 0.1, 32);
+            if(isDarkModeInitialized){
+                adjustAllText($(".content"), 0.9, 0.1, 32);
+            }
             $("html").attr("data-theme","dark");
+            
+            isDarkModeInitialized = true;
         }
         else if (isDarkModeInitialized)
         {
@@ -119,6 +124,7 @@ function darken([r, g, b], amount) {
   // 텍스트·배경색 조정 함수
   // ——————————————————————————————
   function adjustAllText($container, amtLight, amtDark, thresh) {
+    if($container.length == 0) return;
     $container.find('*').each(function(){
       var $el = $(this),
           cs  = window.getComputedStyle(this),
@@ -163,7 +169,7 @@ function darken([r, g, b], amount) {
   }
 
   function restoreAllText($container) {
-    NOMO_DEBUG("restoreAllText");
+    if($container.length == 0) return;
     $container.find('*').each(function(){
       var $el = $(this);
   

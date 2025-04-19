@@ -66,5 +66,6 @@ module.exports = {
             headers: path.join(__dirname, './src/headers_NCTCL.json'),
             pretty: true
         })
-    ]
+    ],
+    devtool: false
 };

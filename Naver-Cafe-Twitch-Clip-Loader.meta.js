@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Naver-Cafe-Clip-Loader
-// @version     1.5.6
+// @version     1.5.7
 // @author      Nomo
 // @description Naver Cafe 에서 Youtube Clip, SOOP(숲), Chzzk, Streamable, Twip, Twitch(해외) 등의 외부 Clip & VOD 시청을 도와주는 유저스크립트 확장
 // @supportURL  https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/issues
@@ -17,7 +17,7 @@
 // @updateURL   https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js
 // @run-at      document-start
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
-// @require     https://code.jquery.com/jquery-3.6.0.min.js
+// @require     https://code.jquery.com/jquery-4.0.0-beta.2.min.js
 // @grant       GM.addStyle
 // @grant       GM_addStyle
 // @grant       GM.getValue

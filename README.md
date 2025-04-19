@@ -49,10 +49,6 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 > 상세 설정을 새 창으로 열 때 AdBlock 사용, 팝업 차단 등에 의하여 문제가 발생하는 경우 현재 창으로 여세요.
 
-## 알려진 버그
-
-- 현재 Youtube 관련 일부 기능(최고 품질 설정, 일시정지 시 오버레이 숨기기 등)이 동작하지 않습니다.
-
 ## FAQ
 
 - Q: 스크립트를 새 버전으로 업데이트 하려면 어떻게 하나요?<br />A: 주기적으로 자동 업데이트 되지만, Tampermonkey 대시보드에서 "최근 업데이트 일시"를 클릭하여 수동 업데이트가 가능합니다.<br />설치 링크를 다시 클릭하여 업데이트 할 수도 있습니다. [Install](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/raw/main/Naver-Cafe-Clip-Loader.user.js)<br /><br />
@@ -69,7 +65,11 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
-### 1.5.6 - Apr 16, 2025
+### 1.5.7 - Apr 19, 2025
+
+- Youtube 관련 일부 기능이 동작하지 않는 버그를 고쳤어요.
+
+### 1.5.6 - Apr 19, 2025
 
 - 어두운 모드 일 때 사용자가 글 작성 시 직접 글자색, 배경색을 설정한 경우 본문이 잘 보이지 않던 문제를 개선했어요.
 

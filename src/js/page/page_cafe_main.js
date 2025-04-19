@@ -195,7 +195,12 @@ export async function PAGE_CAFE_MAIN(){
 
         let obj;
         if($moduleData.length !== 0){
-            obj = JSON.parse($moduleData.get(0).dataset.module);
+            try{
+                obj = JSON.parse($moduleData.get(0).dataset.module);
+            }
+            catch(e){
+                return false;
+            }
         }
         if(!obj || !obj.data) return false;
 
