@@ -308,6 +308,14 @@ const _settings = {
         title:"Youtube 관련 기능 사용",
         desc:"Youtube video 와 관련한 스크립트 기능을 적용합니다.<br />Youtube 동영상 재생에 문제가 발생하는 경우 본 기능을 꺼주세요.",
     },
+    youtubeNocookie : {
+        category:"youtube",
+        depth: 2,
+        type: "checkbox",
+        value: false,
+        title:"<span class='new-badge'>NEW</span>Youtube 비로그인으로 시청 (개인 정보 보호 강화 모드)",
+        desc:"Cafe 글에 삽입된 YouTube 플레이어에 대해 Youtube 계정 로그인을 사용하지 않도록 합니다. 기능이 활성화되면 Cafe 글에서의 시청 내역이 Youtube 웹사이트에 로그인된 계정의 시청 기록, 알고리즘🤖, 맞춤 광고에 영향을 주지 않습니다.<br />만약 \"계정이 다른 위치에서 사용되고 있기 때문에 재생이 일시중지되었습니다.\" 라는 오류가 자주 발생하는 경우 본 기능을 활성화하여 문제를 해결할 수 있습니다.",
+    },
     youtubeSetQuality : {
         category:"youtube",
         depth: 2,

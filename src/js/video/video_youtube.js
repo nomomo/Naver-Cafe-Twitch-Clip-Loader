@@ -204,6 +204,14 @@ export class VideoYoutube extends VideoBase {
             if(this.ab_channel) YTOptions["playerVars"]["ab_channel"] = this.ab_channel;
         }
 
+        // YOUTUBE_NOCOOKIE
+        if(GM_SETTINGS.youtubeNocookie){
+            YTOptions["host"] = "https://www.youtube-nocookie.com";
+
+            // header match 에 "https://www.youtube-nocookie.com/embed/*origin=https%3A%2F%2Fcafe.naver.com*" 를 추가하지 않고도 동작하게 만드는 트릭
+            YTOptions["playerVars"]["parent=cafe.naver.com&extension"] = "NCCL";
+        }
+
         this.YTPlayer = new YT.Player(YTElemID, YTOptions);
         this.YTPlayer.seq = this.seq;
         this.YTPlayer.muted = this.muted;

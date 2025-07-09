@@ -747,6 +747,31 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
     background: #ddffdd;
 }
 
+#GM_setting .new-badge {
+display: inline-block;
+    background: linear-gradient(
+    135deg,
+    #f87171,  /* soft red */
+    #fb923c,  /* soft orange */
+    #facc15,  /* soft yellow */
+    #4ade80,  /* soft green */
+    #38bdf8,  /* soft blue */
+    #a78bfa,  /* soft purple */
+    #f87171   /* loop back to red */
+    );
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 1px 4px 1px 5.5px;
+    border-radius: 4px;
+    vertical-align: text-top;
+    letter-spacing: 1px;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    margin-right: 6px;
+    user-select: none;
+}
+
 `);
     };
 
