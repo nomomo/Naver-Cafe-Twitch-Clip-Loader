@@ -13,7 +13,7 @@ import { VideoGfycat } from "js/video/video_gfycat.js";
 import { VideoTiktok } from "js/video/video_tiktok.js";
 import { VideoTwip } from "js/video/video_twip.js";
 import { VideoChzzkEmbed } from "js/video/video_chzzk_embed.js";
-import { VideoSoopGlobal } from "js/video/video_sooplive_global.js";
+//import { VideoSoopGlobal } from "js/video/video_sooplive_global.js";
 
 export async function PAGE_CAFE_MAIN(){
     NOMO_DEBUG("== PAGE_CAFE_MAIN ==");
@@ -141,7 +141,7 @@ export async function PAGE_CAFE_MAIN(){
     }
     if(GM_SETTINGS.useAftv){
         regexs[GLOBAL.AFTV_VOD] = /^https?:\/\/vod\.afreecatv\.com\/player\/(\d+)\??(change_second=\d+)?/i;
-        regexs[GLOBAL.SOOP] = /^https?:\/\/(?:vod\.sooplive.co\.kr|v\.afree\.ca)\/(?:player|ST)\/(\d+)\??(change_second=\d+)?/i;
+        regexs[GLOBAL.SOOP] = /^https?:\/\/(?:vod\.sooplive\.com|v\.afree\.ca|vod\.sooplive\.co\.kr)\/(?:player|ST)\/(\d+)\??(change_second=\d+)?/i;
     }
     // if(GM_SETTINGS.useTwip){
     //     regexs[GLOBAL.TWIP] = /^https?:\/\/vod\.twip\.kr\/(clip|vod)\/([a-zA-Z0-9-_]+)/i;
@@ -165,9 +165,9 @@ export async function PAGE_CAFE_MAIN(){
     if(GM_SETTINGS.useChzzk){
         regexs[GLOBAL.CHZZK_EMBED] = /^https:\/\/chzzk.naver.com\/(?:embed\/vod|embed\/clip|clips)\/([a-zA-Z0-9-_]+)/i;
     }
-    if(GM_SETTINGS.useSoopGlobal){
-        regexs[GLOBAL.SOOP_GLOBAL] = /^https:\/\/www\.sooplive\.com\/video\/([0-9]+)/i;
-    }
+    // if(GM_SETTINGS.useSoopGlobal){
+    //     regexs[GLOBAL.SOOP_GLOBAL] = /^https:\/\/www\.sooplive\.com\/video\/([0-9]+)/i;
+    // }
 
     // 다크모드인지 체크하기 위한 변수
     let isDarkModeChecked = false;
@@ -398,7 +398,7 @@ export async function PAGE_CAFE_MAIN(){
                 {
                 let id = match[1];
                 let start = 0;
-                let vodurl = `https://vod.sooplive.co.kr/player/${id}`;
+                let vodurl = `https://vod.sooplive.com/player/${id}`;
                 if(match[2] !== undefined){
                     start = Number(match[2].replace("change_second=",""));
                     vodurl += "?" + match[2];
@@ -562,7 +562,7 @@ export async function PAGE_CAFE_MAIN(){
             case GLOBAL.SOOPLIVE:{
                 let id = match[1];
                 let start = 0;
-                let vodurl = `https://vod.sooplive.co.kr/player/${id}`;
+                let vodurl = `https://vod.sooplive.com/player/${id}`;
                 if(match[2] !== undefined){
                     start = Number(match[2].replace("change_second=",""));
                     vodurl += "?" + match[2];
@@ -584,22 +584,22 @@ export async function PAGE_CAFE_MAIN(){
                 break;
             }
 
-            case GLOBAL.SOOP_GLOBAL:{
-                let vid = new VideoSoopGlobal({
-                    id:match[1],
-                    originalUrl:src,
-                    url:src,
-                    title:title,
-                    desc:desc,
-                    view:null,
-                    origin:document.location.origin,
-                    thumbnailUrl: thumbnailUrl,
-                    autoPlay:autoPlay,
-                    muted:muted
-                });
-                vid.createIframeContainer($seComponent);
-                break;
-            }
+            // case GLOBAL.SOOP_GLOBAL:{
+            //     let vid = new VideoSoopGlobal({
+            //         id:match[1],
+            //         originalUrl:src,
+            //         url:src,
+            //         title:title,
+            //         desc:desc,
+            //         view:null,
+            //         origin:document.location.origin,
+            //         thumbnailUrl: thumbnailUrl,
+            //         autoPlay:autoPlay,
+            //         muted:muted
+            //     });
+            //     vid.createIframeContainer($seComponent);
+            //     break;
+            // }
 
             }
         }

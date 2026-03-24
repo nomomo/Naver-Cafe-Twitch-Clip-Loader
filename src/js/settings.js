@@ -414,7 +414,7 @@ const _settings = {
         type: "checkbox",
         value: true,
         title:"SOOP 링크를 비디오로 변환",
-        desc:"<span style='color:#999'>예시) https://vod.sooplive.co.kr/player/11111111</span><br />하위 기능은 스크립트 설정에 따라 적용되지 않을 수도 있습니다.",
+        desc:"<span style='color:#999'>예시) https://vod.sooplive.com/player/11111111</span><br />하위 기능은 스크립트 설정에 따라 적용되지 않을 수도 있습니다.",
     },
     aftvAutoMaxQuality: {
         category:"soop",
@@ -562,14 +562,14 @@ const _settings = {
         desc:"<span style='color:#999'>예시) https://www.tiktok.com/@xxxxxxx/video/111111111</span>",
     },
 
-    useSoopGlobal :{
-        category:"others",
-        depth: 1,
-        type: "checkbox",
-        value: true,
-        title:"SOOP Global 링크를 비디오로 변환",
-        desc:"<span style='color:#999'>예시) https://www.sooplive.com/video/12345</span>",
-    },
+    // useSoopGlobal :{
+    //     category:"others",
+    //     depth: 1,
+    //     type: "checkbox",
+    //     value: true,
+    //     title:"SOOP Global 링크를 비디오로 변환",
+    //     desc:"<span style='color:#999'>예시) https://www.sooplive.com/video/12345</span>",
+    // },
 
     // // Vimeo
     // useVimeo : {

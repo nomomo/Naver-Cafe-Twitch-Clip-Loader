@@ -5,7 +5,7 @@ export default function PAGE_SOOP_EMBED(){
     NOMO_DEBUG("== PAGE_SOOP_EMBED ==");
 
     // get info
-    var match = document.location.href.match(/^https?:\/\/vod\.sooplive\.co\.kr\/(?:player|ST)\/(\d+)\??(change_second=\d+)?/);
+    var match = document.location.href.match(/^https?:\/\/vod\.sooplive\.com\/(?:player|ST)\/(\d+)\??(change_second=\d+)?/);
     if(match === null) return;
     let id = match[1];
     let start = 0;
@@ -208,7 +208,7 @@ export class PageSoop extends PageBase {
 
                     // new send()
                     xhr.send = function(data) {
-                        if (this._url && (this._url.includes("deapi.sooplive.co.kr") || this._url.includes("/get_ad.php") )) {
+                        if (this._url && (this._url.includes("deapi.sooplive.com") || this._url.includes("/get_ad.php") )) {
 
                             NOMO_DEBUG("Blocked request to: " + this._url);
                             // Set readyState to DONE (4)
@@ -244,7 +244,7 @@ export class PageSoop extends PageBase {
                                 return;
                             }
                             try {
-                                if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) && xhr.responseURL.indexOf("sooplive.co.kr/station/video/a/view") !== -1){
+                                if((GM_SETTINGS.shortsAutoResizeType !== "0" && GM_SETTINGS.shortsAutoResizeAftv) && xhr.responseURL.indexOf("sooplive.com/station/video/a/view") !== -1){
 
                                     let responseData = xhr.responseText;
                                     let parsedData = JSON.parse(responseData);

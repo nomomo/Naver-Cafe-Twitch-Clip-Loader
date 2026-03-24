@@ -47,8 +47,8 @@ export default function GLOBAL_INIT(){
     GLOBAL.isStreamableEmbed = /^https?:\/\/streamable\.com\/e\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isAftvEmbed = /^https?:\/\/vod\.afreecatv\.com\/player\//.test(GLOBAL.initLocationUrl);
     GLOBAL.isChzzkEmbed = /^https:\/\/chzzk\.naver\.com\/embed\/(?:vod|clip)\/[a-zA-Z0-9-_]+/.test(GLOBAL.initLocationUrl);
-    GLOBAL.isSoopEmbed = /^https:\/\/vod\.sooplive\.co\.kr\/(?:player|ST)\//.test(GLOBAL.initLocationUrl);
-    GLOBAL.isSoopGlobalEmbed = /^https:\/\/www\.sooplive\.com\/player\/embed\/video\/[0-9]+/.test(GLOBAL.initLocationUrl);
+    GLOBAL.isSoopEmbed = /^https:\/\/vod\.sooplive\.com\/(?:player|ST)\//.test(GLOBAL.initLocationUrl);
+    //GLOBAL.isSoopGlobalEmbed = /^https:\/\/www\.sooplive\.com\/player\/embed\/video\/[0-9]+/.test(GLOBAL.initLocationUrl);
     GLOBAL.isKakaotvEmbed = false;
     GLOBAL.isDailymotionEmbed = false;
     GLOBAL.isGfycat = false;

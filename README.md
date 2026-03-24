@@ -65,6 +65,10 @@ Naver-Cafe-Clip-Loader 의 설치 방법을 설명합니다.
 
 - 모든 Minor Change & 세부 변경 사항은 [CHANGELOG.md](https://github.com/nomomo/Naver-Cafe-Twitch-Clip-Loader/blob/main/CHANGELOG.md)를 확인하세요.
 
+### 1.5.9 - March 24, 2026
+- 숲 도메인 변경(co.kr -> com)에 따라 숲 동영상이 제대로 동작하지 않는 버그를 고쳤어요.
+- 기존 글에 sooplive.co.kr 로 작성된 링크도 여전히 알아서 잘 바꿔줘요.
+
 ### 1.5.8 - July 9, 2025
 
 - "Youtube 비로그인으로 시청 (개인 정보 보호 강화 모드)" 기능을 추가했어요.

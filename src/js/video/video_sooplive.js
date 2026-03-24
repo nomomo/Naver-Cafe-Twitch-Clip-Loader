@@ -21,7 +21,7 @@ export class VideoSoop extends VideoBase {
         if(this.isDataLoading || this.isDataLoaded) return;
         this.isDataLoading = true;
 
-        let urlFetch = await fetch(`https://openapi.sooplive.co.kr/vod/embedinfo?vod_url=https://vod.sooplive.co.kr/player/${this.id}`, {method: 'POST', cors:"no-cors", body: ""});
+        let urlFetch = await fetch(`https://openapi.sooplive.com/vod/embedinfo?vod_url=https://vod.sooplive.com/player/${this.id}`, {method: 'POST', cors:"no-cors", body: ""});
         if(urlFetch.status === 200){
             let json = await urlFetch.json();
             NOMO_DEBUG("Sooplive response", json);
